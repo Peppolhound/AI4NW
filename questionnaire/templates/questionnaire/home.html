@@ -1,53 +1,325 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/90afc8c9e3.js" crossorigin="anonymous"></script> <!-- ICON SET -->
+    
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- Bootstrap v5.3 core Css-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    
+    <!--Material Icon -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/materialdesignicons.min.css' %}"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    
 </head>
 <body>
-    <!-- Top Bar with Menu -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-                AI4NIGHTWORKERS
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Navbar START -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-custom sticky">
+        <div class="container">
+            <a class="navbar-brand logo" href="{% url 'home' %}">
+                <img src="{% static 'images/AI4NIGHTWORKERS_Logo.png' %}" alt="AI4NIGHTWORKERS Logo" width="70">AI4NIGHTWORKERS</a>
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Test</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Result</a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li> -->
-                </ul>
-                <a class="btn btn-outline-success" href="#" role="button">Login</a>
-            </div>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#partner">Partners</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'test' %}">Test</a>
+                </li>
+            </ul>
+            <a class="btn btn-outline-success" id="login" href="{% url 'login' %}" role="button">Login</a>
         </div>
     </nav>
+    <!-- Navbar END -->
 
-    <!-- Content Section -->
-    <div class="container mt-5">
-        <h1>Welcome to the Project</h1>
-        <p>This project is designed to showcase the power of modern web development. It includes a variety of features and tools to help you get started with your own projects.</p>
-        <p>Feel free to explore the menu above to learn more about the project and how it can benefit you.</p>
-    </div>
+    <!-- HOME START-->
+    <section class="bg-home-half" id="home">
+        <div class="bg-overlay"></div>
+        <div class="home-center">
+            <div class="home-desc-center">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-9">
+                            <div class="text-center text-white">
+                                <h5 class="home-small-title text-uppercase text-white-50 mb-4">Lavori di notte?</h5>
+                                <h2 class="home-title mb-4"> Metti al centro il tuo Benessere!</h2>
+                                <p class="home-desc text-white-50 mx-auto">AI4NIGHTWORKERS è un progetto di ricerca che usa l’intelligenza artificiale per comprendere l’impatto del lavoro su turni e prevenire i rischi per la salute, in particolare quelli cardiovascolari.</p>
+                                <div class="text-center pt-4">
+                                    <a href="{% url 'test' %}" class="btn btn-custom">Esegui il test ora<i class="mdi mdi-arrow-right ml-2"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- HOME END-->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FEATURE START -->
+    <section class="section" id="feature">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="text-center">
+                        <h4 class="title-heading">Tecnologia al servizio della salute</h4>
+                        <p class="title-desc text-muted mt-3">AI4NIGHTWORKERS nasce dall’unione tra ricerca, tecnologia e sanità con un obiettivo chiaro: tutelare la salute di chi lavora su turni. Il progetto è stato ideato per rispondere a un problema reale, spesso trascurato: le conseguenze del lavoro notturno sulla salute e sulla qualità della vita.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-lg-4">
+                    <div class="features mt-4">
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <img src="{% static 'images/1.jpg' %}" class="img-fluid rounded" alt="">
+                            </div>
+
+                            <h4>Il Benessere come Inizio</h4>
+                            <p class="features-desc text-muted mt-3 pl-2 pr-2">Prendersi cura di sé è il primo passo per restare attivi, sani e consapevoli. Con AI4NIGHTWORKERS, il benessere non è un traguardo ma il punto di partenza: vogliamo aiutarti a capire meglio come vivi il tuo turno, e quali segnali il tuo corpo ti sta inviando.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="features mt-4">
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <img src="{% static 'images/2.jpg' %}" class="img-fluid rounded" alt="">
+                            </div>
+                            <h4>Il futuro che immaginiamo</h4>
+                            <p class="features-desc text-muted mt-3 pl-2 pr-2">Vogliamo promuovere una cultura della prevenzione che metta le persone al primo posto. Nel nostro futuro ogni lavoratore notturno può vivere in salute, con strumenti efficaci per conoscere, prevenire e affrontare i rischi legati ai propri ritmi di vita.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="features mt-4">
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <img src="{% static 'images/3.jpg' %}" class="img-fluid rounded" alt="">
+                            </div>
+                            <h4>Cosa ci sprona</h4>
+                            <p class="features-desc text-muted mt-3 pl-2 pr-2">La nostra missione è creare soluzioni digitali, semplici e affidabili, per valutare in anticipo i rischi per la salute dei lavoratori turnisti. Attraverso dati concreti e l’intelligenza artificiale, vogliamo dare valore all’esperienza di chi lavora di notte.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- WELCOME END -->
+
+    <!-- SERVICES START -->
+    <section class="section bg-light" id="service">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="text-center">
+                        <h4 class="title-heading text-uppercase">Cosa rende AI4NIGHTWORKERS diverso</h4>
+                        <p class="title-desc text-muted mt-3">AI4NIGHTWORKERS è un progetto di sanità digitale he raccoglie dati in modo non invasivo per analizzare l’impatto del lavoro notturno sul benessere. L'obiettivo? Prevenire patologie grazie a strumenti predittivi avanzati.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-lg-6">
+                    <div class="services-blog mt-4 flex-fill">
+                        <div class="service-head">
+                            <h4>Monitoraggio su base scientifica</h4>
+                            <p class="text-muted mb-0">Attraverso un questionario ispirato al <a href="https://www.chronomeddiet.org/" target="_blank" rel="noopener">Chrono Med Diet Score</a>, raccogliamo informazioni su alimentazione, stile di vita, turni, attività fisica e parametri clinici per valutare i principali fattori di rischio individuali.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="services-blog mt-4 flex-fill">
+                        <div class="service-head">
+                            <h4 class="mb-2">Prevenzione costruita sui dati</h4>
+                            <p class="text-muted mb-0">Con l’aiuto dell’intelligenza artificiale, sviluppiamo uno score personalizzato di rischio cardiovascolare. Un indicatore semplice e immediato, pensato per aiutare i lavoratori a riconoscere in anticipo i segnali e dove poter intervenire.</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-lg-6">
+                    <div class="services-blog mt-4 flex-fill">
+                        <div class="service-head">
+                            <h4>Ricerca partecipativa</h4>
+                            <p class="text-muted mb-0">Le risposte non finiscono in un database: diventano parte attiva di una ricerca che crea soluzioni reali per chi, ogni notte, affronta il lavoro mentre tutti dormono.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="services-blog mt-4 flex-fill">
+                        <div class="service-head">
+                            <h4 class="mb-2">Wearable: un supporto in più</h4>
+                            <p class="text-muted mb-0">Un gruppo selezionato potrà usare dispositivi wearable per aggiungere dati oggettivi e precisi al proprio profilo. Un supporto in più per monitorare il benessere, giorno dopo giorno.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="row mt-4">
+                <div class="col-lg-12">
+                    <div class="text-center mt-5">
+                        <a href="#" class="btn btn-custom btn-round">See all Services</a>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </section>
+    <!-- SERVICES END -->
+
+    <!-- START CTA TEST -->
+    <section class="section bg-cta" id="test">
+        <div class="bg-overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h3 class="text-white text-center">Il tuo benessere inizia da qui.</h3>
+                    <p class="cta-desc text-white text-center mt-3">Compila il test in pochi minuti e partecipa al progetto AI4NIGHTWORKERS.<br>
+                        Non riceverai subito un risultato, ma i tuoi dati aiuteranno ricercatori e medici a migliorare la prevenzione per chi lavora su turni.</p>
+                    <div class="text-center mt-4 position-relative z-2">
+                        <a href="{% url 'test' %}" class="btn btn-custom-white">Partecipa al Test!</a>
+                    </div>   
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END CTA TEST -->   
+
+    <!-- PARTNER START -->
+    <section class="section" id="partner">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <h4 class="title-heading text-uppercase">I partner del progetto</h4>
+                        <p class="title-desc text-muted">Università, startup e innovatori: un team interdisciplinare unito per costruire un futuro più sano per i lavoratori notturni.
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-lg-4">
+                    <div class="pertner-member mt-4 text-center">
+                        <a href="https://www.napslab.it/" target="_blank">
+                            <img src="{% static 'images/NapsLab_Logo.png' %}" class="img-fluid" alt="">
+                        </a>
+                        <div>
+                            <h4 class="mt-3 pb-1">NAPS LAB S.r.l.s</h4>
+                            <p>Impresa Capofila <br> Innovazione e AI per la salute e i dati biometrici</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="pertner-member mt-4 text-center">
+                        <a href="https://www.ageingtech.it/" target="_blank">
+                            <img src="{% static 'images/AgeingTech_Logo.png' %}" class="img-fluid" alt="">
+                        </a>
+                        <div>
+                            <h4 class="mt-3 pb-1">AGEING TECH S.r.l.</h4>
+                            <p>Start-up innovativa <br> Telemedicina e assistenza a soggetti fragili</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="pertner-member mt-4 text-center">
+                        <a href="https://www.uniba.it/it/ricerca/dipartimenti/dim" target="_blank">
+                            <img src="{% static 'images/UniBa-Dim_Logo.png' %}" class="img-fluid" alt="">
+                        </a>
+                        <div>
+                            <h4 class="mt-3 pb-1">Università di Bari – DIM</h4>
+                            <p>Partner accademico <br> Ricerca biomedica e medicina del lavoro</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- PARTNER END --> 
+
+    <!-- FOOTER START -->
+    <section class="footer bg-dark">
+        <div class="container">
+            <div class="row d-flex justify-content-around">
+                <div class="col-lg-4 me-4">
+                    <div class="footer-menu">
+                        <h5 class="mb-4 text-uppercase">AI4NIGHTWORKERS</h5>
+                        <p>Sanità digitale per migliorare la qualità della vita di chi lavora quando il mondo riposa. Posto per la Fund Mention dell'Ente Finanziatore.</p>
+                        <!-- <div class="text-white">
+                            <a href="#facebook"><i class="mdi mdi-facebook facebook footer_mdi"></i></a>
+                            <a href="#twitter"><i class="mdi mdi-twitter twitter footer_mdi"></i></a>
+                            <a href="#google"><i class="mdi mdi-google google footer_mdi"></i></a>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="footer-menu">
+                        <h5 class="mb-4 text-uppercase">About</h5>
+                        <ul class="text-muted list-unstyled">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Press</a></li>
+                            <li><a href="#">Privacy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="footer-menu">
+                        <h5 class="mb-4 text-uppercase">Ente Finanziatore</h5>
+                        <p>Il progetto AI4NIGHTWORKERS è stato finanziato tramite il "Fondo per lo sviluppo delle tecnologie e delle applicazioni di intelligenza artificiale, blockchain e internet of things", istituito dalla legge di bilancio 2019 (art. 1, comma 226).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center mt-5">
+                        <p class="mb-0">2025  ©NapsLab</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FOOTER END -->
+
+    <!-- JAVASCRIPTS -->
+
+    <!--  jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--  jQuery easing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>  
+
+    <!-- Home Javascript -->
+    <script src="{% static 'js/home.js' %}"></script>
+
 </body>
 </html>
