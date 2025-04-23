@@ -35,7 +35,7 @@ class Answer(models.Model):
     answer_question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answerQuestion')
     order = models.IntegerField(default=0)  # Order of the answer in the question
     description = models.CharField(max_length=255)
-    custom_answer = models.TextelField(blank=True, null=True)  # Custom answer for open-ended questions
+    custom_answer = models.TextField(blank=True, null=True)  # Custom answer for open-ended questions
     
     def __str__(self):
         return self.text
