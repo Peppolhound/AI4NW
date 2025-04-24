@@ -626,6 +626,11 @@ header h1 {
     font-weight: 300;
 }
 
+.test-progress{
+    --bs-progress-height: 0.5rem;
+    width: 100%;
+}
+
 h3.main_question {
     margin: 0 0 1rem 0;
     padding: 0;
@@ -659,9 +664,9 @@ h3.main_question i {
     margin: auto;
 }
 
-#wizard_container #top-wizard {
-    width: calc(100% + 30px);
-    margin: -72px -15px 0 -15px;
+.wizard-inner {
+    width: 100%;
+    padding: 0 30rem;
 }
 
 #wizard_container #top-wizard .ui-widget-content {
@@ -790,6 +795,10 @@ span.error:after {
     font-size: 14px;
 }
 
+.container_check.active {
+    background-color: #0a58ca1f !important;
+}
+
 .container_check input {
     position: absolute;
     opacity: 0;
@@ -809,7 +818,7 @@ span.error:after {
     height: 24px;
     width: 24px;
     border: 1px solid #ddd;
-    background-color: #fff;
+    background-color: var(--light-color);
     border-radius: 3px;
     transition: all 0.3s ease-in-out;
 }
@@ -831,125 +840,7 @@ span.error:after {
     display: block;
 }
 
-/* Radio buttons */
-.container_radio {
-    display: block;
-    position: relative;
-    font-size: 14px;
-    font-size: 0.875rem;
-    padding-left: 30px;
-    line-height: 1.3;
-    margin-bottom: 10px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.container_radio input {
-    position: absolute;
-    opacity: 0;
-}
-
-.container_radio input:checked ~ .checkmark:after {
-    opacity: 1;
-}
-
-.container_radio .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-}
-
-.container_radio .checkmark:after {
-    display: block;
-    content: "";
-    position: absolute;
-    opacity: 0;
-    -moz-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
-    -webkit-transition: all 0.3s ease-in-out;
-    -ms-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-    top: 3px;
-    left: 3px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    -moz-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
-    -webkit-transition: all 0.3s ease-in-out;
-    -ms-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-}
-
-.container_radio {
-    padding: 13px 15px 13px 45px;
-    background-color: #fff;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -ms-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px solid #ddd;
-    min-height: 30px;
-    font-weight: 400;
-}
-
-.container_radio input:checked ~ .checkmark:before {
-    opacity: 1;
-}
-
-.container_radio input:checked ~ .checkmark {
-    border: 1px solid transparent;
-}
-
-.container_radio .checkmark {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    height: 24px;
-    width: 24px;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-}
-
-.container_radio .checkmark:after {
-    width: 22px;
-    height: 22px;
-    top: 0;
-    left: 0;
-}
-
-.container_radio .checkmark:before {
-    display: block;
-    content: "";
-    position: absolute;
-    opacity: 0;
-    -moz-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
-    -webkit-transition: all 0.3s ease-in-out;
-    -ms-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    z-index: 999;
-    border-width: 0 2px 2px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
-.container_radio.active, .container_radio:hover, .container_check.active, .container_check:hover {
+.container_check:hover {
     border: 1px solid #2955a9;
     -moz-transition: all 0.8s ease;
     -o-transition: all 0.8s ease;
@@ -958,10 +849,72 @@ span.error:after {
     transition: all 0.8s ease;
 }
 
-.radio_input .container_radio {
-    display: inline-block;
-    margin: 15px 0 0 0;
-}  
+.container_check:hover, .container_check:focus-visible {
+    background-color: #0a58ca1f !important;
+}
+
+/* Radio buttons */
+.container_radio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 13px 25px 15px 45px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.container_radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.container_radio .checkmark {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 24px;
+    width: 24px;
+    border: 1px solid #ddd;
+    background-color: var(--light-color);
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+}
+
+.container_radio .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease-in-out;
+}
+
+.container_radio input:checked ~ .checkmark {
+    border: 1px solid transparent;
+    background-color: var(--primary-color);
+}
+
+.container_radio input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.container_radio:hover {
+    border: 1px solid #2955a9;
+    background-color: #0a58ca1f !important;
+    transition: all 0.3s ease;
+}
 
 /* Wizard Buttons*/
 button.backward, button.forward, button.submit {
@@ -1103,11 +1056,22 @@ button.submit:hover{
     button.backward{
         margin-right: 0;
     }
+
+    .wizard-inner {
+        width: 100%;
+        padding: 0 0.5rem;
+    }
 }
 
-@media (min-width:768px) and (max-width: 1024px) {
+@media (min-width:768px) and (max-width: 1200px) {
     .clients-img {
         top: 76px;
+    }
+
+
+    .wizard-inner {
+        width: 100%;
+        padding: 0 4rem;
     }
 }
 

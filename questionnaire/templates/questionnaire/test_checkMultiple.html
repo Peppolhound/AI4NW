@@ -66,52 +66,51 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div id="wizard_container">
-
-                        <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 25%"></div>
-                        </div>
-                        
-                        <!-- FORM START -->
-                        <form id="wrapped" method="post" action="">
-                            
-                            <div id="middle-wizard">
-                                <fieldset class="step" id="">
-                                    <h3 class="main_question" id=""><i class="mdi mdi-arrow-right"></i>Fare il bagno</h3>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <label class="container_check">Riceve assistenza per lavare solo una parte del corpo (es. dorso)
-                                                    <input type="checkbox" name="question_1[]" value="1" class="required">
-                                                    <span class="checkmark"></span>
-                                                </label>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="container_check">Non riceve assistenza (entra ed esce dalla vasca da bagno o dalla doccia da solo)
-                                                    <input type="checkbox" name="question_1[]" value="2" class="required">
-                                                    <span class="checkmark"></span>
-                                                </label>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="container_check">Riceve assistenza per lavare più di una parte del corpo
-                                                    <input type="checkbox" name="question_1[]" value="3" class="required">
-                                                    <span class="checkmark"></span>
-                                                </label>
+                        <div class="wizard-inner">
+                            <div class="progress test-progress" role="progressbar" aria-label="progressbar-test" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: 20%"></div>
+                            </div>
+                            <!-- FORM START -->
+                            <form id="wrapped_1" class="step-form" method="post" action="{% url 'test_testo' %}" novalidate>
+                                {% csrf_token %}
+                                <div id="middle-wizard">
+                                    <fieldset class="step" id="Group_1">
+                                        <h3 class="main_question" id="question_1"><i class="mdi mdi-arrow-right"></i>Fare il bagno</h3>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="container_check">Riceve assistenza per lavare solo una parte del corpo (es. dorso)
+                                                        <input type="checkbox" name="question_1[]" value="2">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="container_check">Non riceve assistenza (entra ed esce dalla vasca da bagno o dalla doccia da solo)
+                                                        <input type="checkbox" name="question_1[]" value="1" >
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="container_check">Riceve assistenza per lavare più di una parte del corpo
+                                                        <input type="checkbox" name="question_1[]" value="3">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </fieldset>
-                            </div>
-
-                            <div id="bottom-wizard">
-                                <div class="d-flex gap-2 w-100 mobile-d-flex">
-                                    <button type="button" name="backward" class="backward flex-fill">Prev</button>
-                                    <button type="button" name="forward" class="forward flex-fill">Next</button>
+                                    </fieldset>
                                 </div>
 
-                                <button type="submit" name="process" class="submit d-none">Submit</button>
-                            </div>
-                        </form>
-                        <!-- FORM END -->
+                                <div id="bottom-wizard">
+                                    <div class="d-flex gap-2 w-100 mobile-d-flex">
+                                        <button type="button" name="backward" class="backward flex-fill d-none">Prev</button>
+                                        <button type="submit" name="forward" class="forward flex-fill">Next</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- FORM END -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
