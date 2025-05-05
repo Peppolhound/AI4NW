@@ -67,29 +67,34 @@
                 <div class="col-lg-12">
                     <div id="wizard_container">
                         <div class="wizard-inner">
-                            <div class="progress test-progress" role="progressbar" aria-label="progressbar-test" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar" style="width: 40%"></div>
+                            <div class="progress test-progress" role="progressbar" aria-label="progressbar-test" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: 60%"></div>
                             </div>
                             <!-- FORM START -->
                             <form id="wrapped_3" class="step-form" method="post" action="" novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_2">
-                                        <h3 class="main_question" id="question_2"><i class="mdi mdi-arrow-right"></i>Please fill with your personal data</h3>
+                                        <h3 class="main_question" id="question_2"><i class="mdi mdi-arrow-right"></i>Generalità</h3>
                                         <div class="row">
-                                            <div class="col-lg-3 col-md-3 col-sm-3 col-4">
-                                                <label for="age">Age</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label for="age">Età</label>
                                                 <div class="form-group radio_input">
-                                                    <input type="text" name="age" id="age" class="form-control">
+                                                    <input type="number" name="age" id="age" class="form-control">
+                                                </div>
+                                                <label for="weight" class="mobile-padding">Peso</label>
+                                                <div class="form-group radio_input">
+                                                    <input type="number" name="weight" id="weight" class="form-control">
                                                 </div>
                                             </div>
-                                            <div class="col-lg-5 col-md-5 col-sm-6 col-8">
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12 mobile-padding">
+                                                <label for="age">Sesso</label>
                                                 <div class="form-group radio_input">
-                                                    <label class="container_radio mr-3">Male
+                                                    <label class="container_radio mr-3">Maschio
                                                         <input type="radio" name="gender" value="Male" class="required">
                                                         <span class="checkmark"></span>
                                                     </label>
-                                                    <label class="container_radio">Female
+                                                    <label class="container_radio">Femmina
                                                         <input type="radio" name="gender" value="Female" class="required">
                                                         <span class="checkmark"></span>
                                                     </label>
@@ -97,20 +102,30 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label for="height">Altezza </label>
+                                            <input type="number" name="height" id="height" class="form-control" onchange="">
+                                        </div>
                                         <div class="form-group add_top_30">
-                                            <label for="name">First and Last Name</label>
-                                            <input type="text" name="name" id="name" class="form-control">
+                                            <label for="abd-circum">Circonferenza Addominale</label>
+                                            <label class="label-comment">Per misurarla, prendi un centimetro da sarta e misura il girovita all’altezza dell’ombelico.</label> 
+                                            <input type="number" name="abd-circum" id="abd-circum" class="form-control" inputmode="numeric" onchange="">
                                         </div>
-                                        <div class="form-group">
-                                            <label for="email">Email Address</label>
-                                            <input type="email" name="email" id="email" class="form-control" onchange="getVals(this, 'email_field');">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="phone">Phone</label>
-                                            <input type="text" name="phone" id="phone" class="form-control">
+                                        <div class="col-12 add_top_30 mobile-padding">
+                                            <label for="smoke">Fumi?</label>
+                                            <div class="form-group radio_input">
+                                                <label class="container_radio mr-3">Sì
+                                                    <input type="radio" name="smoke" value="Sì" class="required">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                                <label class="container_radio">No
+                                                    <input type="radio" name="smoke" value="No" class="required">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                         
-                                        <h3 class="main_question" id="question_3"><i class="mdi mdi-arrow-right"></i>Uscire</h3>
+                                        <!-- <h3 class="main_question" id="question_3"><i class="mdi mdi-arrow-right"></i>Uscire</h3>
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
@@ -132,7 +147,7 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </fieldset>
                                 </div>
 

@@ -780,6 +780,16 @@ span.error:after {
     border-color: var(--primary-color);
 }
 
+.add_top_30{
+    margin-top: 0.5rem;
+}
+
+.label-comment{
+    color: #5296cf;
+    font-size: 0.7rem;
+    margin-top: 0;
+}
+
 /* Checkbox style */
 .container_check {
     position: relative;
@@ -960,6 +970,7 @@ button.submit:hover{
     background-color: var(--success-color);
 }
 
+
 /* =========================
    12. Text
 ========================= */
@@ -1060,6 +1071,10 @@ button.submit:hover{
     .wizard-inner {
         width: 100%;
         padding: 0 0.5rem;
+    }
+
+    .mobile-padding{
+        margin-top: 0.5rem;
     }
 }
 
