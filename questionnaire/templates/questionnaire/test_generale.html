@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Test</title>
     
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
 
@@ -71,33 +71,83 @@
                                 <div class="progress-bar" style="width: 20%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_1" class="step-form" method="post" action="{% url 'test_testo' %}" novalidate>
+                            <form id="wrapped_1" class="step-form" method="post" action="{% url 'test_singola' %}" novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
-                                    <fieldset class="step" id="Group_1">
-                                        <h3 class="main_question" id="question_1"><i class="mdi mdi-arrow-right"></i>Fare il bagno</h3>
+                                    <fieldset class="step" id="Group_2">
+                                        <h3 class="main_question" id="question_2"><i class="mdi mdi-arrow-right"></i>Generalità</h3>
                                         <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="container_check">Riceve assistenza per lavare solo una parte del corpo (es. dorso)
-                                                        <input type="checkbox" name="question_1[]" value="2">
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <label for="age">Età</label>
+                                                <div class="form-group radio_input">
+                                                    <input type="number" name="age" id="age" class="form-control required" >
+                                                </div>
+                                                <label for="weight" class="mobile-padding">Peso</label>
+                                                <div class="form-group radio_input">
+                                                    <input type="number" name="weight" id="weight" class="form-control required">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12 mobile-padding">
+                                                <label for="age">Sesso</label>
+                                                <div class="form-group radio_input">
+                                                    <label class="container_radio mr-3">Maschio
+                                                        <input type="radio" name="gender" value="Male" class="required required">
                                                         <span class="checkmark"></span>
                                                     </label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="container_check">Non riceve assistenza (entra ed esce dalla vasca da bagno o dalla doccia da solo)
-                                                        <input type="checkbox" name="question_1[]" value="1" >
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="container_check">Riceve assistenza per lavare più di una parte del corpo
-                                                        <input type="checkbox" name="question_1[]" value="3">
+                                                    <label class="container_radio">Femmina
+                                                        <input type="radio" name="gender" value="Female" class="required required">
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            <label for="height">Altezza </label>
+                                            <input type="number" name="height" id="height" class="form-control required" onchange="">
+                                        </div>
+                                        <div class="form-group add_top_30">
+                                            <label for="waist_circum">Circonferenza Addominale</label>
+                                            <label class="label-comment">Per misurarla, prendi un centimetro da sarta e misura il girovita all’altezza dell’ombelico.</label> 
+                                            <input type="number" name="waist_circum" id="waist_circum" class="form-control required" inputmode="numeric" onchange="">
+                                        </div>
+                                        <div class="col-12 add_top_30 mobile-padding">
+                                            <label for="smoke">Fumi?</label>
+                                            <div class="form-group radio_input">
+                                                <label class="container_radio mr-3">Sì
+                                                    <input type="radio" name="smoke" value="Sì" class="required required">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                                <label class="container_radio">No
+                                                    <input type="radio" name="smoke" value="No" class="required required">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- <h3 class="main_question" id="question_3"><i class="mdi mdi-arrow-right"></i>Uscire</h3>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="container_radio">
+                                                        <input type="checkbox" name="question_3[]" value="80">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="container_radio">
+                                                        <input type="checkbox" name="question_3[]" value="5" >
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="container_radio">
+                                                        <input type="checkbox" name="question_3[]" value="6" >
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div> -->
                                     </fieldset>
                                 </div>
 

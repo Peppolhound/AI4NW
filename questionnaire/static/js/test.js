@@ -2,7 +2,7 @@
     "use strict";
 
     document.addEventListener('DOMContentLoaded', () => {
-		const testPaths = ['/test/', '/test_checkbox/', '/test_testo/'];
+		const testPaths = ['/test/', '/test_checkbox/', '/test_testo/', '/test_2nd/'];
 		const currentPath = window.location.pathname;
 	
 		if (!testPaths.includes(currentPath)) {
