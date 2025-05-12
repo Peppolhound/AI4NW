@@ -1,5 +1,6 @@
 import json
 from questionnaire.models import Questionnaire, Group, Question, Answer
+import requests
 
 def parseJSON(json_string):
 
@@ -47,3 +48,23 @@ def parseJSON(json_string):
                     }
                 )
     return print("Data parsed and saved successfully.") 
+
+
+def call_api(endpoint_url, payload=None, headers=None, method='GET'):
+    try:
+        if method.upper() == 'GET':
+            response = requests.get(endpoint_url, headers=headers, params=payload)
+        elif method.upper() == 'POST':
+            response = requests.post(endpoint_url, headers=headers, json=payload)
+        elif method.upper() == 'PUT':
+            response = requests.put(endpoint_url, headers=headers, json=payload)
+        elif method.upper() == 'DELETE':
+            response = requests.delete(endpoint_url, headers=headers, json=payload)
+        else:
+            raise ValueError("Unsupported HTTP method")
+
+        response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
+        return response.json()  # Return the JSON response
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
