@@ -1,0 +1,31 @@
+{
+    "questionnaireId": 1,
+    "dateInsert": 1719218434000,
+    "answeredQuestions": [
+        {
+            "answerId": 2,
+            "questionId": 1,
+            "customAnswer": null
+        },
+        {
+            "answerId": 3,
+            "questionId": 1,
+            "customAnswer": null
+        },
+        {
+            "answerId": 4,
+            "questionId": 2,
+            "customAnswer": "Anche se con qualche difficoltà visto il dolore alle ginocchia"
+        },
+        {
+            "answerId": 477,
+            "questionId": 80,
+            "customAnswer": null
+        },
+        {
+            "answerId": 476,
+            "questionId": 30,
+            "customAnswer": null
+        }
+    ]
+}
