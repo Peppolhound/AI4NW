@@ -67,53 +67,46 @@
                 <div class="col-lg-12">
                     <div id="wizard_container">
                         <div class="wizard-inner">
-                            <div class="progress test-progress" role="progressbar" aria-label="progressbar-test" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar" style="width: 60%"></div>
+                            <div class="progress test-progress" role="progressbar" aria-label="progressbar-test" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: 100%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_1" class="step-form" method="post" action="{% url 'test_specifica' %}" novalidate>
+                            <form id="wrapped_2" class="step-form" method="post" action="{% url 'result' %}" novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
-                                        <h3 class="main_question mb-0" id="question_1"><i class="mdi mdi-arrow-right"></i>Consumi pasti durante il turno notturno?</h3>
-                                        <label class="label-comment">Se possibile, seleziona una sola opzione.</label> 
+                                        <h3 class="main_question" id="question_2"><i class="mdi mdi-arrow-right"></i>Patologie cardiovascolari già note?</h3>
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                    <label class="container_check">Sì, piccoli snack
-                                                        <input type="checkbox" name="question_1[]" value="2">
+                                                    <label class="container_radio">No
+                                                        <input type="radio" name="question_2[]" value="4">
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="container_check">Sì, pasto normale
-                                                        <input type="checkbox" name="question_1[]" value="3" >
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="container_check">Occasionalmente
-                                                        <input type="checkbox" name="question_1[]" value="1">
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="container_check">Mai
-                                                        <input type="checkbox" name="question_1[]" value="0">
+                                                    <label class="container_radio">Sì
+                                                        <input type="radio" name="question_2[]" value="5" >
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-group pt-2" id="custom-answer-wrapper" style="display:none;">
+                                            <label for="customAnswer">Quale patologia?</label>
+                                            <textarea class="form-control" name="customAnswer" id="customAnswer" rows="3" placeholder="Scrivi qui..."></textarea>
+                                        </div>
+
                                     </fieldset>
                                 </div>
+
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
-                                        <button type="button" name="backward" class="backward flex-fill d-none" data-prev-url="{% url 'test_singola' %}">Prev</button>
-                                        <button type="submit" name="forward" class="forward flex-fill">Next</button>
+                                        <button type="button" name="backward" class="backward flex-fill" data-prev-url="{% url 'test_checkbox' %}">Prev</button>
+                                        <button type="submit" name="process" class="submit flex-fill">Submit</button>
                                     </div>
                                 </div>
-
                             </form>
                             <!-- FORM END -->
                         </div>
