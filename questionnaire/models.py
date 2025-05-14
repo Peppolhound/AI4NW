@@ -14,6 +14,7 @@ class Group(models.Model):
     groupId = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=100)
     questionnaireId = models.CharField(max_length=100)
+    order = models.IntegerField(default=0)  # Order of the group in the questionnaire
 
     def __str__(self):
         return self.description

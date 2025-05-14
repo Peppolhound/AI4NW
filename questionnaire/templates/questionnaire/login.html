@@ -48,7 +48,25 @@
     </nav>
 <!-- Navbar END -->
 
-    
+    <div class="container mt-5">
+        <h2 class="text-center">Login Form</h2>
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="first_name" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Inserisci il tuo nome" required>
+            </div>
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Cognome</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Inserisci il tuo cognome" required>
+            </div>
+            <div class="mb-3">
+                <label for="birth_date" class="form-label">Data di Nascita</label>
+                <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Invia</button>
+        </form>
+    </div>
     <!-- JAVASCRIPTS -->
 
     <!--  jQuery -->
