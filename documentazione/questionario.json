@@ -1,0 +1,877 @@
+{
+    "questionnaireId": 14,
+    "questionnaireName": "AI 4 Nightworkers",
+    "groups": [
+        {
+            "groupId": 21,
+            "description": "Anamnesi",
+            "questionnaireId": 14,
+            "questions": [
+                {
+                    "questionId": 226,
+                    "groupId": 21,
+                    "typeQuestion": {
+                        "idTypeQuestion": 1,
+                        "description": "Checkbox"
+                    },
+                    "description": "Sesso",
+                    "answers": [
+                        {
+                            "answerId": 821,
+                            "questionId": 226,
+                            "description": "Maschio",
+                            "order": 1
+                        },
+                        {
+                            "answerId": 822,
+                            "questionId": 226,
+                            "description": "Femmina",
+                            "order": 2
+                        }
+                    ],
+                    "order": 1
+                },
+                {
+                    "questionId": 227,
+                    "groupId": 21,
+                    "typeQuestion": {
+                        "idTypeQuestion": 2,
+                        "description": "Testo"
+                    },
+                    "description": "Età",
+                    "answers": [],
+                    "order": 2
+                },
+                {
+                    "questionId": 228,
+                    "groupId": 21,
+                    "typeQuestion": {
+                        "idTypeQuestion": 2,
+                        "description": "Testo"
+                    },
+                    "description": "Peso (kg)",
+                    "answers": [],
+                    "order": 3
+                },
+                {
+                    "questionId": 229,
+                    "groupId": 21,
+                    "typeQuestion": {
+                        "idTypeQuestion": 2,
+                        "description": "Testo"
+                    },
+                    "description": "Altezza (m)",
+                    "answers": [],
+                    "order": 4
+                },
+                {
+                    "questionId": 230,
+                    "groupId": 21,
+                    "typeQuestion": {
+                        "idTypeQuestion": 2,
+                        "description": "Testo"
+                    },
+                    "description": "Cironferenza Addominale (cm)",
+                    "answers": [],
+                    "order": 5
+                },
+                {
+                    "questionId": 231,
+                    "groupId": 21,
+                    "typeQuestion": {
+                        "idTypeQuestion": 1,
+                        "description": "Checkbox"
+                    },
+                    "description": "Fumo",
+                    "answers": [
+                        {
+                            "answerId": 823,
+                            "questionId": 231,
+                            "description": "Si",
+                            "order": 1
+                        },
+                        {
+                            "answerId": 824,
+                            "questionId": 231,
+                            "description": "No",
+                            "order": 2
+                        }
+                    ],
+                    "order": 6
+                }
+            ],
+            "questionGroups": [
+                {
+                    "groupId": 22,
+                    "description": "Turni di Lavoro",
+                    "questionnaireId": 14,
+                    "groupParentId": 21,
+                    "questions": [
+                        {
+                            "questionId": 232,
+                            "groupId": 22,
+                            "typeQuestion": {
+                                "idTypeQuestion": 1,
+                                "description": "Checkbox"
+                            },
+                            "description": "Presti servizio in turni notturni?",
+                            "answers": [
+                                {
+                                    "answerId": 825,
+                                    "questionId": 232,
+                                    "description": "Si",
+                                    "order": 1
+                                },
+                                {
+                                    "answerId": 826,
+                                    "questionId": 232,
+                                    "description": "No",
+                                    "order": 2
+                                }
+                            ],
+                            "order": 1
+                        },
+                        {
+                            "questionId": 233,
+                            "groupId": 22,
+                            "typeQuestion": {
+                                "idTypeQuestion": 1,
+                                "description": "Checkbox"
+                            },
+                            "description": "Quanti turni notturni effettui in un mese? ",
+                            "answers": [
+                                {
+                                    "answerId": 827,
+                                    "questionId": 233,
+                                    "description": "0",
+                                    "order": 1
+                                },
+                                {
+                                    "answerId": 828,
+                                    "questionId": 233,
+                                    "description": "1",
+                                    "order": 2
+                                },
+                                {
+                                    "answerId": 829,
+                                    "questionId": 233,
+                                    "description": "2",
+                                    "order": 3
+                                },
+                                {
+                                    "answerId": 830,
+                                    "questionId": 233,
+                                    "description": "3",
+                                    "order": 4
+                                },
+                                {
+                                    "answerId": 831,
+                                    "questionId": 233,
+                                    "description": "4",
+                                    "order": 5
+                                },
+                                {
+                                    "answerId": 832,
+                                    "questionId": 233,
+                                    "description": "5",
+                                    "order": 6
+                                },
+                                {
+                                    "answerId": 833,
+                                    "questionId": 233,
+                                    "description": "6",
+                                    "order": 7
+                                }
+                            ],
+                            "order": 2
+                        },
+                        {
+                            "questionId": 234,
+                            "groupId": 22,
+                            "typeQuestion": {
+                                "idTypeQuestion": 1,
+                                "description": "Checkbox"
+                            },
+                            "description": "Consumi pasti durante il turno notturno? ",
+                            "answers": [
+                                {
+                                    "answerId": 834,
+                                    "questionId": 234,
+                                    "description": "Si, piccoli snack",
+                                    "order": 1
+                                },
+                                {
+                                    "answerId": 835,
+                                    "questionId": 234,
+                                    "description": "Si, pasto normale",
+                                    "order": 2
+                                },
+                                {
+                                    "answerId": 836,
+                                    "questionId": 234,
+                                    "description": "Occasionalmente",
+                                    "order": 3
+                                },
+                                {
+                                    "answerId": 837,
+                                    "questionId": 234,
+                                    "description": "Mai",
+                                    "order": 4
+                                }
+                            ],
+                            "order": 3
+                        },
+                        {
+                            "questionId": 235,
+                            "groupId": 22,
+                            "typeQuestion": {
+                                "idTypeQuestion": 1,
+                                "description": "Checkbox"
+                            },
+                            "description": "Durante i turni sei esposto",
+                            "answers": [
+                                {
+                                    "answerId": 838,
+                                    "questionId": 235,
+                                    "description": "Alla luce naturale",
+                                    "order": 1
+                                },
+                                {
+                                    "answerId": 839,
+                                    "questionId": 235,
+                                    "description": "Alla luce artificiale (stanza illuminata a giorno a prescindere dall’orario)",
+                                    "order": 2
+                                }
+                            ],
+                            "order": 4
+                        }
+                    ],
+                    "questionGroups": [
+                        {
+                            "groupId": 23,
+                            "description": "Terapie",
+                            "questionnaireId": 14,
+                            "groupParentId": 22,
+                            "questions": [
+                                {
+                                    "questionId": 236,
+                                    "groupId": 23,
+                                    "typeQuestion": {
+                                        "idTypeQuestion": 1,
+                                        "description": "Checkbox"
+                                    },
+                                    "description": "Terapia per Diabete:",
+                                    "answers": [
+                                        {
+                                            "answerId": 840,
+                                            "questionId": 236,
+                                            "description": "Si",
+                                            "order": 1
+                                        },
+                                        {
+                                            "answerId": 841,
+                                            "questionId": 236,
+                                            "description": "No",
+                                            "order": 2
+                                        }
+                                    ],
+                                    "order": 1
+                                },
+                                {
+                                    "questionId": 237,
+                                    "groupId": 23,
+                                    "typeQuestion": {
+                                        "idTypeQuestion": 1,
+                                        "description": "Checkbox"
+                                    },
+                                    "description": "Terapia per Ipertensione Arteriosa",
+                                    "answers": [
+                                        {
+                                            "answerId": 842,
+                                            "questionId": 237,
+                                            "description": "Si",
+                                            "order": 1
+                                        },
+                                        {
+                                            "answerId": 843,
+                                            "questionId": 237,
+                                            "description": "No",
+                                            "order": 2
+                                        }
+                                    ],
+                                    "order": 2
+                                },
+                                {
+                                    "questionId": 238,
+                                    "groupId": 23,
+                                    "typeQuestion": {
+                                        "idTypeQuestion": 1,
+                                        "description": "Checkbox"
+                                    },
+                                    "description": "Terapia per colesterolo alto ",
+                                    "answers": [
+                                        {
+                                            "answerId": 844,
+                                            "questionId": 238,
+                                            "description": "Si",
+                                            "order": 1
+                                        },
+                                        {
+                                            "answerId": 845,
+                                            "questionId": 238,
+                                            "description": "No",
+                                            "order": 2
+                                        }
+                                    ],
+                                    "order": 3
+                                },
+                                {
+                                    "questionId": 239,
+                                    "groupId": 23,
+                                    "typeQuestion": {
+                                        "idTypeQuestion": 2,
+                                        "description": "Testo"
+                                    },
+                                    "description": "Ultimo valore di Pressione Arteriosa Massima misurata (mmHg)",
+                                    "answers": [
+                                        {
+                                            "answerId": 846,
+                                            "questionId": 239,
+                                            "description": "Si",
+                                            "order": 1
+                                        },
+                                        {
+                                            "answerId": 847,
+                                            "questionId": 239,
+                                            "description": "No",
+                                            "order": 2
+                                        }
+                                    ],
+                                    "order": 4
+                                },
+                                {
+                                    "questionId": 240,
+                                    "groupId": 23,
+                                    "typeQuestion": {
+                                        "idTypeQuestion": 2,
+                                        "description": "Testo"
+                                    },
+                                    "description": "Ultimo valore di Pressione Arteriosa Minima misurata (mmHg)",
+                                    "answers": [],
+                                    "order": 5
+                                },
+                                {
+                                    "questionId": 241,
+                                    "groupId": 23,
+                                    "typeQuestion": {
+                                        "idTypeQuestion": 2,
+                                        "description": "Testo"
+                                    },
+                                    "description": "Patologie cardiovascolari già note?",
+                                    "answers": [],
+                                    "order": 6
+                                }
+                            ],
+                            "questionGroups": [
+                                {
+                                    "groupId": 24,
+                                    "description": "Esami di Laboratorio",
+                                    "questionnaireId": 14,
+                                    "groupParentId": 23,
+                                    "questions": [
+                                        {
+                                            "questionId": 243,
+                                            "groupId": 24,
+                                            "typeQuestion": {
+                                                "idTypeQuestion": 4,
+                                                "description": "Media"
+                                            },
+                                            "description": "Carica una foto dei tuoi ultimi esami ematochimici che comprendano: Emocromo, Glicemia, Emoglobina glicata, Colesterolo Totale, Colesterolo HDL, Colesterolo LDL, Trigliceridi, AST (GOT), ALT (GPT), GGT",
+                                            "answers": [],
+                                            "order": 1
+                                        }
+                                    ],
+                                    "questionGroups": [
+                                        {
+                                            "groupId": 25,
+                                            "description": "CMDS",
+                                            "questionnaireId": 14,
+                                            "groupParentId": 24,
+                                            "questions": [
+                                                {
+                                                    "questionId": 244,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quanta frutta mangi al giorno? (description: ‘1 porzione = 150gr')\n",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 848,
+                                                            "questionId": 244,
+                                                            "description": "Meno di 1 porzione al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 849,
+                                                            "questionId": 244,
+                                                            "description": "Da 1 a 1.5 porzioni al giorno",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 850,
+                                                            "questionId": 244,
+                                                            "description": "Più di 1.5 porzioni al giorno",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 1
+                                                },
+                                                {
+                                                    "questionId": 245,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quanta verdura (cotta o cruda) mangi al giorno? (description: ‘1 porzione = 150gr')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 851,
+                                                            "questionId": 245,
+                                                            "description": "Meno di 1 porzione al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 852,
+                                                            "questionId": 245,
+                                                            "description": "Da 1 a 2 porzioni al giorno",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 853,
+                                                            "questionId": 245,
+                                                            "description": "Più di 2 porzioni al giorno",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 2
+                                                },
+                                                {
+                                                    "questionId": 246,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quante volte alla settimana mangi legumi? (description: ‘1 porzione = 70gr')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 854,
+                                                            "questionId": 246,
+                                                            "description": "Meno di 1 porzione al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 855,
+                                                            "questionId": 246,
+                                                            "description": "Da 1 a 2 porzioni al giorno",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 856,
+                                                            "questionId": 246,
+                                                            "description": "Più di 2 porzioni al giorno",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 3
+                                                },
+                                                {
+                                                    "questionId": 248,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quanti carboidrati (esclusi i cereali) mangi al giorno? (description: ‘1 porzione = 130gr')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 857,
+                                                            "questionId": 248,
+                                                            "description": "Meno di 1 porzione al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 858,
+                                                            "questionId": 248,
+                                                            "description": "Da 1 a 1.5 porzioni al giorno",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 859,
+                                                            "questionId": 248,
+                                                            "description": "Più di 2 porzioni al giorno",
+                                                            "order": 3
+                                                        },
+                                                        {
+                                                            "answerId": 860,
+                                                            "questionId": 248,
+                                                            "description": "Più di 1.5 porzioni al giorno",
+                                                            "order": 4
+                                                        }
+                                                    ],
+                                                    "order": 4
+                                                },
+                                                {
+                                                    "questionId": 249,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "In quale momento della giornata assumi i carboidrati?",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 861,
+                                                            "questionId": 249,
+                                                            "description": "Entro le 15 ",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 862,
+                                                            "questionId": 249,
+                                                            "description": "Entro le 19",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 863,
+                                                            "questionId": 249,
+                                                            "description": "Dopo le 19",
+                                                            "order": 3
+                                                        },
+                                                        {
+                                                            "answerId": 864,
+                                                            "questionId": 249,
+                                                            "description": "Pranzo + cena",
+                                                            "order": 4
+                                                        }
+                                                    ],
+                                                    "order": 5
+                                                },
+                                                {
+                                                    "questionId": 250,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quanti cereali mangi al giorno? (description: ‘1 porzione = 130gr')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 865,
+                                                            "questionId": 250,
+                                                            "description": "Meno 1 porzione al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 866,
+                                                            "questionId": 250,
+                                                            "description": "Da 1 a 1.5 porzioni al giorno",
+                                                            "order": 2
+                                                        }
+                                                    ],
+                                                    "order": 6
+                                                },
+                                                {
+                                                    "questionId": 251,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quante volte alla settimana mangi pesce (esclusi i crostacei)? (description: ‘1 porzione = 100gr')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 867,
+                                                            "questionId": 251,
+                                                            "description": "Meno di 1 porzione alla settimana",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 868,
+                                                            "questionId": 251,
+                                                            "description": "Da 1 a 2 porzioni alla settimana",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 869,
+                                                            "questionId": 251,
+                                                            "description": "Più 2 porzioni alla settimana",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 7
+                                                },
+                                                {
+                                                    "questionId": 252,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quanta carne e derivati mangi al giorno? (description: ‘1 porzione = 80gr')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 870,
+                                                            "questionId": 252,
+                                                            "description": "Meno di 1 porzione al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 871,
+                                                            "questionId": 252,
+                                                            "description": "Da 1 a 1.5 porzioni al giorno",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 872,
+                                                            "questionId": 252,
+                                                            "description": "Più di 1.5 porzioni al giorno",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 8
+                                                },
+                                                {
+                                                    "questionId": 253,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quanto latte e derivati mangi al giorno? (description: ‘1 porzione = 180gr')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 873,
+                                                            "questionId": 253,
+                                                            "description": "Meno di 1 porzione al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 874,
+                                                            "questionId": 253,
+                                                            "description": "Da 1 a 1.5 porzioni al giorno",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 875,
+                                                            "questionId": 253,
+                                                            "description": "Più di 1.5 porzioni al giorno",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 9
+                                                },
+                                                {
+                                                    "questionId": 254,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Utilizzi l'olio extravergine di oliva? ",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 876,
+                                                            "questionId": 254,
+                                                            "description": "Utilizzo occasionale",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 877,
+                                                            "questionId": 254,
+                                                            "description": "Utilizzo frequente",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 878,
+                                                            "questionId": 254,
+                                                            "description": "Utilizzo regolare",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 10
+                                                },
+                                                {
+                                                    "questionId": 255,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Utilizzi burro, margarina o strutto?",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 879,
+                                                            "questionId": 255,
+                                                            "description": "Utilizzo occasionale",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 880,
+                                                            "questionId": 255,
+                                                            "description": "Utilizzo frequente",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 881,
+                                                            "questionId": 255,
+                                                            "description": "Utilizzo regolare",
+                                                            "order": 3
+                                                        }
+                                                    ],
+                                                    "order": 11
+                                                },
+                                                {
+                                                    "questionId": 256,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Quante unità alcoliche consumi al giorno? (description: '1 UA = 1 bicchiere di vino o 12 gr di alcool')",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 882,
+                                                            "questionId": 256,
+                                                            "description": "Meno di 1 Unità alcolica al giorno",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 883,
+                                                            "questionId": 256,
+                                                            "description": "Da 1 a 2 Unità alcoliche al giorno",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 884,
+                                                            "questionId": 256,
+                                                            "description": "Da 2 a 3 Unità alcoliche al giorno ",
+                                                            "order": 3
+                                                        },
+                                                        {
+                                                            "answerId": 885,
+                                                            "questionId": 256,
+                                                            "description": "Più di 3 Unità alcoliche al giorno",
+                                                            "order": 4
+                                                        }
+                                                    ],
+                                                    "order": 12
+                                                },
+                                                {
+                                                    "questionId": 257,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 1,
+                                                        "description": "Checkbox"
+                                                    },
+                                                    "description": "Svolgi attività fisica? (description: '30 min al giorno per 5 giorni alla settimana')\n",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 886,
+                                                            "questionId": 257,
+                                                            "description": "Rara",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 887,
+                                                            "questionId": 257,
+                                                            "description": "Occasionale",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 888,
+                                                            "questionId": 257,
+                                                            "description": "Frequente",
+                                                            "order": 3
+                                                        },
+                                                        {
+                                                            "answerId": 889,
+                                                            "questionId": 257,
+                                                            "description": "Regolare",
+                                                            "order": 4
+                                                        }
+                                                    ],
+                                                    "order": 13
+                                                },
+                                                {
+                                                    "questionId": 259,
+                                                    "groupId": 25,
+                                                    "typeQuestion": {
+                                                        "idTypeQuestion": 3,
+                                                        "description": "Checkbox Multipla"
+                                                    },
+                                                    "description": "Che tipo di attività fisica svolgi? (possibili più risposte)",
+                                                    "answers": [
+                                                        {
+                                                            "answerId": 890,
+                                                            "questionId": 259,
+                                                            "description": "Nessuna",
+                                                            "order": 1
+                                                        },
+                                                        {
+                                                            "answerId": 891,
+                                                            "questionId": 259,
+                                                            "description": "Pesistica/Attrezzi",
+                                                            "order": 2
+                                                        },
+                                                        {
+                                                            "answerId": 892,
+                                                            "questionId": 259,
+                                                            "description": "Corsa",
+                                                            "order": 3
+                                                        },
+                                                        {
+                                                            "answerId": 893,
+                                                            "questionId": 259,
+                                                            "description": "Camminata Veloce",
+                                                            "order": 4
+                                                        },
+                                                        {
+                                                            "answerId": 894,
+                                                            "questionId": 259,
+                                                            "description": "Esercizi A Corpo Libero",
+                                                            "order": 5
+                                                        },
+                                                        {
+                                                            "answerId": 895,
+                                                            "questionId": 259,
+                                                            "description": "Crossfit",
+                                                            "order": 6
+                                                        },
+                                                        {
+                                                            "answerId": 896,
+                                                            "questionId": 259,
+                                                            "description": "Cardio",
+                                                            "order": 7
+                                                        }
+                                                    ],
+                                                    "order": 14
+                                                }
+                                            ],
+                                            "questionGroups": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "order": 1
+        }
+    ],
+    "dateInsert": "2025-05-05T10:24:26.000+00:00"
+}

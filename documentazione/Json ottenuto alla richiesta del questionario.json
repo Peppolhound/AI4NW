@@ -1,0 +1,151 @@
+{
+    "questionnaireId": 1,
+    "questionnaireName": "ADL Test",
+    "groups": [
+        {
+            "groupId": 1,
+            "description": "Gruppo 1",
+            "questionnaireId": 1,
+            "questions": [
+                {
+                    "questionId": 1,
+                    "groupId": 1,
+                    "typeQuestion": {
+                        "idTypeQuestion": 3,
+                        "description": "Checkbox Multipla"
+                    },
+                    "description": "Fare Il Bagno",
+                    "answers": [
+                        {
+                            "answerId": 2,
+                            "questionId": 1,
+                            "description": "Riceve assistenza per lavare solo una parte del corpo (es. dorso)",
+                            "order": 1
+                        },
+                        {
+                            "answerId": 1,
+                            "questionId": 1,
+                            "description": "Non riceve assistenza (entra ed esce dalla vasca da bagno o dalla doccia da solo)\n",
+                            "order": 2
+                        },
+                        {
+                            "answerId": 3,
+                            "questionId": 1,
+                            "description": "Riceve assistenza per lavare più di una parte del corpo",
+                            "order": 3
+                        }
+                    ],
+                    "order": 1
+                },
+                {
+                    "questionId": 2,
+                    "groupId": 1,
+                    "typeQuestion": {
+                        "idTypeQuestion": 2,
+                        "description": "Testo"
+                    },
+                    "description": "Vestirsi",
+                    "answers": [
+                        {
+                            "answerId": 4,
+                            "questionId": 2,
+                            "description": "Prende i vestiti e si veste completamente senza assistenza",
+                            "order": 1
+                        },
+                        {
+                            "answerId": 5,
+                            "questionId": 2,
+                            "description": "Prende i vestiti e si veste completamente senza assistenza eccetto che per allacciarsi le scarpe",
+                            "order": 2
+                        },
+                        {
+                            "answerId": 6,
+                            "questionId": 2,
+                            "description": "Riceve assistenza nel prendere i vestiti o nel vestirsi, o rimane in parte o completamente svestito",
+                            "order": 3
+                        }
+                    ],
+                    "order": 2
+                }
+            ],
+            "questionGroups": [
+                {
+                    "groupId": 2,
+                    "description": "Gruppo 2",
+                    "questionnaireId": 1,
+                    "groupParentId": 1,
+                    "questions": [
+                        {
+                            "questionId": 3,
+                            "groupId": 2,
+                            "typeQuestion": {
+                                "idTypeQuestion": 1,
+                                "description": "Checkbox"
+                            },
+                            "description": "Uscire",
+                            "answers": [],
+                            "order": 5
+                        }
+                    ],
+                    "questionGroups": [],
+                    "order": 1
+                },
+                {
+                    "groupId": 3,
+                    "description": "Gruppo 3",
+                    "questionnaireId": 3,
+                    "groupParentId": 1,
+                    "questions": [
+                        {
+                            "questionId": 80,
+                            "groupId": 3,
+                            "typeQuestion": {
+                                "idTypeQuestion": 1,
+                                "description": "Checkbox"
+                            },
+                            "description": "fare il bagno",
+                            "answers": [
+                                {
+                                    "answerId": 477,
+                                    "questionId": 80,
+                                    "description": "Answer di gruppo 4",
+                                    "order": 1
+                                }
+                            ],
+                            "order": 1
+                        },
+                        {
+                            "questionId": 30,
+                            "groupId": 3,
+                            "typeQuestion": {
+                                "idTypeQuestion": 1,
+                                "description": "Checkbox"
+                            },
+                            "description": "Mangiare",
+                            "answers": [
+                                {
+                                    "answerId": 478,
+                                    "questionId": 30,
+                                    "description": "Answer vera e sola ",
+                                    "order": 1
+                                },
+                                {
+                                    "answerId": 476,
+                                    "questionId": 30,
+                                    "description": "Answer in sottogruppo",
+                                    "order": 2
+                                }
+                            ],
+                            "order": 2
+                        }
+                    ],
+                    "questionGroups": [],
+                    "order": 1
+                }
+            ],
+            "order": 1
+        }
+    ],
+    "dateInsert": 1719218434000,
+    "evaluatorClass": "it.ageingtech.bo.questionnaire.evaluator.WeightsSumEvaluator"
+}

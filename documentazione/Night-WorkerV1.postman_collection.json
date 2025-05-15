@@ -1,0 +1,255 @@
+{
+	"info": {
+		"_postman_id": "0cdaaaa4-ebca-45fe-9a5b-5b3f2216b35f",
+		"name": "Night-Worker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25723570",
+		"_collection_link": "https://ageingtech.postman.co/workspace/My-Workspace~3bbf0768-2363-45ec-8a2b-daeb1f3ae27b/collection/26772478-0cdaaaa4-ebca-45fe-9a5b-5b3f2216b35f?action=share&source=collection_link&creator=25723570"
+	},
+	"item": [
+		{
+			"name": "API NW",
+			"item": [
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Auth - App-Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.json();\r",
+											"pm.environment.set(\"token\", data.tokenId);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin-nw\",\r\n    \"password\": \"6jS3Fohz@C\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dev}}/night-worker/auth/app-login",
+									"host": [
+										"{{dev}}"
+									],
+									"path": [
+										"night-worker",
+										"auth",
+										"app-login"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "luca final",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"luca.final@dhc.it\",\r\n    \"password\": \"password\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{local}}/auth/login",
+											"host": [
+												"{{local}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"_postman_previewlanguage": "Text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "andrea",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"angelino.mobile@gmail.con\",\r\n    \"password\": \"Angelino1!\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{local}}/auth/login",
+											"host": [
+												"{{local}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"_postman_previewlanguage": "Text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Auth - User-Login",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.json();\r",
+											"pm.environment.set(\"token\", data.tokenId);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "tokenId",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0ZGI5OTlkZS0xZTc5LTRhNDktYjk5OS1kZTFlNzlmYTQ5ZDgiLCJzdWIiOiJhZG1pbi1udyIsImlhdCI6MTc0NjYwMjc5NSwiaXNzIjoiQXBhY2hlU3luY29wZSIsImV4cCI6MTc0NjYwOTk5NiwibmJmIjoxNzQ2NjAyNzk1fQ.PFr1gV4UaY2iB5WMy6NP2FMm-Je3jfw__ZX1QCppzR-FZO3xsH6BSyZpYcc5oGV5aTcEUyyJnV5Utm8RyZttQg",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dev}}/night-worker/auth/user-login?userCode=codice",
+									"host": [
+										"{{dev}}"
+									],
+									"path": [
+										"night-worker",
+										"auth",
+										"user-login"
+									],
+									"query": [
+										{
+											"key": "userCode",
+											"value": "codice"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"item": [
+						{
+							"name": "Auth - Logout",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "tokenId",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{dev}}/night-worker/auth/logout",
+									"host": [
+										"{{dev}}"
+									],
+									"path": [
+										"night-worker",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Questionnaire",
+					"item": [
+						{
+							"name": "get Questionnaire",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "tokenId",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJkNzdhNjdlMy1lNjlkLTRmMmUtYmE2Ny1lM2U2OWQ1ZjJlMTEiLCJzdWIiOiJhZG1pbi1udyIsImlhdCI6MTc0NjYwMzc4NywiaXNzIjoiQXBhY2hlU3luY29wZSIsImV4cCI6MTc0NjYxMDk4NywibmJmIjoxNzQ2NjAzNzg3fQ.VxM86YGgw6Pw5NcZ7bdDfynLABAR0bIRVzg77Ng4BkNLt3UrztF_xlv4xkYom46jUj987hZh0qJlSQPU7sHcAQ",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{dev}}/night-worker/questionnaire/NW",
+									"host": [
+										"{{dev}}"
+									],
+									"path": [
+										"night-worker",
+										"questionnaire",
+										"NW"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
