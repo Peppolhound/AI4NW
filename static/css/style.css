@@ -1068,10 +1068,182 @@ button.submit:hover{
 
 
 /* =========================
-   12. Text
+   12. Login Page
 ========================= */
+.body-lgn{
+    height: 100%;
+}
+
+.login-body {
+    background-color: var(--secondary-color);
+    display: flex;
+    height: 100vh;
+}
+
+.login-body.without-side .img-holder {
+    z-index: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.img-holder {
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    left: 0;
+    min-height: 700px;
+    height: 100%;
+    padding: 60px;
+    text-align: center;
+}
+
+.img-holder .bg {
+    position: absolute;
+    opacity: 0.23;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    background-image: none;
+}
+
+.img-holder .info-holder {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.form-body.without-side .img-holder .info-holder img {
+    display: inline-block;
+    max-width: 800px;
+    animation: zoom-in-img 50s linear 0s infinite;
+    transform-origin: center center;
+    transform: scale(1);
+    width: 100%;
+}
+
+img, svg {
+    vertical-align: middle;
+}
+
+.login-body.without-side .form-holder {
+    margin-left: 0;
+    width: 100%;
+}
+
+.login-body.without-side .form-holder .form-content {
+    background-color: transparent;
+}
+
+.login-body.without-side .form-content {
+    padding: 125px 60px 60px;
+    perspective: 800px;
+}
+
+.form-holder .form-content {
+    position: relative;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    
+}
+
+.login-body.without-side .form-content .form-items {
+    padding: 35px 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.16);
+    border: 0;
+    margin-top: 15rem;
+}
+
+.form-content .form-items {
+    max-width: 600px;
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.form-content .form-items h3{
+    margin-bottom: 24px;
+}
+
+.form-content .form-items p{
+    margin-bottom: 4px;
+}
+
+.login-body.without-side .form-content .form-items form {
+    margin-bottom: 0;
+}
+
+.login-body.without-side .form-content input, .login-body.without-side .form-content .dropdown-toggle.btn-default {
+    border: 0;
+    background-color: #f1f1f1;
+    color: #8D8D8D;
+    padding: 9px 20px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+.form-content input, .form-content .dropdown-toggle.btn-default {
+    width: 100%;
+    text-align: left;
+    outline: 0;
+    font-size: 15px;
+    font-weight: 300;
+    transition: all 0.3s ease;
+    margin-bottom: 14px;
+    height: inherit;
+}
+
+.form-control {
+    display: block;
+    appearance: none;
+    background-clip: padding-box;
+}
+
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font-family: inherit;
+}
+
+.login-body.without-side .form-content .form-button {
+    margin-bottom: 0;
+}
+
+.form-content .form-button {
+    margin-top: 0.9rem;
+}
+
+.login-body.without-side .form-content .form-button .ibtn {
+    background-color: #29A4FF;
+    color: #fff;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.16);
+    border: 0;
+    border-radius: 6px;
+    padding: 9px 27px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 10px;
+    outline: none;
+}
+
+.ibtn:hover, .ibtn:focus, .ibtn:target {
+    background-color: #0b71bf !important;
+}
 
 
+/* =========================
+   13. Text
+========================= */
 
 /************************
     RESPONSIVE
@@ -1180,6 +1352,15 @@ button.submit:hover{
 
     .result-card{
         margin-top: 0 !important;
+    }
+
+    .login-body.without-side .form-content {
+        padding: 0px 30px;
+    }
+
+    .img-holder .info-holder {
+        top: 50%;
+        left: -74%;
     }
 }
 
