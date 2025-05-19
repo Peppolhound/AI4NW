@@ -71,37 +71,23 @@
                                 <div class="progress-bar" style="width: 60%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_1" class="step-form" method="post" action="{% url 'test_specifica' %}" novalidate>
+                            <form id="wrapped_1" class="step-form" method="post"  action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question' questionId %}{% endif %}" novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
-                                        <h3 class="main_question mb-0" id="question_1"><i class="mdi mdi-arrow-right"></i>Consumi pasti durante il turno notturno?</h3>
+                                        <input type="hidden" name="userId" value="{{ userId }}">
+                                        <input type="hidden" name="userId" value="{{ questionId }}">
+                                        <h3 class="main_question mb-0" id="question_{{ q.questionId }}"><i class="mdi mdi-arrow-right"></i>{{ q.description }}</h3>
                                         <label class="label-comment">Se possibile, seleziona una sola opzione.</label> 
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                    <label class="container_check">Sì, piccoli snack
-                                                        <input type="checkbox" name="question_1[]" value="2">
+                                                     {% for answer in q.answers %}
+                                                    <label class="container_check">{{ answer.description }}
+                                                        <input type="radio" name="question_{{ q.questionId }}"  value="{{ answer.description }}">
                                                         <span class="checkmark"></span>
                                                     </label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="container_check">Sì, pasto normale
-                                                        <input type="checkbox" name="question_1[]" value="3" >
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="container_check">Occasionalmente
-                                                        <input type="checkbox" name="question_1[]" value="1">
-                                                        <span class="checkmark"></span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="container_check">Mai
-                                                        <input type="checkbox" name="question_1[]" value="0">
-                                                        <span class="checkmark"></span>
-                                                    </label>
+                                                    {% endfor %}
                                                 </div>
                                             </div>
                                         </div>
@@ -110,7 +96,9 @@
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
                                         <button type="button" name="backward" class="backward flex-fill d-none" data-prev-url="{% url 'test_singola' %}">Prev</button>
-                                        <button type="submit" name="forward" class="forward flex-fill">Next</button>
+                                        <button type="submit" name="forward" class="forward flex-fill">
+                                            {% if is_last_question %}Submit{% else %}Next{% endif %}
+                                        </button>
                                     </div>
                                 </div>
 

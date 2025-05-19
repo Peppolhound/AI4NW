@@ -71,20 +71,24 @@
                                 <div class="progress-bar" style="width: 40%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_4" class="step-form" method="post" action="{% url 'test_checkbox' %}" novalidate>
+                            <form id="wrapped_4" class="step-form" method="post" action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question' questionId %}{% endif %}" novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
-                                        <h3 class="main_question" id="question_2"><i class="mdi mdi-arrow-right"></i>Quanti turni notturni effettui in un mese?</h3>
+                                        <h3 class="main_question" id="question_2"><i class="mdi mdi-arrow-right"></i>{{ q.description }}</h3>
+                                        <input type="hidden" name="userId" value="{{ userId }}">
+                                        <input type="hidden" name="userId" value="{{ questionId }}">
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                    <label class="container_radio">0
-                                                        <input type="radio" name="question_2[]" value="4">
+                                                    {% for answer in q.answers %}
+                                                    <label class="container_check">{{ answer.description }}
+                                                        <input type="checkbox" name="question_{{ q.questionId }}"  value="{{ answer.description }}">
                                                         <span class="checkmark"></span>
                                                     </label>
+                                                    {% endfor %}
                                                 </div>
-                                                <div class="form-group">
+                                                <!-- <div class="form-group">
                                                     <label class="container_radio">1
                                                         <input type="radio" name="question_2[]" value="5" >
                                                         <span class="checkmark"></span>
@@ -119,7 +123,7 @@
                                                         <input type="radio" name="question_2[]" value="6" >
                                                         <span class="checkmark"></span>
                                                     </label>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
 
@@ -134,7 +138,9 @@
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
                                         <button type="button" name="backward" class="backward flex-fill d-none" data-prev-url="{% url 'test' %}">Prev</button>
-                                        <button type="submit" name="forward" class="forward flex-fill">Next</button>
+                                        <button type="submit" name="forward" class="forward flex-fill">
+                                            {% if is_last_question %}Submit{% else %}Next{% endif %}
+                                        </button>       
                                     </div>
                                 </div>
                             </form>

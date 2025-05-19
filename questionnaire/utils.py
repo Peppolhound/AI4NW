@@ -20,6 +20,7 @@ def parseJSON(json_string):
             groupId=group_data['groupId'],
             defaults={
                 'description':group_data['description'],
+                'order':group_data['order'],
                 'questionnaireId':questionnaire.questionnaireId,
                 }
             )
@@ -108,37 +109,55 @@ def getQuestionnaire(tokenId):
     else:
         return None
     
-def getUserCode(nome, cognome, birthdate):
-    parts = birthdate.split("-")  # Split the date into ['yyyy', 'mm', 'dd']
-    formatted_birthdate = f"{parts[2]}{parts[1]}{parts[0]}"  # Rearrange to ddmmyyyy
-    usercode = f"{nome.lower()}{cognome.lower()}{formatted_birthdate}"
+def getUserCode(usercode):
     return usercode
 
 def getNextQuestion(questionId):
     try:
         currentQuestion = Question.objects.get(questionId=questionId)
     except Question.DoesNotExist:
-        return None
-    
-    nextQuestion = Question.objects.filter(groupId=currentQuestion.groupId, order__gt=currentQuestion.order).order_by('order').first()
+        return None, None, None
+
+    print(f"➡️ Domanda corrente: {currentQuestion.description} (ID: {currentQuestion.questionId}, gruppo: {currentQuestion.groupId}, ordine: {currentQuestion.order})")
+
+    # STEP 1 - Cerca la prossima domanda nello stesso gruppo
+    nextQuestion = Question.objects.filter(
+        groupId=currentQuestion.groupId,
+        order__gt=currentQuestion.order
+    ).order_by('order').first()
 
     if nextQuestion:
-        answers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
-        return nextQuestion, answers
-    else:
-        # If no next question, return the first question of the next group
+        nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
+        nextDescription = nextQuestion.typeQuestion_description
+        return nextQuestion, nextAnswers, nextDescription
+
+    # STEP 2 - Nessuna domanda successiva in questo gruppo → cerca nel gruppo successivo
+    try:
         currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
-        nextGroup = Group.objects.filter(questionnaireId=currentGroup.questionnaireId, order__gt=currentGroup.order).order_by('order').first()
-        if nextGroup:
-            nextQuestion = Question.objects.filter(groupId=nextGroup.groupId).order_by('order').first()
-            if nextQuestion:
-                answers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
-                return nextQuestion, answers
-            else:
-                # If no questions in the next group, return None
-                return None
-        else:
-            return None
+    except Group.DoesNotExist:
+        return None, None, None
+
+
+    # STEP 3 - Cerca il gruppo successivo
+    nextGroup = Group.objects.filter(
+        questionnaireId=currentGroup.questionnaireId,
+        order__gt=currentGroup.order
+    ).order_by('order').first()
+
+    if not nextGroup:
+        return None, None, None
+
+    # STEP 4 - Trova la prima domanda del gruppo successivo
+    nextQuestion = Question.objects.filter(groupId=nextGroup.groupId).order_by('order').first()
+    if not nextQuestion:
+        return None, None, None
+
+    nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
+    nextDescription = nextQuestion.typeQuestion_description
+
+    return nextQuestion, nextAnswers, nextDescription
+
+
 
 def getPreviousQuestion(questionId):
     try:

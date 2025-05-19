@@ -44,21 +44,35 @@
 
         // === Se formId è wrapped_2, gestisci il customAnswer ===
         if (formId === 'wrapped_2') {
-            const radioButtons = form.querySelectorAll('input[type="radio"]');
+            const radioButtons = form.querySelectorAll('input[name="question_2[]"]');
             const customWrapper = form.querySelector('#custom-answer-wrapper');
             const customTextarea = form.querySelector('#customAnswer');
 
             if (radioButtons.length && customWrapper && customTextarea) {
-                if (Array.from(radioButtons).some(r => r.checked)) {
+                // Mostra solo se "Sì" è selezionato (valore "5")
+                const selected = Array.from(radioButtons).find(r => r.checked);
+                if (selected && selected.value == "5") {
                     customWrapper.style.display = 'block';
+                } else {
+                    customWrapper.style.display = 'none';
                 }
 
+                // Listener per mostrare/nascondere in base al cambio
                 radioButtons.forEach(radio => {
                     radio.addEventListener('change', () => {
-                        customWrapper.style.display = 'block';
+                        if (radio.value == "5") {
+                            customWrapper.style.display = 'block';
+                        } else {
+                            customWrapper.style.display = 'none';
+                            customTextarea.value = '';
+                            const currentData = JSON.parse(localStorage.getItem(formId) || '{}');
+                            delete currentData['customAnswer'];
+                            localStorage.setItem(formId, JSON.stringify(currentData));
+                        }
                     });
                 });
 
+                // Ripristina da localStorage
                 if (storedData['customAnswer']) {
                     customTextarea.value = storedData['customAnswer'];
                 }

@@ -71,7 +71,7 @@
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_2" class="step-form" method="post" action="{% url 'result' %}" novalidate>
+                            <form id="wrapped_2" class="step-form" method="post"  action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question' questionId %}{% endif %}"  novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
@@ -104,7 +104,9 @@
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
                                         <button type="button" name="backward" class="backward flex-fill" data-prev-url="{% url 'test_checkbox' %}">Prev</button>
-                                        <button type="submit" name="process" class="submit flex-fill">Submit</button>
+                                        <button type="submit" name="forward" class="forward flex-fill">
+                                            {% if is_last_question %}Submit{% else %}Next{% endif %}
+                                        </button>                           
                                     </div>
                                 </div>
                             </form>
