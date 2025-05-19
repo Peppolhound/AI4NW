@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- Bootstrap v5.3 core Css-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--Material Icon -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/materialdesignicons.min.css' %}" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block stylesheet %}
+    {% endblock stylesheet %}
+</head>
+
+<body>
+    <!-- Navbar START -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-custom sticky">
+        <div class="container">
+            <a class="navbar-brand logo" href="{% url 'home' %}">
+                <img src="{% static 'images/AI4NIGHTWORKERS_Logo.png' %}" alt="AI4NIGHTWORKERS Logo"
+                    width="70">AI4NIGHTWORKERS</a>
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#partner">Partners</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Test</a>
+                </li>
+            </ul>
+            <a class="btn btn-outline-success" id="login" href="{% url 'login' %}" role="button">Login</a>
+        </div>
+    </nav>
+    <!-- Navbar END -->
+    {% block content %}
+    {% endblock contet %}
+
+
+    {% block footer %}
+
+    <!-- FOOTER START -->
+    <section class="footer bg-dark">
+        <div class="container">
+            <div class="row d-flex justify-content-around">
+                <div class="col-lg-4 me-4">
+                    <div class="footer-menu">
+                        <h5 class="mb-4 text-uppercase">AI4NIGHTWORKERS</h5>
+                        <p>Sanità digitale per migliorare la qualità della vita di chi lavora quando il mondo riposa.
+                            Posto per la Fund Mention dell'Ente Finanziatore.</p>
+                        <!-- <div class="text-white">
+                            <a href="#facebook"><i class="mdi mdi-facebook facebook footer_mdi"></i></a>
+                            <a href="#twitter"><i class="mdi mdi-twitter twitter footer_mdi"></i></a>
+                            <a href="#google"><i class="mdi mdi-google google footer_mdi"></i></a>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="footer-menu">
+                        <h5 class="mb-4 text-uppercase">About</h5>
+                        <ul class="text-muted list-unstyled">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Press</a></li>
+                            <li><a href="#">Privacy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="footer-menu">
+                        <h5 class="mb-4 text-uppercase">Ente Finanziatore</h5>
+                        <p>Il progetto AI4NIGHTWORKERS è stato finanziato tramite il "Fondo per lo sviluppo delle
+                            tecnologie e delle applicazioni di intelligenza artificiale, blockchain e internet of
+                            things", istituito dalla legge di bilancio 2019 (art. 1, comma 226).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center mt-5">
+                        <p class="mb-0">2025 ©NapsLab</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FOOTER END -->
+    {% endblock footer %}
+
+    <!-- JAVASCRIPTS -->
+
+    <!--  jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--  jQuery easing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block javascript %}
+    <!-- Home + Test Javascript -->
+    <script src="{% static 'js/home.js' %}"></script>
+    <script src="{% static 'js/test.js' %}"></script>
+    {% endblock javascript %}
+</body>
+
+</html>

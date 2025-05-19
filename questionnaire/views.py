@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .utils import *
 from .models import Questionnaire
+from django.core.serializers import serialize
+import json
 
 # Create your views here.
 def home(request):
@@ -26,42 +28,46 @@ def login(request):
                 questionnaireJSON = getQuestionnaire(tokenId)
                 # print(f"Questionnaire JSON: {questionnaireJSON}")
                 if questionnaireJSON is not None:
-                    # Save the questionnaire data to the database
-                    questionnaireId = questionnaireJSON['questionnaireId']
-                    if not Questionnaire.objects.filter(questionnaireId=questionnaireId).exists():
-                        # Create a new Questionnaire object if it doesn't exist
-                        q = parseJSON(questionnaireJSON)
-                    else:
-                        q = Questionnaire.objects.get(questionnaireId=questionnaireId)
-                    # Render the questionnaire page with the userId
-                    
-                    # currentQuestion, answers = getFirstQuestion(q.questionnaireId)
-                    # if currentQuestion is not None:
-                    #     # Render the questionnaire page with the current question and answers
-                    #     context = {
-                    #         'questionnaireId': q.questionnaireId,
-                    #         'userId': userId,
-                    #         'question': currentQuestion,
-                    #         'answers': answers
-                    #     }
-                    #     if currentQuestion.typeQuestion_description == 'checkbox':
-                    #         return render(request, 'questionnaire/test_checkbox.html', context=context)
-                    #     elif currentQuestion.typeQuestion_description == 'singola':
-                    #         return render(request, 'questionnaire/test_singola.html', context=context)
-                    #     elif currentQuestion.typeQuestion_description == 'specifica':
-                    #         return render(request, 'questionnaire/test_specifica.html', context=context)
-                        
-                        # return render(request, 'questionnaire/questionnaire.html', context=context)
-                    # else:
-                    #     # Handle case where there are no questions available
-                    #     return render(request, 'questionnaire/login.html', {'userId': userId})
-                    # Handle case where questionnaire data is not available
+                    questionnaire = parseJSON(questionnaireJSON)
+                    first_group = Group.objects.filter(questionnaireId=questionnaire.questionnaireId).order_by('order').first() # SELEZIONO IL PRIMO GRUPPO con ID del questionario (in genere ANAMNESI)
+                    questions = Question.objects.filter(groupId=first_group.groupId).order_by('order')              # SELEZIONO LE DOMANDE del primo gruppo
+                    print(f"Questions: {questions}")
+                    context_questions = {}
+                    for question in questions:
+                        q = {}
+                        answers = Answer.objects.filter(questionId=question.questionId).order_by('order')  # SELEZIONO LE RISPOSTE per ogni domanda
+                        q['questionId'] = question.questionId
+                        q['description'] = question.description
+                        q['typeQuestion'] = question.typeQuestion_description
+                        q['groupId'] = question.groupId
+                        q['order'] = question.order
+                        answ = []
+                        for answer in answers:
+                            a = {}
+                            a['answerId'] = answer.answerId
+                            a['description'] = answer.description
+                            a['order'] = answer.order
+                            a['questionId'] = answer.questionId
+                            answ.append(a)
+                        q['answers'] = answ
+                        if 'Sesso' in question.description: 
+                            context_questions['sesso'] = q
+                        elif 'Età' in question.description:
+                            context_questions['eta'] = q
+                        elif 'Altezza' in question.description:
+                            context_questions['altezza'] = q
+                        elif 'Peso' in question.description:
+                            context_questions['peso'] = q
+                        elif 'Fumo' in question.description:
+                            context_questions['fumo'] = q
+                        elif 'Addominale' in question.description:
+                            context_questions['addominale'] = q
+
                 # User login failed, show an error message
-        context = {
-            'questionnaireId': questionnaireId,
-            'userId': userId,
-        }
-        return render(request, 'questionnaire/test_generale.html', context=context)
+                context_questions['questionnaireId'] = questionnaire.questionnaireId
+                context_questions['userId'] = userId
+                # print(f"Context Questions: {context_questions['fumo']}")
+        return render(request, 'questionnaire/test_generale.html', context=context_questions)
     else:
         # If it's a GET request, just render the login page
         return render(request, 'questionnaire/login.html')
