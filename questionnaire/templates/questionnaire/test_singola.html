@@ -71,7 +71,7 @@
                                 <div class="progress-bar" style="width: 40%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_4" class="step-form" method="post" action="{% url 'next_question' questionId %}" novalidate>
+                            <form id="wrapped_4" class="step-form" method="post" action="{% url 'next_question'  %}" novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
@@ -84,8 +84,10 @@
                                                 {% for answer in q.answers %}
                                                 <label class="container_check">
                                                     <input type="checkbox" 
-                                                        name="question_{{ q.questionId }}" 
-                                                        value="{{ answer.answerId }}">
+                                                        name="question_{{ q.questionId }}[]" 
+                                                        value="{{ answer.answerId }}" 
+                                                       {% if answer.answerId|stringformat:"s" in saved_answer_ids %}checked{% endif %}
+                                                        required>
                                                     {{ answer.description }}
                                                     <span class="checkmark"></span>
                                                 </label>

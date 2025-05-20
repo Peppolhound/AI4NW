@@ -71,7 +71,7 @@
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_2" class="step-form" method="post" action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question' questionId %}{% endif %}"  novalidate>
+                            <form id="wrapped_2" class="step-form" method="post" action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question' %}{% endif %}"  novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
@@ -108,6 +108,7 @@
                                                         class="form-control"
                                                         name="customAnswer_{{ q.questionId }}"
                                                         id="customAnswer_{{ q.questionId }}"
+                                                        value = "{{ saved_custom_answer }}"
                                                         rows="3"
                                                         placeholder="Scrivi qui..."
                                                         required

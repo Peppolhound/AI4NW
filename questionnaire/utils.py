@@ -118,7 +118,7 @@ def getNextQuestion(questionId):
     except Question.DoesNotExist:
         return None, None, None, True  # Nessuna domanda: consideriamo True come "ultima"
 
-    print(f"➡️ Domanda corrente: {currentQuestion.description} (ID: {currentQuestion.questionId}, gruppo: {currentQuestion.groupId}, ordine: {currentQuestion.order})")
+    # print(f"➡️ Domanda corrente: {currentQuestion.description} (ID: {currentQuestion.questionId}, gruppo: {currentQuestion.groupId}, ordine: {currentQuestion.order})")
 
     # STEP 1 - Cerca la prossima domanda nello stesso gruppo
     nextQuestion = Question.objects.filter(
@@ -182,7 +182,7 @@ def getPreviousQuestion(questionId):
     try:
         currentQuestion = Question.objects.get(questionId=questionId)
     except Question.DoesNotExist:
-        return None
+        return None, None
     
     previousQuestion = Question.objects.filter(groupId=currentQuestion.groupId, order__lt=currentQuestion.order).order_by('-order').first()
 
@@ -200,9 +200,9 @@ def getPreviousQuestion(questionId):
                 return previousQuestion, answers
             else:
                 # If no questions in the previous group, return None
-                return None
+                return None, None
         else:
-            return None
+            return None, None
         
         
 def getFirstQuestion(questionnaireId):
