@@ -116,7 +116,7 @@ def getNextQuestion(questionId):
     try:
         currentQuestion = Question.objects.get(questionId=questionId)
     except Question.DoesNotExist:
-        return None, None, None
+        return None, None, None, True  # Nessuna domanda: consideriamo True come "ultima"
 
     print(f"➡️ Domanda corrente: {currentQuestion.description} (ID: {currentQuestion.questionId}, gruppo: {currentQuestion.groupId}, ordine: {currentQuestion.order})")
 
@@ -129,14 +129,23 @@ def getNextQuestion(questionId):
     if nextQuestion:
         nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
         nextDescription = nextQuestion.typeQuestion_description
-        return nextQuestion, nextAnswers, nextDescription
+
+        # Controllo se questa domanda è l'ultima: se non c'è una domanda dopo nextQuestion
+        is_last = not Question.objects.filter(
+            groupId=nextQuestion.groupId,
+            order__gt=nextQuestion.order
+        ).exists() and not Group.objects.filter(
+            questionnaireId=Group.objects.get(groupId=nextQuestion.groupId).questionnaireId,
+            order__gt=Group.objects.get(groupId=nextQuestion.groupId).order
+        ).exists()
+
+        return nextQuestion, nextAnswers, nextDescription, is_last
 
     # STEP 2 - Nessuna domanda successiva in questo gruppo → cerca nel gruppo successivo
     try:
         currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
     except Group.DoesNotExist:
-        return None, None, None
-
+        return None, None, None, True
 
     # STEP 3 - Cerca il gruppo successivo
     nextGroup = Group.objects.filter(
@@ -145,18 +154,28 @@ def getNextQuestion(questionId):
     ).order_by('order').first()
 
     if not nextGroup:
-        return None, None, None
+        # Nessun gruppo successivo = ultima domanda
+        return None, None, None, True
 
     # STEP 4 - Trova la prima domanda del gruppo successivo
     nextQuestion = Question.objects.filter(groupId=nextGroup.groupId).order_by('order').first()
     if not nextQuestion:
-        return None, None, None
+        return None, None, None, True
 
     nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
     nextDescription = nextQuestion.typeQuestion_description
 
-    return nextQuestion, nextAnswers, nextDescription
+    # Controlla se la domanda successiva è l'ultima nel questionario
+    # Verifica se non ci sono altre domande dopo nextQuestion né gruppi dopo nextGroup
+    is_last = not Question.objects.filter(
+        groupId=nextQuestion.groupId,
+        order__gt=nextQuestion.order
+    ).exists() and not Group.objects.filter(
+        questionnaireId=nextGroup.questionnaireId,
+        order__gt=nextGroup.order
+    ).exists()
 
+    return nextQuestion, nextAnswers, nextDescription, is_last
 
 
 def getPreviousQuestion(questionId):

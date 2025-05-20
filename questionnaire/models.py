@@ -46,6 +46,7 @@ class QuestionnaireValue(models.Model):
     dateInsert = models.DateTimeField(auto_now_add=True)
 
 class AnsweredQuestions(models.Model):
-    answerId = models.CharField(max_length=100)
+    userId = models.CharField(max_length=100)
+    answerId = models.CharField(max_length=100, blank=True, null=True)
     questionId = models.CharField(max_length=100)
     customAnswer = models.CharField(max_length=2000, blank=True, null=True)  # Custom answer for open-ended questions

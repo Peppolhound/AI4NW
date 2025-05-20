@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .utils import *
-from .models import Questionnaire
+from .models import Questionnaire, Group, Question, Answer, QuestionnaireValue, AnsweredQuestions
 from django.core.serializers import serialize
 import json
 
@@ -105,14 +105,92 @@ def test_start(request):
 
 def nextQuestion(request, questionId):
     if request.method == 'POST':
-        nextQuestionObj, nextAnswer, nextDescription = getNextQuestion(questionId)
+        is_generalita = request.POST.get('is_generalita', None)
+        user_id = request.POST.get('userId')
+        question_id = request.POST.get('questionId')
+        if is_generalita == 'true':
+            age = request.POST.get('age')
+            weight = request.POST.get('weight')
+            genderId = request.POST.get('gender')
+            height = request.POST.get('height')
+            waist = request.POST.get('waist_circum')
+            smokeId = request.POST.get('smoke')
+            # Salva i dati generali dell'utente
+            AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    answerId=None,
+                    questionId=227,
+                    defaults={'customAnswer': age}
+            )
+            AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    answerId=None,
+                    questionId=228,
+                    defaults={'customAnswer': weight}
+            )
+            AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    answerId=None,
+                    questionId=229,
+                    defaults={'customAnswer': height}
+            )
+            AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    answerId=None,
+                    questionId=230,
+                    defaults={'customAnswer': waist}
+            )
+            AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    answerId=genderId,
+                    questionId=226,
+                    defaults={'customAnswer': None}
+            )
+            AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    answerId=smokeId,
+                    questionId=231,
+                    defaults={'customAnswer': None}
+            )
 
-        context_questions = {}
+
+        
+        question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
+        custom_answer = request.POST.get('customAnswer', None)
+        question_id = request.POST.get('questionId')
+        
+
+        if question_keys:
+            question_key = question_keys[0]
+            answers = request.POST.getlist(question_key)
+        else:
+            answers = []
+
+        if answers:
+            for answer in answers:
+                AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    answerId=answer,
+                    questionId=question_id,
+                    defaults={'customAnswer': custom_answer}
+                )
+        elif custom_answer:
+            AnsweredQuestions.objects.update_or_create(
+                userId=user_id,
+                answerId=None,
+                questionId=question_id,
+                defaults={'customAnswer': custom_answer}
+            )
+        else:
+            print(f"No answers or customAnswer provided for question {question_id}")
+
+        # Recupera la prossima domanda
+        nextQuestionObj, nextAnswer, nextDescription, is_last = getNextQuestion(questionId)
         if nextQuestionObj is None:
-            context_questions['is_last_question'] = True
-            return render(request, 'questionnaire/result.html')  # o una pagina di fine
+            # È l'ultima domanda, quindi renderizza la pagina risultato
+            return render(request, 'questionnaire/result.html', {'userId': user_id})
 
-        # Costruzione della domanda
+        # Altrimenti prepariamo il context per la prossima domanda
         question = nextQuestionObj
         q = {
             'questionId': question.questionId,
@@ -120,10 +198,8 @@ def nextQuestion(request, questionId):
             'typeQuestion_description': question.typeQuestion_description,
             'typeQuestion_id': question.typeQuestion_idTypeQuestion,
             'groupId': question.groupId,
-            'order': question.order
+            'order': question.order,
         }
-
-        # Costruzione delle risposte
         answ = []
         for answer in nextAnswer:
             answ.append({
@@ -131,24 +207,28 @@ def nextQuestion(request, questionId):
                 'description': answer.description,
                 'order': answer.order
             })
-
         q['answers'] = answ
-        context_questions['q'] = q
-        context_questions['questionId'] = q['questionId']
-        context_questions['is_last_question'] = getNextQuestion(q['questionId'])[0] is None  # Verifica se ci sono ancora domande
 
+        context_questions = {
+            'q': q,
+            'questionId': q['questionId'],
+            'userId': user_id,
+            'is_last_question': is_last
+        }
 
-        if nextDescription is not None:
-            questionId = request.POST.get('questionId')
-            if q['typeQuestion_id'] == "1":
-                return render (request, 'questionnaire/test_checkbox.html', context=context_questions)
-            if q['typeQuestion_id'] == "2":
-                return render (request, 'questionnaire/test_specifica.html', context=context_questions)
-            if q['typeQuestion_id'] == "3":
-                return render (request, 'questionnaire/test_singola.html', context=context_questions)
-            if q['typeQuestion_id'] == "4": #MEDIA - DA DEFINIRE
-                return render (request, 'questionnaire/test_checkbox.html', context=context_questions)
-
+        # Ritorna il template adatto in base al tipo domanda
+        if q['typeQuestion_id'] == "1":
+            return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
+        elif q['typeQuestion_id'] == "2":
+            return render(request, 'questionnaire/test_specifica.html', context=context_questions)
+        elif q['typeQuestion_id'] == "3":
+            return render(request, 'questionnaire/test_singola.html', context=context_questions)
+        elif q['typeQuestion_id'] == "4":
+            return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
         else:
-            return render(request, 'questionnaire/result.html')
+            # fallback (opzionale)
+            return render(request, 'questionnaire/result.html', {'userId': user_id})
 
+    else:
+        # Se è GET puoi gestire come preferisci o fare redirect
+        return render(request, 'questionnaire/home.html')

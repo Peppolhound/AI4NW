@@ -81,8 +81,9 @@
                                                 <label for="age">{{ eta.description }}</label>
                                                 <div class="form-group radio_input">
                                                     <input type="number" name="age" id="age" class="form-control required" required>
+                                                    <input type="hidden" name="is_generalita" value="true">
                                                     <input type="hidden" name="userId" value="{{ userId }}">
-                                                    <input type="hidden" name="userId" value="{{ questionId }}">
+                                                    <input type="hidden" name="questionId" value="{{ questionId }}">
                                                 </div>
                                                 <label for="weight" class="mobile-padding">{{ peso.description}}</label>
                                                 <div class="form-group radio_input">
@@ -94,7 +95,7 @@
                                                 <div class="form-group radio_input">
                                                     {% for answer in sesso.answers %}
                                                     <label class="container_radio mr-3">{{ answer.description }}
-                                                        <input type="radio" name="gender" value="{{ answer.description }}" class="required required" required>
+                                                        <input type="radio" name="gender" value="{{ answer.answerId  }}" class="required required" required>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                     {% endfor %}
@@ -120,7 +121,7 @@
                                             <div class="form-group radio_input">
                                                 {% for answer in fumo.answers %}
                                                 <label class="container_radio mr-3">{{ answer.description }}
-                                                    <input type="radio" name="question_{{ q.questionId }}[]"  value="{{ answer.description }}" class="required required" required>
+                                                    <input type="radio" name="smoke"  value="{{ answer.answerId }}" class="required required" required>
                                                     <span class="checkmark"></span>
                                                 </label>
                                                 <!-- <label class="container_radio">{{ fumo.answer.2.description }}
