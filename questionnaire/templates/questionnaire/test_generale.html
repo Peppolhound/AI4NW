@@ -160,8 +160,10 @@
 
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
-                                        <button type="button" name="backward" class="backward flex-fill d-none">Prev</button>
-                                        <button type="submit" name="action" value="next" class="forward flex-fill">Next</button>
+                                        <button type="submit" name="action" value="prev " class="backward flex-fill" data-prev-url="{% url 'next_question' %}">Prev</button>
+                                        <button type="submit" name="action" value="next" class="forward flex-fill">
+                                            {% if is_last_question %}Submit{% else %}Next{% endif %}
+                                        </button>    
                                     </div>
                                 </div>
                             </form>
