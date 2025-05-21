@@ -81,6 +81,7 @@ def login(request):
         # If it's a GET request, just render the login page
         return render(request, 'questionnaire/login.html')
 
+
 def test(request):
     return render(request, 'questionnaire/test_start.html')
 
@@ -97,6 +98,63 @@ def test_specifica(request):
     return render(request, 'questionnaire/test_specifica.html')
 
 def result(request):
+    if request.method == 'POST':
+        question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
+        question_id = request.POST.get('questionId')
+        custom_answer = request.POST.get(f'customAnswer_{question_id}', None)
+        user_id = request.POST.get('userId')    
+        
+
+        if question_keys:
+            question_key = question_keys[0]
+            answers = request.POST.getlist(question_key)
+        else:
+            answers = []
+
+        if answers:
+            # # Cancella risposte esistenti per userId e questionId prima di aggiornare le risposte
+            # AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).delete()
+            # print(f"Deleted existing answers for userId: {user_id}, questionId: {question_id}")
+            
+            # # Crea nuove risposte
+            # for answer in answers:
+            #     AnsweredQuestions.objects.create(
+            #         userId=user_id,
+            #         questionId=question_id,
+            #         answerId=answer,
+            #         # defaults={'customAnswer': None}
+            #     )
+            for answer in answers:
+                existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=answer).first()
+
+                if existing_answer:
+                    print(f"Answer already exists for userId: {user_id}, questionId: {question_id}, answerId: {answer}, no update needed.")
+                else:
+                    # Se la risposta non esiste (cioè, answerId diverso), aggiorna il valore
+                    AnsweredQuestions.objects.update_or_create(
+                        userId=user_id,
+                        questionId=question_id,
+                        answerId=answer,  # Usa answerId come chiave
+                        defaults={'customAnswer': None}  # Aggiorna con il nuovo valore (se necessario)
+                    )
+                
+        elif custom_answer:
+            existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=None).first()
+            # Solo risposta custom, aggiorna o crea una singola risposta
+            if existing_answer_custom:
+                # Se esiste una risposta custom, aggiorna il campo customAnswer
+                existing_answer_custom.customAnswer = custom_answer
+                existing_answer_custom.save()  # Salva l'istanza aggiornata
+            else:
+                # Se non esiste una risposta custom, creane una nuova
+                AnsweredQuestions.objects.create(
+                    userId=user_id,
+                    questionId=question_id,
+                    answerId=None,
+                    customAnswer=custom_answer
+                )
+        else:
+            pass
     if request.method == 'POST':
         question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
         question_id = request.POST.get('questionId')
@@ -206,15 +264,20 @@ def nextQuestion(request):
                     questionId=231,
                 )
 
+
+
+    
             # Gestione delle risposte alle domande successive
             question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
+            custom_answer = request.POST.get(f'customAnswer_{question_id}', None)
+            question_id = request.POST.get('questionId')
+            
             custom_answer = request.POST.get(f'customAnswer_{question_id}', None)            
             print(f"Custom Answer: {custom_answer}")
 
             if question_keys:
                 question_key = question_keys[0]
                 answers = request.POST.getlist(question_key)
-                print(f"Answers: {answers}")
             else:
                 answers = []
 
@@ -256,6 +319,7 @@ def nextQuestion(request):
 
             # Recupera la prossima domanda
             nextQuestionObj, nextAnswer, nextDescription, is_last = getNextQuestion(question_id)
+            print(f"is last: {is_last}")
             if nextQuestionObj is None:
                 # È l'ultima domanda, quindi renderizza la pagina risultato
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
@@ -288,26 +352,29 @@ def nextQuestion(request):
 
             # Ritorna il template adatto in base al tipo domanda
             if q['typeQuestion_id'] == "1":
-                return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
+                return render(request, 'questionnaire/test_singola.html', context=context_questions)
             elif q['typeQuestion_id'] == "2":
                 return render(request, 'questionnaire/test_specifica.html', context=context_questions)
             elif q['typeQuestion_id'] == "3":
-                return render(request, 'questionnaire/test_singola.html', context=context_questions)
+                return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
             elif q['typeQuestion_id'] == "4":
                 return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
             else:
                 # fallback (opzionale)
-                return render(request, 'questionnaire/result.html', {'userId': user_id})
+                return redirect('home')
+            
+
         else:
             user_id = request.POST.get('userId')
             question_id = request.POST.get('questionId')
-            previousQuestionObj, previousAnswer = getPreviousQuestion(question_id)
+            previousQuestionObj, previousAnswer, is_first = getPreviousQuestion(question_id)
             print(f"Previous Question: {previousQuestionObj}")
             print(f"Answers: {previousAnswer}")
+            print(f"Is first question in Anamnesi group: {is_first}")
 
             if previousQuestionObj is None:
                 # È l'ultima domanda, quindi renderizza la pagina risultato
-                return render(request, 'questionnaire/result.html', {'userId': user_id})
+                return redirect('home')
 
             # Prepara il context per la prossima domanda
             question = previousQuestionObj

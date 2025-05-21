@@ -182,13 +182,22 @@ def getPreviousQuestion(questionId):
     try:
         currentQuestion = Question.objects.get(questionId=questionId)
     except Question.DoesNotExist:
-        return None, None
+        return None, None, False  # Aggiungi is_first come False quando non trovi la domanda
     
     previousQuestion = Question.objects.filter(groupId=currentQuestion.groupId, order__lt=currentQuestion.order).order_by('-order').first()
 
+    # Variabile per determinare se siamo nel primo gruppo "Anamnesi"
+    is_first = False
+
     if previousQuestion:
         answers = Answer.objects.filter(questionId=previousQuestion.questionId).order_by('order')
-        return previousQuestion, answers
+        
+        # Verifica se il gruppo della domanda precedente è "Anamnesi"
+        previousGroup = Group.objects.get(groupId=previousQuestion.groupId)
+        if previousGroup.description == "Anamnesi":
+            is_first = True
+        
+        return previousQuestion, answers, is_first
     else:
         # If no previous question, return the last question of the previous group
         currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
@@ -197,12 +206,16 @@ def getPreviousQuestion(questionId):
             previousQuestion = Question.objects.filter(groupId=previousGroup.groupId).order_by('-order').first()
             if previousQuestion:
                 answers = Answer.objects.filter(questionId=previousQuestion.questionId).order_by('order')
-                return previousQuestion, answers
+                
+                # Verifica se il gruppo della domanda precedente è "Anamnesi"
+                if previousGroup.description == "Anamnesi":
+                    is_first = True
+                return previousQuestion, answers, is_first
             else:
                 # If no questions in the previous group, return None
-                return None, None
+                return None, None, is_first
         else:
-            return None, None
+            return None, None, is_first
         
         
 def getFirstQuestion(questionnaireId):
