@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from .utils import *
 from .models import Questionnaire, Group, Question, Answer, QuestionnaireValue, AnsweredQuestions
-from django.views.decorators.cache import never_cache
 from django.core.serializers import serialize
 import json
 
@@ -103,7 +102,7 @@ def result(request):
 def test_start(request):
     return render(request, 'questionnaire/test_start.html')
 
-@never_cache
+
 def nextQuestion(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -120,43 +119,33 @@ def nextQuestion(request):
                 height = request.POST.get('height')
                 waist = request.POST.get('waist_circum')
                 smokeId = request.POST.get('smoke')
-                # Salva i dati generali dell'utente
+                for question_id, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
+                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).first()
+                    if existing_answer:
+                        existing_answer.customAnswer = answer_value
+                        existing_answer.save()  # Salva la risposta aggiornata
+                        print(f"Updated customAnswer for question {question_id}")
+                    else:
+                        AnsweredQuestions.objects.create(
+                            userId=user_id,
+                            questionId=question_id,
+                            answerId=None,
+                            customAnswer=answer_value
+                        )
+                        print(f"Created new answer for question {question_id}")
+
+                # Aggiorna o crea le risposte per "Sesso" e "Fumo"
                 AnsweredQuestions.objects.update_or_create(
-                        userId=user_id,
-                        answerId=None,
-                        questionId=227,
-                        defaults={'customAnswer': age}
+                    userId=user_id,
+                    defaults= {'answerId': genderId},
+                    questionId=226,
                 )
                 AnsweredQuestions.objects.update_or_create(
-                        userId=user_id,
-                        answerId=None,
-                        questionId=228,
-                        defaults={'customAnswer': weight}
+                    userId=user_id,
+                    defaults= {'answerId': smokeId},
+                    questionId=231,
                 )
-                AnsweredQuestions.objects.update_or_create(
-                        userId=user_id,
-                        answerId=None,
-                        questionId=229,
-                        defaults={'customAnswer': height}
-                )
-                AnsweredQuestions.objects.update_or_create(
-                        userId=user_id,
-                        answerId=None,
-                        questionId=230,
-                        defaults={'customAnswer': waist}
-                )
-                AnsweredQuestions.objects.update_or_create(
-                        userId=user_id,
-                        answerId=genderId,
-                        questionId=226,
-                        defaults={'customAnswer': None}
-                )
-                AnsweredQuestions.objects.update_or_create(
-                        userId=user_id,
-                        answerId=smokeId,
-                        questionId=231,
-                        defaults={'customAnswer': None}
-                )
+
 
 
             
@@ -168,12 +157,14 @@ def nextQuestion(request):
             if question_keys:
                 question_key = question_keys[0]
                 answers = request.POST.getlist(question_key)
+                print(f"Answers: {answers}")
             else:
                 answers = []
 
             if answers:
-    # Cancella risposte esistenti per userId e questionId
+            # Cancella risposte esistenti per userId e questionId
                 AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).delete()
+                print(f"Deleted existing answers for userId: {user_id}, questionId: {question_id}")
                 
                 # Crea nuove risposte
                 for answer in answers:
@@ -181,15 +172,23 @@ def nextQuestion(request):
                         userId=user_id,
                         questionId=question_id,
                         answerId=answer,
+                    )
+                    
+            elif custom_answer:
+                existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=None).first()
+                # Solo risposta custom, aggiorna o crea una singola risposta
+                if existing_answer_custom:
+                    # Se esiste una risposta custom, aggiorna il campo customAnswer
+                    existing_answer_custom.customAnswer = custom_answer
+                    existing_answer_custom.save()  # Salva l'istanza aggiornata
+                else:
+                    # Se non esiste una risposta custom, creane una nuova
+                    AnsweredQuestions.objects.create(
+                        userId=user_id,
+                        questionId=question_id,
+                        answerId=None,
                         customAnswer=custom_answer
                     )
-            elif custom_answer:
-                # Solo risposta custom, aggiorna o crea una singola risposta
-                AnsweredQuestions.objects.update_or_create(
-                    userId=user_id,
-                    questionId=question_id,
-                    defaults={'answerId': None, 'customAnswer': custom_answer}
-                )
             else:
                 pass
 
