@@ -113,20 +113,20 @@ def nextQuestion(request):
                 smokeId = request.POST.get('smoke')
                 
                 # Salvataggio delle risposte per le domande generali (età, peso, altezza, etc.)
-                for question_id, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
+                for questionid, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
                     existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).first()
                     if existing_answer:
                         existing_answer.customAnswer = answer_value
                         existing_answer.save()
-                        print(f"Updated customAnswer for question {question_id}")
+                        print(f"Updated customAnswer for question {questionid}")
                     else:
                         AnsweredQuestions.objects.create(
                             userId=user_id,
-                            questionId=question_id,
+                            questionId=questionid,
                             answerId=None,
                             customAnswer=answer_value
                         )
-                        print(f"Created new answer for question {question_id}")
+                        print(f"Created new answer for question {questionid}")
 
                 # Aggiorna o crea risposte per "Sesso" e "Fumo"
                 AnsweredQuestions.objects.update_or_create(
