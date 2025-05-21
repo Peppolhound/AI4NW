@@ -9,10 +9,14 @@ def home(request):
     return render(request, 'questionnaire/home.html')
 
 def login(request):
+    return render(request, 'questionnaire/login.html')
+
+
+def test(request):
+    return render(request, 'questionnaire/test_start.html')
+
+def test_generale(request):
     if request.method == 'POST':
-        # nome = request.POST.get('first_name')
-        # cognome = request.POST.get('last_name')
-        # birthdate = request.POST.get('birth_date')
         username = request.POST.get('login-info')
         # print(f"Nome: {nome}, Cognome: {cognome}, Data di Nascita: {birthdate}")
         usercode = getUserCode(username)
@@ -22,71 +26,13 @@ def login(request):
             ################## DEBUG ##################
             # usercode = '9876'                       
             ################## DEBUG ##################
-            userId = loginUtente(usercode, tokenId)
-            print(f"UserId: {userId}")
-            if userId is not None:
-                # User login successful, redirect to the questionnaire page
-                questionnaireJSON = getQuestionnaire(tokenId)
-                # print(f"Questionnaire JSON: {questionnaireJSON}")
-                if questionnaireJSON is not None:
-                    questionnaire = parseJSON(questionnaireJSON)
-                    first_group = Group.objects.filter(questionnaireId=questionnaire.questionnaireId).order_by('order').first() # SELEZIONO IL PRIMO GRUPPO con ID del questionario (in genere ANAMNESI)
-                    questions = Question.objects.filter(groupId=first_group.groupId).order_by('order')              # SELEZIONO LE DOMANDE del primo gruppo
-                    print(f"Questions: {questions}")
-
-                    context_questions = {}
-                    for question in questions:
-                        q = {}
-                        answers = Answer.objects.filter(questionId=question.questionId).order_by('order')  # SELEZIONO LE RISPOSTE per ogni domanda
-                        q['questionId'] = question.questionId
-                        q['description'] = question.description
-                        q['typeQuestion'] = question.typeQuestion_description
-                        q['groupId'] = question.groupId
-                        q['order'] = question.order
-                        answ = []
-                        for answer in answers:
-                            a = {}
-                            a['answerId'] = answer.answerId
-                            a['description'] = answer.description
-                            a['order'] = answer.order
-                            a['questionId'] = answer.questionId
-                            answ.append(a)
-                        q['answers'] = answ
-
-                        if 'Sesso' in question.description: 
-                            context_questions['sesso'] = q
-                            context_questions['questionId'] = q['questionId'] 
-                        elif 'Età' in question.description:
-                            context_questions['eta'] = q
-                            context_questions['questionId'] = q['questionId'] 
-                        elif 'Altezza' in question.description:
-                            context_questions['altezza'] = q
-                            context_questions['questionId'] = q['questionId'] 
-                        elif 'Peso' in question.description:
-                            context_questions['peso'] = q
-                            context_questions['questionId'] = q['questionId'] 
-                        elif 'Fumo' in question.description:
-                            context_questions['fumo'] = q
-                            context_questions['questionId'] = q['questionId'] 
-                        elif 'Addominale' in question.description:
-                            context_questions['addominale'] = q
-                            context_questions['questionId'] = q['questionId'] 
-                        
-
-                # User login failed, show an error message
-                context_questions['questionnaireId'] = questionnaire.questionnaireId
-                context_questions['userId'] = userId
+            user_id= loginUtente(usercode, tokenId)
+            context_questions = showGeneralitaForm(user_id)
             return render(request, 'questionnaire/test_generale.html', context=context_questions)
     else:
         # If it's a GET request, just render the login page
-        return render(request, 'questionnaire/login.html')
-
-def test(request):
-    return render(request, 'questionnaire/test_start.html')
-
-def test_generale(request):
-    return render(request, 'questionnaire/test_generale.html')
-
+        return redirect('login')
+    
 def test_singola(request):
     return render(request, 'questionnaire/test_singola.html')
 
@@ -111,18 +57,6 @@ def result(request):
             answers = []
 
         if answers:
-            # # Cancella risposte esistenti per userId e questionId prima di aggiornare le risposte
-            # AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).delete()
-            # print(f"Deleted existing answers for userId: {user_id}, questionId: {question_id}")
-            
-            # # Crea nuove risposte
-            # for answer in answers:
-            #     AnsweredQuestions.objects.create(
-            #         userId=user_id,
-            #         questionId=question_id,
-            #         answerId=answer,
-            #         # defaults={'customAnswer': None}
-            #     )
             for answer in answers:
                 existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=answer).first()
 
@@ -301,13 +235,17 @@ def nextQuestion(request):
         else:
             user_id = request.POST.get('userId')
             question_id = request.POST.get('questionId')
-            previousQuestionObj, previousAnswer = getPreviousQuestion(question_id)
-            print(f"Previous Question: {previousQuestionObj}")
-            print(f"Answers: {previousAnswer}")
+            previousQuestionObj, previousAnswer, is_first_group = getPreviousQuestion(question_id)
+
 
             if previousQuestionObj is None:
                 # È l'ultima domanda, quindi renderizza la pagina risultato
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
+
+            if is_first_group:
+                context_questions = showGeneralitaForm(user_id)
+                return render(request, 'questionnaire/test_generale.html', context=context_questions)
+
 
             # Prepara il context per la prossima domanda
             question = previousQuestionObj

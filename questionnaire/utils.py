@@ -116,9 +116,7 @@ def getNextQuestion(questionId):
     try:
         currentQuestion = Question.objects.get(questionId=questionId)
     except Question.DoesNotExist:
-        return None, None, None, True  # Nessuna domanda: consideriamo True come "ultima"
-
-    # print(f"➡️ Domanda corrente: {currentQuestion.description} (ID: {currentQuestion.questionId}, gruppo: {currentQuestion.groupId}, ordine: {currentQuestion.order})")
+        return None, None, None, True  # Nessuna domanda
 
     # STEP 1 - Cerca la prossima domanda nello stesso gruppo
     nextQuestion = Question.objects.filter(
@@ -177,32 +175,45 @@ def getNextQuestion(questionId):
 
     return nextQuestion, nextAnswers, nextDescription, is_last
 
-
 def getPreviousQuestion(questionId):
     try:
         currentQuestion = Question.objects.get(questionId=questionId)
     except Question.DoesNotExist:
-        return None, None
+        return None, None, False
     
+    # Trova la domanda precedente nel gruppo corrente
     previousQuestion = Question.objects.filter(groupId=currentQuestion.groupId, order__lt=currentQuestion.order).order_by('-order').first()
 
+    is_first = False
     if previousQuestion:
+        # Trova le risposte per la domanda precedente
         answers = Answer.objects.filter(questionId=previousQuestion.questionId).order_by('order')
-        return previousQuestion, answers
+        
+        
+        # Se la descrizione del gruppo precedente è "Anamnesi", imposta is_first a True
+        if previousQuestion.groupId == "21":  # Confronta con la descrizione del gruppo
+            is_first = True
+
+        return previousQuestion, answers, is_first 
     else:
-        # If no previous question, return the last question of the previous group
+        # Se non c'è una domanda precedente, cerca il gruppo precedente
         currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
         previousGroup = Group.objects.filter(questionnaireId=currentGroup.questionnaireId, order__lt=currentGroup.order).order_by('-order').first()
+        
         if previousGroup:
             previousQuestion = Question.objects.filter(groupId=previousGroup.groupId).order_by('-order').first()
             if previousQuestion:
                 answers = Answer.objects.filter(questionId=previousQuestion.questionId).order_by('order')
-                return previousQuestion, answers
+
+                # Imposta is_first a True solo se la domanda precedente appartiene al gruppo "Anamnesi"
+                if previousGroup.description == "Anamnesi":  # Confronta con la descrizione del gruppo
+                    is_first = True
+                return previousQuestion, answers, is_first
             else:
-                # If no questions in the previous group, return None
-                return None, None
+                # Se non ci sono domande nel gruppo precedente, restituisci None
+                return None, None, is_first
         else:
-            return None, None
+            return None, None, is_first
         
         
 def getFirstQuestion(questionnaireId):
@@ -216,3 +227,58 @@ def getFirstQuestion(questionnaireId):
             return None
     except Group.DoesNotExist:
         return None
+    
+
+def showGeneralitaForm(user_id):
+    tokenId = loginApplicativo()
+    questionnaireJSON = getQuestionnaire(tokenId)
+    # print(f"Questionnaire JSON: {questionnaireJSON}")
+    if questionnaireJSON is not None:
+        questionnaire = parseJSON(questionnaireJSON)
+        first_group = Group.objects.filter(questionnaireId=questionnaire.questionnaireId).order_by('order').first() # SELEZIONO IL PRIMO GRUPPO con ID del questionario (in genere ANAMNESI)
+        questions = Question.objects.filter(groupId=first_group.groupId).order_by('order')              # SELEZIONO LE DOMANDE del primo gruppo
+        print(f"Questions: {questions}")
+
+        context_questions = {}
+        for question in questions:
+            q = {}
+            answers = Answer.objects.filter(questionId=question.questionId).order_by('order')  # SELEZIONO LE RISPOSTE per ogni domanda
+            q['questionId'] = question.questionId
+            q['description'] = question.description
+            q['typeQuestion'] = question.typeQuestion_description
+            q['groupId'] = question.groupId
+            q['order'] = question.order
+            answ = []
+            for answer in answers:
+                a = {}
+                a['answerId'] = answer.answerId
+                a['description'] = answer.description
+                a['order'] = answer.order
+                a['questionId'] = answer.questionId
+                answ.append(a)
+            q['answers'] = answ
+
+            if 'Sesso' in question.description: 
+                context_questions['sesso'] = q
+                context_questions['questionId'] = q['questionId'] 
+            elif 'Età' in question.description:
+                context_questions['eta'] = q
+                context_questions['questionId'] = q['questionId'] 
+            elif 'Altezza' in question.description:
+                context_questions['altezza'] = q
+                context_questions['questionId'] = q['questionId'] 
+            elif 'Peso' in question.description:
+                context_questions['peso'] = q
+                context_questions['questionId'] = q['questionId'] 
+            elif 'Fumo' in question.description:
+                context_questions['fumo'] = q
+                context_questions['questionId'] = q['questionId'] 
+            elif 'Addominale' in question.description:
+                context_questions['addominale'] = q
+                context_questions['questionId'] = q['questionId'] 
+            
+
+        # User login failed, show an error message
+        context_questions['questionnaireId'] = questionnaire.questionnaireId
+        context_questions['userId'] = user_id 
+        return context_questions

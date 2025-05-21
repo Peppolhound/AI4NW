@@ -62,7 +62,7 @@
                     <div class="form-items">
                         <h3>Login</h3>
                         <p>Inserisci il tuo indirizzo email/il tuo codice di accesso</p>
-                        <form method="POST">
+                        <form method="POST" action="{% url 'test_generale' %}">
                             {% csrf_token %}
                             <input class="form-control" type="text" name="login-info" placeholder="Inserisci" required>
                             <div class="form-button">
