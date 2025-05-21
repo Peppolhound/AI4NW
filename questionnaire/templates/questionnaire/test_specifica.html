@@ -112,7 +112,7 @@
                                                         rows="3"
                                                         placeholder="Scrivi qui..."
                                                         required
-                                                    ></textarea>
+                                                    >{{ saved_custom_answer }}</textarea>
                                                 </div>
                                                 {% endif %}
                                                     <!-- <label class="container_radio">No
@@ -138,11 +138,11 @@
                                 </div>
 
                                 <div id="bottom-wizard">
-                                    <div class="d-flex gap-2 w-100 mobile-d-flex">
-                                        <button type="button" name="backward" class="backward flex-fill" data-prev-url="{% url 'test_checkbox' %}">Prev</button>
-                                        <button type="submit" name="forward" class="forward flex-fill">
+                                      <div class="d-flex gap-2 w-100 mobile-d-flex">
+                                        <button type="submit" name="action" value="prev" class="backward flex-fill" data-prev-url="{% url 'next_question' %}">Prev</button>
+                                        <button type="submit" name="action" value="next" class="forward flex-fill">
                                             {% if is_last_question %}Submit{% else %}Next{% endif %}
-                                        </button>                           
+                                        </button>
                                     </div>
                                 </div>
                             </form>

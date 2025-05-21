@@ -85,8 +85,8 @@
                                                 {% for answer in q.answers %}
                                                 <label class="container_radio mr-3">
                                                     <input type="radio" name="question_{{ q.questionId }}" value="{{ answer.answerId }}"
-                                                        {% if answer.answerId|stringformat:"s" in saved_answer_ids %}checked{% endif %}
-                                                        required>
+                                                    {% if answer.answerId|stringformat:"s" in saved_answer_ids %}checked{% endif %}
+                                                    required>
                                                     {{ answer.description }}
                                                     <span class="checkmark"></span>
                                                 </label>
