@@ -101,13 +101,21 @@ def nextQuestion(request):
         action = request.POST.get('action')
         print(f"Action: {action}")
         
+        # Ottieni userId e questionId
+        user_id = request.POST.get('userId')
+        question_id = request.POST.get('questionId')
+
+        # Calcola il numero totale di domande e domande completate
+        total_questions = Question.objects.count()  # Numero totale di domande
+        questions_completed = AnsweredQuestions.objects.filter(userId=user_id).count()  # Domande completate
+        completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
+
+        # Gestisci il caso del pulsante "Next"
         if action == 'next':
             is_generalita = request.POST.get('is_generalita', None)
-            user_id = request.POST.get('userId')
-            question_id = request.POST.get('questionId')
 
             if is_generalita == 'true':
-                # Preleva le risposte per le domande generali
+                # Preleva le risposte per le domande generali (età, peso, altezza, etc.)
                 age = request.POST.get('age')
                 weight = request.POST.get('weight')
                 genderId = request.POST.get('gender')
@@ -115,9 +123,9 @@ def nextQuestion(request):
                 waist = request.POST.get('waist_circum')
                 smokeId = request.POST.get('smoke')
 
-                # Salvataggio delle risposte per le domande generali (età, peso, altezza, etc.)
+                # Salvataggio delle risposte per le domande generali
                 for questionid, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
-                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=questionid).first()  # Usa il questionid corretto per ogni domanda
+                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=questionid).first()
                     if existing_answer:
                         existing_answer.customAnswer = answer_value
                         existing_answer.save()
@@ -125,7 +133,7 @@ def nextQuestion(request):
                     else:
                         AnsweredQuestions.objects.create(
                             userId=user_id,
-                            questionId=questionid,  # Usa il questionid corretto
+                            questionId=questionid,
                             answerId=None,
                             customAnswer=answer_value
                         )
@@ -135,33 +143,28 @@ def nextQuestion(request):
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,
                     defaults={'answerId': genderId},
-                    questionId=226,  # ID di "Sesso"
+                    questionId=226,
                 )
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,
                     defaults={'answerId': smokeId},
-                    questionId=231,  # ID di "Fumo"
+                    questionId=231,
                 )
 
             # Gestione delle risposte alle domande successive
             question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
             custom_answer = request.POST.get(f'customAnswer_{question_id}', None) 
             uploaded_file = request.FILES.get('file_upload')
-            print(f"Uploaded file: {uploaded_file}")
            
-            # Se il file è presente, salvalo (ad esempio nel sistema di file di Django)
+            # Se il file è presente, salvalo nel modello
             if uploaded_file:
-                # fs = FileSystemStorage(location=settings.MEDIA_ROOT)
-                # filename = fs.save(uploaded_file.name, uploaded_file)
-                # file_url = fs.url(filename)
-                # Salva il file nel modello
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,  
                     questionId=question_id, 
                     defaults={'uploaded_file': uploaded_file}  # Usa 'defaults' per aggiornare il campo 'uploaded_file'
                 )
 
-
+            # Gestisci le risposte multiple
             if question_keys:
                 question_key = question_keys[0]
                 answers = request.POST.getlist(question_key)
@@ -171,7 +174,7 @@ def nextQuestion(request):
 
             print(f"Answers: {answers}")
 
-            if answers: #Controllo risposte multiple, salvale nel database
+            if answers:
                 # Cancella risposte esistenti per userId e questionId
                 AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).delete()
                 print(f"Deleted existing answers for userId: {user_id}, questionId: {question_id}")
@@ -189,12 +192,10 @@ def nextQuestion(request):
                 # Gestisci le risposte personalizzate
                 existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=None).first()
                 if existing_answer_custom:
-                    # Se esiste una risposta custom, aggiorna il campo customAnswer
                     existing_answer_custom.customAnswer = custom_answer
                     existing_answer_custom.save()  # Salva l'istanza aggiornata
                     print(f"Updated customAnswer for question {question_id}")
                 else:
-                    # Se non esiste una risposta custom, creane una nuova
                     AnsweredQuestions.objects.create(
                         userId=user_id,
                         questionId=question_id,
@@ -208,7 +209,6 @@ def nextQuestion(request):
             # Recupera la prossima domanda
             nextQuestionObj, nextAnswer, nextDescription, is_last = getNextQuestion(question_id)
             if nextQuestionObj is None:
-                # È l'ultima domanda, quindi renderizza la pagina risultato
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
 
             # Prepara il context per la prossima domanda
@@ -234,10 +234,11 @@ def nextQuestion(request):
                 'q': q,
                 'questionId': q['questionId'],
                 'userId': user_id,
-                'is_last_question': is_last
+                'is_last_question': is_last,
+                'completion_percentage': completion_percentage
             }
 
-            # Ritorna il template adatto in base al tipo domanda
+            # Ritorna il template corretto in base al tipo domanda
             if q['typeQuestion_id'] == "1":
                 return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
             elif q['typeQuestion_id'] == "2":
@@ -247,24 +248,23 @@ def nextQuestion(request):
             elif q['typeQuestion_id'] == "4":
                 return render(request, 'questionnaire/test_media.html', context=context_questions)
             else:
-                # fallback (opzionale)
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
-        else:
-            user_id = request.POST.get('userId')
-            question_id = request.POST.get('questionId')
+        
+        # Gestisci il caso del pulsante "Prev"
+        elif action == 'prev':
+            # Calcola la percentuale di completamento
+            print(f"Completamento: {completion_percentage}%")
+
+            # Recupera la domanda precedente e la progress bar aggiornata
             previousQuestionObj, previousAnswer, is_first_group = getPreviousQuestion(question_id)
 
-
             if previousQuestionObj is None:
-                # È l'ultima domanda, quindi renderizza la pagina risultato
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
 
             if is_first_group:
                 context_questions = showGeneralitaForm(user_id)
                 return render(request, 'questionnaire/test_generale.html', context=context_questions)
 
-
-            # Prepara il context per la prossima domanda
             question = previousQuestionObj
             saved_answers = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId)
             saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
@@ -296,9 +296,10 @@ def nextQuestion(request):
                 'userId': user_id,
                 'saved_answer_ids': saved_answer_ids,
                 'saved_custom_answer': saved_custom_answer,
+                'completion_percentage': completion_percentage  # Mostra la percentuale anche nel caso di "Prev"
             }
 
-            # Ritorna il template adatto in base al tipo domanda
+            # Ritorna il template adatto per la domanda precedente
             if q['typeQuestion_id'] == "1":
                 return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
             elif q['typeQuestion_id'] == "2":
@@ -306,7 +307,7 @@ def nextQuestion(request):
             elif q['typeQuestion_id'] == "3":
                 return render(request, 'questionnaire/test_singola.html', context=context_questions)
             elif q['typeQuestion_id'] == "4":
-                return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
+                return render(request, 'questionnaire/test_media.html', context=context_questions)
             else:
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
 
