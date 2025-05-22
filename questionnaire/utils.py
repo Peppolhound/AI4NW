@@ -1,5 +1,5 @@
 import json
-from questionnaire.models import Questionnaire, Group, Question, Answer, AnsweredQuestions
+from questionnaire.models import Questionnaire, Group, Question, Answer, AnsweredQuestions, QuestionnaireValue
 import requests
 import datetime
 
@@ -305,3 +305,48 @@ def showGeneralitaForm(user_id):
         context_questions['questionnaireId'] = questionnaire.questionnaireId
         context_questions['userId'] = user_id 
         return context_questions
+
+def submitQuestionnaire(userId, questionnaireId):
+
+
+    ##### RACCOGO ED ORGANIZZO IN JSON I DATI DEL QUESTIONARIO #####
+    questionnaireResponse = {}
+    file_list = []
+    answer_list = []
+    questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId).first()
+    questionnaireResponse['dateInsert'] = questionnaireValue.dateInsert
+    questionnaireResponse['questionnaireKey'] = "NW"
+
+    groups = Group.objects.filter(questionnaireId=questionnaireId)
+    for group in groups:
+        questions = Question.objects.filter(groupId=group.groupId)
+        for question in questions:
+            answers = AnsweredQuestions.objects.filter(questionId=question.questionId)
+            answer_dict = {}
+            for answer in answers:
+                answer_dict['answerId'] = answer.answerId
+                answer_dict['questionId'] = answer.questionId
+                answer_dict['customAnswer'] = answer.customAnswer
+                if answer.uploaded_file:
+                    file_list.append(answer.uploaded_file)    # Se l'ID della risposta corrisponde a quello selezionato, salva la risposta
+                answer_list.append(answer_dict)
+    questionnaireResponse['answeredQuestions'] = answer_list
+
+    ######### PREPARO LA CHIAMATA ALL'API #########
+    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/"
+    method = "POST"
+    headers = {
+        'Content-Type': 'application/json',
+        'tokenId': loginApplicativo(),
+    }
+    payload = {
+        "userId": userId,
+        "questionnaire": questionnaireResponse,
+        "files": file_list,
+    }
+
+    response = call_api(endpoint_url=endpoint_url, payload=payload, headers=headers, method=method)
+    if response is not None:
+        print("Questionnaire submitted successfully. {response}")
+    else:
+        print("Failed to submit questionnaire.")
