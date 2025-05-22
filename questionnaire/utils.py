@@ -307,13 +307,17 @@ def showGeneralitaForm(user_id):
         return context_questions
 
 def submitQuestionnaire(userId, questionnaireId):
-
+    import datetime
 
     ##### RACCOGO ED ORGANIZZO IN JSON I DATI DEL QUESTIONARIO #####
     questionnaireResponse = {}
     file_list = []
     answer_list = []
-    questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId).first()
+    today = datetime.date.today()
+    print(f"Today: {today}")
+    print(f"User ID: {userId}")
+    print(f"Questionnaire ID: {questionnaireId}")
+    questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId, user_id=userId, dateInsert=today)
     questionnaireResponse['dateInsert'] = questionnaireValue.dateInsert
     questionnaireResponse['questionnaireKey'] = "NW"
 
@@ -321,7 +325,7 @@ def submitQuestionnaire(userId, questionnaireId):
     for group in groups:
         questions = Question.objects.filter(groupId=group.groupId)
         for question in questions:
-            answers = AnsweredQuestions.objects.filter(questionId=question.questionId)
+            answers = AnsweredQuestions.objects.filter(questionId=question.questionId, userId=userId, dateAnswer=today)
             answer_dict = {}
             for answer in answers:
                 answer_dict['answerId'] = answer.answerId

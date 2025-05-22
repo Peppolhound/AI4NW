@@ -264,6 +264,7 @@ def nextQuestion(request):
                 'completion_percentage': completion_percentage,
             }
             print(f'La prossima domanda sarà {q['typeQuestion_description']}')
+            print(f'Questionnaire ID: {questionnaireId}')
 
             # Ritorna il template corretto in base al tipo domanda
             if q['typeQuestion_id'] == "1":
@@ -319,10 +320,12 @@ def nextQuestion(request):
                 'q': q,
                 'questionId': q['questionId'],
                 'userId': user_id,
+                'questionnaireId': questionnaireId,
                 'saved_answer_ids': saved_answer_ids,
                 'saved_custom_answer': saved_custom_answer,
                 'completion_percentage': completion_percentage  # Mostra la percentuale anche nel caso di "Prev"
             }
+            print(f'Questionnaire ID: {questionnaireId}')
 
             # Ritorna il template adatto per la domanda precedente
             if q['typeQuestion_id'] == "1":
