@@ -96,7 +96,7 @@
                                                 <div class="form-group radio_input">
                                                     {% for answer in sesso.answers %}
                                                     <label class="container_radio mr-3">{{ answer.description }}
-                                                        <input type="radio" name="gender" value="{{ answer.answerId  }}" class="required required" value="{{ answer.answerId }}"
+                                                        <input type="radio" name="gender" value="{{ answer.answerId  }}" class="required required" 
                                                         {% if answer.answerId == sesso.saved_answer %}checked{% endif %}  required>
                                                         <span class="checkmark"></span>
                                                     </label>
@@ -123,7 +123,7 @@
                                             <div class="form-group radio_input">
                                                 {% for answer in fumo.answers %}
                                                 <label class="container_radio mr-3">{{ answer.description }}
-                                                    <input type="radio" name="smoke"  value="{{ answer.answerId }}" class="required required" value="{{ answer.answerId }}" 
+                                                    <input type="radio" name="smoke"  value="{{ answer.answerId }}" class="required required" 
                                                     {% if answer.answerId == fumo.saved_answer %}checked{% endif %}  required> 
                                                     <span class="checkmark"></span>
                                                 </label>

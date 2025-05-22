@@ -105,16 +105,17 @@ def nextQuestion(request):
             question_id = request.POST.get('questionId')
             
             if is_generalita == 'true':
+                # Preleva le risposte per le domande generali
                 age = request.POST.get('age')
                 weight = request.POST.get('weight')
                 genderId = request.POST.get('gender')
                 height = request.POST.get('height')
                 waist = request.POST.get('waist_circum')
                 smokeId = request.POST.get('smoke')
-                
+
                 # Salvataggio delle risposte per le domande generali (età, peso, altezza, etc.)
                 for questionid, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
-                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).first()
+                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=questionid).first()  # Usa il questionid corretto per ogni domanda
                     if existing_answer:
                         existing_answer.customAnswer = answer_value
                         existing_answer.save()
@@ -122,7 +123,7 @@ def nextQuestion(request):
                     else:
                         AnsweredQuestions.objects.create(
                             userId=user_id,
-                            questionId=questionid,
+                            questionId=questionid,  # Usa il questionid corretto
                             answerId=None,
                             customAnswer=answer_value
                         )
@@ -132,12 +133,12 @@ def nextQuestion(request):
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,
                     defaults={'answerId': genderId},
-                    questionId=226,
+                    questionId=226,  # ID di "Sesso"
                 )
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,
                     defaults={'answerId': smokeId},
-                    questionId=231,
+                    questionId=231,  # ID di "Fumo"
                 )
 
             # Gestione delle risposte alle domande successive
