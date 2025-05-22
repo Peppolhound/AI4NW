@@ -106,8 +106,8 @@ def nextQuestion(request):
         question_id = request.POST.get('questionId')
 
         # Calcola il numero totale di domande e domande completate
-        total_questions = Question.objects.count()  # Numero totale di domande
-        questions_completed = AnsweredQuestions.objects.filter(userId=user_id).count()  # Domande completate
+        total_questions = Question.objects.count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
+        questions_completed = AnsweredQuestions.objects.filter(userId=user_id).count()  # Domande completate  AGGIUNGERE FILTRO PER DATA
         completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
 
         # Gestisci il caso del pulsante "Next"
@@ -123,7 +123,7 @@ def nextQuestion(request):
                 waist = request.POST.get('waist_circum')
                 smokeId = request.POST.get('smoke')
 
-                # Salvataggio delle risposte per le domande generali
+                # Salvataggio delle risposte per le domande con Custom Answer
                 for questionid, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
                     existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=questionid).first()
                     if existing_answer:
@@ -237,6 +237,7 @@ def nextQuestion(request):
                 'is_last_question': is_last,
                 'completion_percentage': completion_percentage
             }
+            print(q['typeQuestion_id'])
 
             # Ritorna il template corretto in base al tipo domanda
             if q['typeQuestion_id'] == "1":
