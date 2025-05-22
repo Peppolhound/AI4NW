@@ -1,5 +1,5 @@
 import json
-from questionnaire.models import Questionnaire, Group, Question, Answer
+from questionnaire.models import Questionnaire, Group, Question, Answer, AnsweredQuestions
 import requests
 
 def parseJSON(json_string):
@@ -270,6 +270,14 @@ def showGeneralitaForm(user_id):
                 a['questionId'] = answer.questionId
                 answ.append(a)
             q['answers'] = answ
+
+            saved_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId).first()
+            if saved_answer:
+                # Se c'è una risposta salvata, precompila il campo
+                if saved_answer.answerId:
+                    q['saved_answer'] = saved_answer.answerId
+                elif saved_answer.customAnswer:
+                    q['saved_answer'] = saved_answer.customAnswer
 
             if 'Sesso' in question.description: 
                 context_questions['sesso'] = q
