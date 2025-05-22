@@ -13,7 +13,9 @@ def home(request):
     return render(request, 'questionnaire/home.html')
 
 def login(request):
-    return render(request, 'questionnaire/login.html')
+    questionnaireId = Questionnaire.objects.first().questionnaireId
+    print(f"questionnaireId: {questionnaireId}") # stampa il valore di questionnaireId)
+    return render(request, 'questionnaire/login.html', {'questionnaireId': questionnaireId})
 
 
 def test(request):
@@ -28,6 +30,11 @@ def test_generale(request):
             ################## DEBUG ##################
             # usercode = '9876'                       
             ################## DEBUG ##################
+            questionnaireId = request.POST.get('questionnaireId')
+            QuestionnaireValue.objects.create(
+                user_id=usercode,
+                questionnaireId=questionnaireId
+            )
             user_id= loginUtente(usercode, tokenId)
             context_questions = showGeneralitaForm(user_id)
             return render(request, 'questionnaire/test_generale.html', context=context_questions)

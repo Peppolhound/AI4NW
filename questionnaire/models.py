@@ -43,8 +43,9 @@ class Answer(models.Model):
         return self.description
     
 class QuestionnaireValue(models.Model):
+    user_id = models.CharField(max_length=100)
     questionnaireId = models.CharField(max_length=100)
-    dateInsert = models.DateTimeField(auto_now_add=True)
+    dateInsert = models.DateField(auto_now_add=True)
 
 class AnsweredQuestions(models.Model):
     userId = models.CharField(max_length=100)
