@@ -215,9 +215,9 @@ def nextQuestion(request):
                 print("No answers or custom answer found.")
 
             # Recupera la prossima domanda
-            nextQuestionObj, nextAnswer, is_last = getNextQuestion(question_id)
-            if nextQuestionObj is None:
-                return render(request, 'questionnaire/result.html', {'userId': user_id})
+            nextQuestionObj, nextAnswer, nextDescription, is_last = getNextQuestion(question_id)
+            # if nextQuestionObj is None:
+            #     return render(request, 'questionnaire/result.html', {'userId': user_id})
 
             # Prepara il context per la prossima domanda
             question = nextQuestionObj

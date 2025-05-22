@@ -129,7 +129,7 @@ def getNextQuestion(questionId):
     if nextQuestion:
         print(f"Next Question in the same group: {nextQuestion.description}")
         nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
-        # nextDescription = nextQuestion.typeQuestion_description
+        nextDescription = nextQuestion.typeQuestion_description
 
         # Controllo se questa domanda è l'ultima: se non c'è una domanda dopo nextQuestion
         is_last = not Question.objects.filter(
@@ -139,53 +139,54 @@ def getNextQuestion(questionId):
             questionnaireId=Group.objects.get(groupId=nextQuestion.groupId).questionnaireId,
             order__gt=Group.objects.get(groupId=nextQuestion.groupId).order
         ).exists()
-        print(f"Is this the last question in the questionnaire? {is_last}")
+        print(f"Is this the last question in the group? {is_last}")
 
-        # return nextQuestion, nextAnswers, nextDescription, is_last
-    else:
-        # STEP 2 - Nessuna domanda successiva in questo gruppo → cerca nel gruppo successivo
-        try:
-            currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
-            print(f"Current Group: {currentGroup.description}")
-        except Group.DoesNotExist:
-            print(f"No group found for question ID: {questionId}")
-            return None, None, None, True
+        return nextQuestion, nextAnswers, nextDescription, is_last
 
-        # STEP 3 - Cerca il gruppo successivo
-        nextGroup = Group.objects.filter(
-            questionnaireId=currentGroup.questionnaireId,
-            order__gt=currentGroup.order
-        ).order_by('order').first()
+    # STEP 2 - Nessuna domanda successiva in questo gruppo → cerca nel gruppo successivo
+    try:
+        currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
+        print(f"Current Group: {currentGroup.description}")
+    except Group.DoesNotExist:
+        print(f"No group found for question ID: {questionId}")
+        return None, None, None, True
 
-        if not nextGroup:
-            print("No next group found. This is the last group.")
-            # Nessun gruppo successivo = ultima domanda
-            return None, None, None, True
+    # STEP 3 - Cerca il gruppo successivo
+    nextGroup = Group.objects.filter(
+        questionnaireId=currentGroup.questionnaireId,
+        order__gt=currentGroup.order
+    ).order_by('order').first()
 
-        print(f"Next Group: {nextGroup.description}")
+    if not nextGroup:
+        print("No next group found. This is the last group.")
+        # Nessun gruppo successivo = ultima domanda
+        return None, None, None, True
 
-        # STEP 4 - Trova la prima domanda del gruppo successivo
-        nextQuestion = Question.objects.filter(groupId=nextGroup.groupId).order_by('order').first()
-        if not nextQuestion:
-            print(f"No questions in next group: {nextGroup.description}")
-            return None, None, None, True
+    print(f"Next Group: {nextGroup.description}")
 
-        print(f"Next Question in next group: {nextQuestion.description}")
-        nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
+    # STEP 4 - Trova la prima domanda del gruppo successivo
+    nextQuestion = Question.objects.filter(groupId=nextGroup.groupId).order_by('order').first()
+    if not nextQuestion:
+        print(f"No questions in next group: {nextGroup.description}")
+        return None, None, None, True
 
-        # Controlla se la domanda successiva è l'ultima nel questionario
-        # Verifica se non ci sono altre domande dopo nextQuestion né gruppi dopo nextGroup
-        is_last = not Question.objects.filter(
-            groupId=nextQuestion.groupId,
-            order__gt=nextQuestion.order
-        ).exists() and not Group.objects.filter(
-            questionnaireId=nextGroup.questionnaireId,
-            order__gt=nextGroup.order
-        ).exists()
+    print(f"Next Question in next group: {nextQuestion.description}")
+    nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
+    nextDescription = nextQuestion.typeQuestion_description
+
+    # Controlla se la domanda successiva è l'ultima nel questionario
+    # Verifica se non ci sono altre domande dopo nextQuestion né gruppi dopo nextGroup
+    is_last = not Question.objects.filter(
+        groupId=nextQuestion.groupId,
+        order__gt=nextQuestion.order
+    ).exists() and not Group.objects.filter(
+        questionnaireId=nextGroup.questionnaireId,
+        order__gt=nextGroup.order
+    ).exists()
 
     print(f"Is this the last question in the questionnaire? {is_last}")
 
-    return nextQuestion, nextAnswers, is_last
+    return nextQuestion, nextAnswers, nextDescription, is_last
 
 def getPreviousQuestion(questionId):
     try:
