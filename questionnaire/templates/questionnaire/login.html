@@ -61,9 +61,11 @@
                 <div class="form-content">
                     <div class="form-items">
                         <h3>Login</h3>
+
                         <p>Inserisci il tuo indirizzo email/il tuo codice di accesso</p>
                         <form method="POST" action="{% url 'test_generale' %}">
                             {% csrf_token %}
+                            <input type="hidden" name="questionnaireId" value="{{ questionnaireId }}">
                             <input class="form-control" type="text" name="login-info" placeholder="Inserisci" required>
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Login</button> 
