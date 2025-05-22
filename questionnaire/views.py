@@ -31,11 +31,12 @@ def test_generale(request):
             # usercode = '9876'                       
             ################## DEBUG ##################
             questionnaireId = request.POST.get('questionnaireId')
+            user_id= loginUtente(usercode, tokenId)
+            print(f"User ID: {user_id}")
             QuestionnaireValue.objects.create(
-                user_id=usercode,
+                user_id=user_id,
                 questionnaireId=questionnaireId
             )
-            user_id= loginUtente(usercode, tokenId)
             context_questions = showGeneralitaForm(user_id)
             return render(request, 'questionnaire/test_generale.html', context=context_questions)
     else:
@@ -182,11 +183,17 @@ def nextQuestion(request):
                 filename_without_extension, file_extension = os.path.splitext(original_filename)
                 upload_file_date = datetime.date.today().strftime('%Y%m%d') 
                 new_filename = f"{question_id}_{filename_without_extension}-{user_id}-{upload_file_date}{file_extension}"
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # Usa MEDIA_ROOT per salvare il file
+                print(f"Saving file: {settings.MEDIA_ROOT}")
+                filename = fs.save(new_filename, uploaded_file)  # Salva il file
+                file_url = fs.url(filename)  # Ottieni l'URL per accedere al file
+
+                # Salva o aggiorna la risposta con il nuovo URL del file
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,  
-                    dateAnswer=today_date,
+                    dateAnswer=datetime.date.today(),  # Usa la data odierna
                     questionId=question_id, 
-                    defaults={'uploaded_file':  new_filename}  # Usa 'defaults' per aggiornare il campo 'uploaded_file'
+                    defaults={'uploaded_file': file_url}  # Salva il percorso del file
                 )
 
             # Gestisci le risposte multiple
