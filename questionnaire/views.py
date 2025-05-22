@@ -252,8 +252,6 @@ def nextQuestion(request):
         
         # Gestisci il caso del pulsante "Prev"
         elif action == 'prev':
-            # Calcola la percentuale di completamento
-            print(f"Completamento: {completion_percentage}%")
 
             # Recupera la domanda precedente e la progress bar aggiornata
             previousQuestionObj, previousAnswer, is_first_group = getPreviousQuestion(question_id)
