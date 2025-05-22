@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
+from django.conf import settings
 from .utils import *
 from .models import Questionnaire, Group, Question, Answer, QuestionnaireValue, AnsweredQuestions
+from django.core.files.storage import FileSystemStorage
 from django.core.serializers import serialize
 import json
 
@@ -103,7 +105,7 @@ def nextQuestion(request):
             is_generalita = request.POST.get('is_generalita', None)
             user_id = request.POST.get('userId')
             question_id = request.POST.get('questionId')
-            
+
             if is_generalita == 'true':
                 # Preleva le risposte per le domande generali
                 age = request.POST.get('age')
@@ -143,8 +145,22 @@ def nextQuestion(request):
 
             # Gestione delle risposte alle domande successive
             question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
-            custom_answer = request.POST.get(f'customAnswer_{question_id}', None)            
-            print(f"Custom Answer: {custom_answer}")
+            custom_answer = request.POST.get(f'customAnswer_{question_id}', None) 
+            uploaded_file = request.FILES.get('file_upload')
+            print(f"Uploaded file: {uploaded_file}")
+           
+            # Se il file è presente, salvalo (ad esempio nel sistema di file di Django)
+            if uploaded_file:
+                # fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+                # filename = fs.save(uploaded_file.name, uploaded_file)
+                # file_url = fs.url(filename)
+                # Salva il file nel modello
+                AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,  
+                    questionId=question_id, 
+                    defaults={'uploaded_file': uploaded_file}  # Usa 'defaults' per aggiornare il campo 'uploaded_file'
+                )
+
 
             if question_keys:
                 question_key = question_keys[0]
@@ -229,7 +245,7 @@ def nextQuestion(request):
             elif q['typeQuestion_id'] == "3":
                 return render(request, 'questionnaire/test_singola.html', context=context_questions)
             elif q['typeQuestion_id'] == "4":
-                return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
+                return render(request, 'questionnaire/test_media.html', context=context_questions)
             else:
                 # fallback (opzionale)
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
