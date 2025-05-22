@@ -1,6 +1,7 @@
 import json
 from questionnaire.models import Questionnaire, Group, Question, Answer, AnsweredQuestions, QuestionnaireValue
 import requests
+import datetime
 
 def parseJSON(json_string):
 
@@ -243,6 +244,7 @@ def getFirstQuestion(questionnaireId):
     
 
 def showGeneralitaForm(user_id):
+    today_date = datetime.date.today()
     tokenId = loginApplicativo()
     questionnaireJSON = getQuestionnaire(tokenId)
     # print(f"Questionnaire JSON: {questionnaireJSON}")
@@ -271,7 +273,7 @@ def showGeneralitaForm(user_id):
                 answ.append(a)
             q['answers'] = answ
 
-            saved_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId).first()
+            saved_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId, dateAnswer=today_date).first()
             if saved_answer:
                 # Se c'è una risposta salvata, precompila il campo
                 if saved_answer.answerId:

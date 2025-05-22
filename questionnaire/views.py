@@ -4,6 +4,8 @@ from .utils import *
 from .models import Questionnaire, Group, Question, Answer, QuestionnaireValue, AnsweredQuestions
 from django.core.files.storage import FileSystemStorage
 from django.core.serializers import serialize
+import datetime
+import os
 import json
 
 # Create your views here.
@@ -11,7 +13,9 @@ def home(request):
     return render(request, 'questionnaire/home.html')
 
 def login(request):
-    return render(request, 'questionnaire/login.html')
+    questionnaireId = Questionnaire.objects.first().questionnaireId
+    print(f"questionnaireId: {questionnaireId}") # stampa il valore di questionnaireId)
+    return render(request, 'questionnaire/login.html', {'questionnaireId': questionnaireId})
 
 
 def test(request):
@@ -20,14 +24,17 @@ def test(request):
 def test_generale(request):
     if request.method == 'POST':
         username = request.POST.get('login-info')
-        # print(f"Nome: {nome}, Cognome: {cognome}, Data di Nascita: {birthdate}")
         usercode = getUserCode(username)
-        # print(f"Usercode: {usercode}")
         tokenId = loginApplicativo()
         if tokenId is not None:
             ################## DEBUG ##################
             # usercode = '9876'                       
             ################## DEBUG ##################
+            questionnaireId = request.POST.get('questionnaireId')
+            QuestionnaireValue.objects.create(
+                user_id=usercode,
+                questionnaireId=questionnaireId
+            )
             user_id= loginUtente(usercode, tokenId)
             context_questions = showGeneralitaForm(user_id)
             return render(request, 'questionnaire/test_generale.html', context=context_questions)
@@ -45,6 +52,7 @@ def test_specifica(request):
     return render(request, 'questionnaire/test_specifica.html')
 
 def result(request):
+    today_date = datetime.date.today()
     if request.method == 'POST':
         question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
         question_id = request.POST.get('questionId')
@@ -61,7 +69,7 @@ def result(request):
 
         if answers:
             for answer in answers:
-                existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=answer).first()
+                existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=answer, dateAnswer=today_date).first()
 
                 if existing_answer:
                     print(f"Answer already exists for userId: {user_id}, questionId: {question_id}, answerId: {answer}, no update needed.")
@@ -69,13 +77,14 @@ def result(request):
                     # Se la risposta non esiste (cioè, answerId diverso), aggiorna il valore
                     AnsweredQuestions.objects.update_or_create(
                         userId=user_id,
+                        dateAnswer=today_date,
                         questionId=question_id,
                         answerId=answer,  # Usa answerId come chiave
                         defaults={'customAnswer': None}  # Aggiorna con il nuovo valore (se necessario)
                     )
                 
         elif custom_answer:
-            existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=None).first()
+            existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, dateAnswer=today_date, answerId=None).first()
             # Solo risposta custom, aggiorna o crea una singola risposta
             if existing_answer_custom:
                 # Se esiste una risposta custom, aggiorna il campo customAnswer
@@ -104,6 +113,7 @@ def test_start(request):
     return render(request, 'questionnaire/test_start.html')
 
 def nextQuestion(request):
+    today_date = datetime.date.today()
     if request.method == 'POST':
         action = request.POST.get('action')
         print(f"Action: {action}")
@@ -115,13 +125,12 @@ def nextQuestion(request):
 
         # Calcola il numero totale di domande e domande completate
         total_questions = Question.objects.count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
-        questions_completed = AnsweredQuestions.objects.filter(userId=user_id).count()  # Domande completate  AGGIUNGERE FILTRO PER DATA
+        questions_completed = AnsweredQuestions.objects.filter(userId=user_id, dateAnswer=today_date).count()  # Domande completate  AGGIUNGERE FILTRO PER DATA
         completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
 
         # Gestisci il caso del pulsante "Next"
         if action == 'next':
             is_generalita = request.POST.get('is_generalita', None)
-
             if is_generalita == 'true':
                 # Preleva le risposte per le domande generali (età, peso, altezza, etc.)
                 age = request.POST.get('age')
@@ -133,7 +142,7 @@ def nextQuestion(request):
 
                 # Salvataggio delle risposte per le domande con Custom Answer
                 for questionid, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
-                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=questionid).first()
+                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=questionid, dateAnswer=today_date).first()
                     if existing_answer:
                         existing_answer.customAnswer = answer_value
                         existing_answer.save()
@@ -150,11 +159,13 @@ def nextQuestion(request):
                 # Aggiorna o crea risposte per "Sesso" e "Fumo"
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,
+                    dateAnswer=today_date,
                     defaults={'answerId': genderId},
                     questionId=226,
                 )
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,
+                    dateAnswer=today_date,
                     defaults={'answerId': smokeId},
                     questionId=231,
                 )
@@ -166,10 +177,16 @@ def nextQuestion(request):
            
             # Se il file è presente, salvalo nel modello
             if uploaded_file:
+                # Cambio nome del file 
+                original_filename = uploaded_file.name
+                filename_without_extension, file_extension = os.path.splitext(original_filename)
+                upload_file_date = datetime.date.today().strftime('%Y%m%d') 
+                new_filename = f"{question_id}_{filename_without_extension}-{user_id}-{upload_file_date}{file_extension}"
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,  
+                    dateAnswer=today_date,
                     questionId=question_id, 
-                    defaults={'uploaded_file': uploaded_file}  # Usa 'defaults' per aggiornare il campo 'uploaded_file'
+                    defaults={'uploaded_file':  new_filename}  # Usa 'defaults' per aggiornare il campo 'uploaded_file'
                 )
 
             # Gestisci le risposte multiple
@@ -184,7 +201,7 @@ def nextQuestion(request):
 
             if answers:
                 # Cancella risposte esistenti per userId e questionId
-                AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id).delete()
+                AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id,  dateAnswer=today_date).delete()
                 print(f"Deleted existing answers for userId: {user_id}, questionId: {question_id}")
                 
                 # Crea nuove risposte
@@ -198,7 +215,7 @@ def nextQuestion(request):
                     
             elif custom_answer:
                 # Gestisci le risposte personalizzate
-                existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=None).first()
+                existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=None,  dateAnswer=today_date).first()
                 if existing_answer_custom:
                     existing_answer_custom.customAnswer = custom_answer
                     existing_answer_custom.save()  # Salva l'istanza aggiornata
@@ -274,7 +291,7 @@ def nextQuestion(request):
                 return render(request, 'questionnaire/test_generale.html', context=context_questions)
 
             question = previousQuestionObj
-            saved_answers = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId)
+            saved_answers = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId,  dateAnswer=today_date)
             saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
             saved_custom_answer = None
             custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
