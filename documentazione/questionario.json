@@ -357,20 +357,7 @@
                         "description": "Testo"
                     },
                     "description": "Ultimo valore di Pressione Arteriosa Massima misurata (mmHg)",
-                    "answers": [
-                        {
-                            "answerId": 846,
-                            "questionId": 239,
-                            "description": "Si",
-                            "order": 1
-                        },
-                        {
-                            "answerId": 847,
-                            "questionId": 239,
-                            "description": "No",
-                            "order": 2
-                        }
-                    ],
+                    "answers": [],
                     "order": 6
                 },
                 {
@@ -431,7 +418,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quanta frutta mangi al giorno? (description: ‘1 porzione = 150gr')\n",
+                    "description": "Quanta frutta mangi al giorno? (1 porzione = 150gr)",
                     "answers": [
                         {
                             "answerId": 848,
@@ -461,7 +448,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quanta verdura (cotta o cruda) mangi al giorno? (description: ‘1 porzione = 150gr')",
+                    "description": "Quanta verdura (cotta o cruda) mangi al giorno? (1 porzione = 150gr)",
                     "answers": [
                         {
                             "answerId": 851,
@@ -491,7 +478,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quante volte alla settimana mangi legumi? (description: ‘1 porzione = 70gr')",
+                    "description": "Quante volte alla settimana mangi legumi? (1 porzione = 70gr)",
                     "answers": [
                         {
                             "answerId": 854,
@@ -521,7 +508,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quanti carboidrati (esclusi i cereali) mangi al giorno? (description: ‘1 porzione = 130gr')",
+                    "description": "Quanti carboidrati (esclusi i cereali) mangi al giorno? (1 porzione = 130gr)",
                     "answers": [
                         {
                             "answerId": 857,
@@ -593,7 +580,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quanti cereali mangi al giorno? (description: ‘1 porzione = 130gr')",
+                    "description": "Quanti cereali mangi al giorno? (1 porzione = 130gr)",
                     "answers": [
                         {
                             "answerId": 865,
@@ -617,7 +604,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quante volte alla settimana mangi pesce (esclusi i crostacei)? (description: ‘1 porzione = 100gr')",
+                    "description": "Quante volte alla settimana mangi pesce (esclusi i crostacei)? (1 porzione = 100gr)",
                     "answers": [
                         {
                             "answerId": 867,
@@ -647,7 +634,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quanta carne e derivati mangi al giorno? (description: ‘1 porzione = 80gr')",
+                    "description": "Quanta carne e derivati mangi al giorno? (1 porzione = 80gr)",
                     "answers": [
                         {
                             "answerId": 870,
@@ -677,7 +664,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quanto latte e derivati mangi al giorno? (description: ‘1 porzione = 180gr')",
+                    "description": "Quanto latte e derivati mangi al giorno? (1 porzione = 180gr)",
                     "answers": [
                         {
                             "answerId": 873,
@@ -767,7 +754,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Quante unità alcoliche consumi al giorno? (description: '1 UA = 1 bicchiere di vino o 12 gr di alcool')",
+                    "description": "Quante unità alcoliche consumi al giorno? ('1 UA = 1 bicchiere di vino o 12 gr di alcool')",
                     "answers": [
                         {
                             "answerId": 882,
@@ -803,7 +790,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Svolgi attività fisica? (description: '30 min al giorno per 5 giorni alla settimana')\n",
+                    "description": "Svolgi attività fisica? ('30 min al giorno per 5 giorni alla settimana')\n",
                     "answers": [
                         {
                             "answerId": 886,

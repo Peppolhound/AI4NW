@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/materialdesignicons.min.css' %}"/>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
 </head>
 <body>
@@ -48,12 +48,12 @@
 
     <!-- PRELOAD START -->
     <div id="preloader">
-		<div data-loader="circle-side"></div>
-	</div>
+        <div data-loader="circle-side"></div>
+    </div>
     <!-- PRELOAD END -->
 
     <!-- HEADER START -->
-	<header>
+    <header>
         <div class="container-fluid">
             <h1>AI4NIGHTWORKERS TEST</h1>
         </div>
@@ -71,7 +71,7 @@
                                 <div class="progress-bar" style="width: {{ completion_percentage }}%"></div>
                             </div>                            
                             <!-- FORM START -->
-                            <form id="wrapped_1" class="step-form" method="post" action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question'  %}{% endif %}" novalidate>
+                            <form id="wrapped_1" class="step-form" method="post" enctype="multipart/form-data" action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question'  %}{% endif %}" novalidate>
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
@@ -79,24 +79,30 @@
                                         <input type="hidden" name="questionId" value="{{ questionId }}">
                                         <input type="hidden" name="questionnaireId " value="{{ questionnaireId }}">
                                         <h3 class="main_question mb-0" id="question_{{ q.questionId }}"><i class="mdi mdi-arrow-right"></i>{{ q.description }}</h3>
-                                        <label class="label-comment">Se possibile, seleziona una sola opzione.</label> 
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                {% for answer in q.answers %}
-                                                <label class="container_radio mr-3">
-                                                    <input type="radio" name="question_{{ q.questionId }}" value="{{ answer.answerId }}"
-                                                    {% if answer.answerId|stringformat:"s" in saved_answer_ids %}checked{% endif %}
-                                                    required>
-                                                    {{ answer.description }}
-                                                    <span class="checkmark"></span>
-                                                </label>
-                                                {% endfor %}
+                                                    {% for answer in q.answers %}
+                                                    <label class="container_radio mr-3">
+                                                        <input type="radio" name="question_{{ q.questionId }}" value="{{ answer.answerId }}"
+                                                        {% if answer.answerId|stringformat:"s" in saved_answer_ids %}checked{% endif %}
+                                                        required>
+                                                        {{ answer.description }}
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                    {% endfor %}
                                                 </div>
                                             </div>
                                         </div>
                                     </fieldset>
                                 </div>
+
+                                <!-- Campo per caricare un file -->
+                                <div class="form-group">
+                                    <label for="file_upload">Carica un file (PDF, JPG, PNG):</label>
+                                    <input type="file" class="form-control" name="file_upload" id="file_upload" accept=".pdf, .jpg, .png" required>
+                                </div>
+
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
                                         <button type="submit" name="action" value="prev" class="backward flex-fill" data-prev-url="{% url 'next_question' %}">Prev</button>

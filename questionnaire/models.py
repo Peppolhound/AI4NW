@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Questionnaire(models.Model):
@@ -42,10 +43,14 @@ class Answer(models.Model):
         return self.description
     
 class QuestionnaireValue(models.Model):
+    user_id = models.CharField(max_length=100)
     questionnaireId = models.CharField(max_length=100)
-    dateInsert = models.DateTimeField(auto_now_add=True)
+    dateInsert = models.DateField(auto_now_add=True)
 
 class AnsweredQuestions(models.Model):
-    answerId = models.CharField(max_length=100)
+    userId = models.CharField(max_length=100)
+    answerId = models.CharField(max_length=100, blank=True, null=True)
     questionId = models.CharField(max_length=100)
     customAnswer = models.CharField(max_length=2000, blank=True, null=True)  # Custom answer for open-ended questions
+    dateAnswer = models.DateField(auto_now_add=True)
+    uploaded_file = models.FileField(blank=True, null=True)

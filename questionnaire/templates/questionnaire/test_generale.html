@@ -68,10 +68,11 @@
                     <div id="wizard_container">
                         <div class="wizard-inner">
                             <div class="progress test-progress" role="progressbar" aria-label="progressbar-test" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar" style="width: 20%"></div>
+                                <div class="progress-bar" style="width: 0%"></div>
                             </div>
                             <!-- FORM START -->
-                            <form id="wrapped_1" class="step-form" method="post" action="{% url 'test_singola' %}" novalidate>
+                            <form id="wrapped_1" class="step-form" method="post"  action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question'  %}{% endif %}" novalidate>
+
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_2">
@@ -80,12 +81,15 @@
                                             <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                                 <label for="age">{{ eta.description }}</label>
                                                 <div class="form-group radio_input">
-                                                    <input type="number" name="age" id="age" class="form-control required" >
+                                                    <input type="number" name="age" id="age" class="form-control required" value="{{ eta.saved_answer }}"  required>
+                                                    <input type="hidden" name="is_generalita" value="true">
                                                     <input type="hidden" name="userId" value="{{ userId }}">
+                                                    <input type="hidden" name="questionId" value="{{ questionId }}">
+                                                    <input type="hidden" name="questionnaireId " value="{{ questionnaireId }}">
                                                 </div>
                                                 <label for="weight" class="mobile-padding">{{ peso.description}}</label>
                                                 <div class="form-group radio_input">
-                                                    <input type="number" name="weight" id="weight" class="form-control required">
+                                                    <input type="number" name="weight" id="weight" class="form-control required" value="{{ peso.saved_answer }}"  required>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-12 col-12 mobile-padding">
@@ -93,7 +97,8 @@
                                                 <div class="form-group radio_input">
                                                     {% for answer in sesso.answers %}
                                                     <label class="container_radio mr-3">{{ answer.description }}
-                                                        <input type="radio" name="gender" value="{{ answer.description }}" class="required required">
+                                                        <input type="radio" name="gender" value="{{ answer.answerId  }}" class="required required" 
+                                                        {% if answer.answerId == sesso.saved_answer %}checked{% endif %}  required>
                                                         <span class="checkmark"></span>
                                                     </label>
                                                     {% endfor %}
@@ -107,19 +112,20 @@
 
                                         <div class="form-group">
                                             <label for="height">{{ altezza.description}} </label>
-                                            <input type="number" name="height" id="height" class="form-control required" onchange="">
+                                            <input type="number" name="height" id="height" class="form-control required" onchange=""  value="{{ altezza.saved_answer }}"  required>
                                         </div>
                                         <div class="form-group add_top_30">
                                             <label for="waist_circum">{{ addominale.description }}</label>
                                             <label class="label-comment">Per misurarla, prendi un centimetro da sarta e misura il girovita all'altezza dell'ombelico.</label> 
-                                            <input type="number" name="waist_circum" id="waist_circum" class="form-control required" inputmode="numeric" onchange="">
+                                            <input type="number" name="waist_circum" id="waist_circum" class="form-control required" inputmode="numeric" onchange="" value="{{ addominale.saved_answer }}"  required>
                                         </div>
                                         <div class="col-12 add_top_30 mobile-padding">
                                             <label for="smoke">{{ fumo.description }}</label>
                                             <div class="form-group radio_input">
                                                 {% for answer in fumo.answers %}
                                                 <label class="container_radio mr-3">{{ answer.description }}
-                                                    <input type="radio" name="smoke" value="{{ answer.description }}" class="required required">
+                                                    <input type="radio" name="smoke"  value="{{ answer.answerId }}" class="required required" 
+                                                    {% if answer.answerId == fumo.saved_answer %}checked{% endif %}  required> 
                                                     <span class="checkmark"></span>
                                                 </label>
                                                 <!-- <label class="container_radio">{{ fumo.answer.2.description }}
@@ -158,8 +164,10 @@
 
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
-                                        <button type="button" name="backward" class="backward flex-fill d-none">Prev</button>
-                                        <button type="submit" name="forward" class="forward flex-fill">Next</button>
+                                        <!-- <button type="submit" name="action" value="prev" class="backward flex-fill" data-prev-url="{% url 'next_question' %}">Prev</button> -->
+                                        <button type="submit" name="action" value="next" class="forward flex-fill">
+                                            {% if is_last_question %}Submit{% else %}Next{% endif %}
+                                        </button>
                                     </div>
                                 </div>
                             </form>
