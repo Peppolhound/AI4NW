@@ -218,8 +218,9 @@ def nextQuestion(request):
 
             # Recupera la prossima domanda
             nextQuestionObj, nextAnswer, nextDescription, is_last = getNextQuestion(question_id)
+            print(f"is last: {is_last}")
             if nextQuestionObj is None:
-                return render(request, 'questionnaire/result.html', {'userId': user_id})
+                return redirect('result')
 
             # Prepara il context per la prossima domanda
             question = nextQuestionObj
