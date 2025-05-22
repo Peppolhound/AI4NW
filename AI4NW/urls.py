@@ -16,19 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-<<<<<<< HEAD
-from django.conf import settings
-from django.conf.urls.static import static
-=======
 from django.conf.urls.static import static
 from django.conf import settings
->>>>>>> 91d352a199f287c66b98bbc77113911ae0b74d94
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('questionnaire.urls')),
-<<<<<<< HEAD
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-=======
-]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  
->>>>>>> 91d352a199f287c66b98bbc77113911ae0b74d94
