@@ -50,6 +50,7 @@ def result(request):
         question_id = request.POST.get('questionId')
         custom_answer = request.POST.get(f'customAnswer_{question_id}', None)
         user_id = request.POST.get('userId')    
+        questionnaireId = request.POST.get('questionnaireId')
         
 
         if question_keys:
@@ -90,7 +91,13 @@ def result(request):
                 )
         else:
             pass
-    return render(request, 'questionnaire/result.html')
+        
+        response = submitQuestionnaire(userId=user_id, questionnaireId=questionnaireId)
+        context = {
+            'CMDS': response['results']['CMDS'],
+            'Framingham Risk': response['results']['Framingame'],
+            }
+        return render(request, 'questionnaire/result.html', content=context)
 
 
 def test_start(request):
@@ -104,6 +111,7 @@ def nextQuestion(request):
         # Ottieni userId e questionId
         user_id = request.POST.get('userId')
         question_id = request.POST.get('questionId')
+        questionnaireId = request.POST.get('questionnaireId')
 
         # Calcola il numero totale di domande e domande completate
         total_questions = Question.objects.count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
@@ -207,7 +215,7 @@ def nextQuestion(request):
                 print("No answers or custom answer found.")
 
             # Recupera la prossima domanda
-            nextQuestionObj, nextAnswer, nextDescription, is_last = getNextQuestion(question_id)
+            nextQuestionObj, nextAnswer, is_last = getNextQuestion(question_id)
             if nextQuestionObj is None:
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
 
@@ -233,11 +241,12 @@ def nextQuestion(request):
             context_questions = {
                 'q': q,
                 'questionId': q['questionId'],
+                'questionnaireId': questionnaireId,
                 'userId': user_id,
                 'is_last_question': is_last,
-                'completion_percentage': completion_percentage
+                'completion_percentage': completion_percentage,
             }
-            print(q['typeQuestion_id'])
+            print(f'La prossima domanda sarà {q['typeQuestion_description']}')
 
             # Ritorna il template corretto in base al tipo domanda
             if q['typeQuestion_id'] == "1":

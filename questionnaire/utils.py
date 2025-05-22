@@ -1,5 +1,5 @@
 import json
-from questionnaire.models import Questionnaire, Group, Question, Answer, AnsweredQuestions
+from questionnaire.models import Questionnaire, Group, Question, Answer, AnsweredQuestions, QuestionnaireValue
 import requests
 
 def parseJSON(json_string):
@@ -129,7 +129,7 @@ def getNextQuestion(questionId):
     if nextQuestion:
         print(f"Next Question in the same group: {nextQuestion.description}")
         nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
-        nextDescription = nextQuestion.typeQuestion_description
+        # nextDescription = nextQuestion.typeQuestion_description
 
         # Controllo se questa domanda è l'ultima: se non c'è una domanda dopo nextQuestion
         is_last = not Question.objects.filter(
@@ -139,54 +139,53 @@ def getNextQuestion(questionId):
             questionnaireId=Group.objects.get(groupId=nextQuestion.groupId).questionnaireId,
             order__gt=Group.objects.get(groupId=nextQuestion.groupId).order
         ).exists()
-        print(f"Is this the last question in the group? {is_last}")
+        print(f"Is this the last question in the questionnaire? {is_last}")
 
-        return nextQuestion, nextAnswers, nextDescription, is_last
+        # return nextQuestion, nextAnswers, nextDescription, is_last
+    else:
+        # STEP 2 - Nessuna domanda successiva in questo gruppo → cerca nel gruppo successivo
+        try:
+            currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
+            print(f"Current Group: {currentGroup.description}")
+        except Group.DoesNotExist:
+            print(f"No group found for question ID: {questionId}")
+            return None, None, None, True
 
-    # STEP 2 - Nessuna domanda successiva in questo gruppo → cerca nel gruppo successivo
-    try:
-        currentGroup = Group.objects.get(groupId=currentQuestion.groupId)
-        print(f"Current Group: {currentGroup.description}")
-    except Group.DoesNotExist:
-        print(f"No group found for question ID: {questionId}")
-        return None, None, None, True
+        # STEP 3 - Cerca il gruppo successivo
+        nextGroup = Group.objects.filter(
+            questionnaireId=currentGroup.questionnaireId,
+            order__gt=currentGroup.order
+        ).order_by('order').first()
 
-    # STEP 3 - Cerca il gruppo successivo
-    nextGroup = Group.objects.filter(
-        questionnaireId=currentGroup.questionnaireId,
-        order__gt=currentGroup.order
-    ).order_by('order').first()
+        if not nextGroup:
+            print("No next group found. This is the last group.")
+            # Nessun gruppo successivo = ultima domanda
+            return None, None, None, True
 
-    if not nextGroup:
-        print("No next group found. This is the last group.")
-        # Nessun gruppo successivo = ultima domanda
-        return None, None, None, True
+        print(f"Next Group: {nextGroup.description}")
 
-    print(f"Next Group: {nextGroup.description}")
+        # STEP 4 - Trova la prima domanda del gruppo successivo
+        nextQuestion = Question.objects.filter(groupId=nextGroup.groupId).order_by('order').first()
+        if not nextQuestion:
+            print(f"No questions in next group: {nextGroup.description}")
+            return None, None, None, True
 
-    # STEP 4 - Trova la prima domanda del gruppo successivo
-    nextQuestion = Question.objects.filter(groupId=nextGroup.groupId).order_by('order').first()
-    if not nextQuestion:
-        print(f"No questions in next group: {nextGroup.description}")
-        return None, None, None, True
+        print(f"Next Question in next group: {nextQuestion.description}")
+        nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
 
-    print(f"Next Question in next group: {nextQuestion.description}")
-    nextAnswers = Answer.objects.filter(questionId=nextQuestion.questionId).order_by('order')
-    nextDescription = nextQuestion.typeQuestion_description
-
-    # Controlla se la domanda successiva è l'ultima nel questionario
-    # Verifica se non ci sono altre domande dopo nextQuestion né gruppi dopo nextGroup
-    is_last = not Question.objects.filter(
-        groupId=nextQuestion.groupId,
-        order__gt=nextQuestion.order
-    ).exists() and not Group.objects.filter(
-        questionnaireId=nextGroup.questionnaireId,
-        order__gt=nextGroup.order
-    ).exists()
+        # Controlla se la domanda successiva è l'ultima nel questionario
+        # Verifica se non ci sono altre domande dopo nextQuestion né gruppi dopo nextGroup
+        is_last = not Question.objects.filter(
+            groupId=nextQuestion.groupId,
+            order__gt=nextQuestion.order
+        ).exists() and not Group.objects.filter(
+            questionnaireId=nextGroup.questionnaireId,
+            order__gt=nextGroup.order
+        ).exists()
 
     print(f"Is this the last question in the questionnaire? {is_last}")
 
-    return nextQuestion, nextAnswers, nextDescription, is_last
+    return nextQuestion, nextAnswers, is_last
 
 def getPreviousQuestion(questionId):
     try:
@@ -303,3 +302,48 @@ def showGeneralitaForm(user_id):
         context_questions['questionnaireId'] = questionnaire.questionnaireId
         context_questions['userId'] = user_id 
         return context_questions
+
+def submitQuestionnaire(userId, questionnaireId):
+
+
+    ##### RACCOGO ED ORGANIZZO IN JSON I DATI DEL QUESTIONARIO #####
+    questionnaireResponse = {}
+    file_list = []
+    answer_list = []
+    questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId).first()
+    questionnaireResponse['dateInsert'] = questionnaireValue.dateInsert
+    questionnaireResponse['questionnaireKey'] = "NW"
+
+    groups = Group.objects.filter(questionnaireId=questionnaireId)
+    for group in groups:
+        questions = Question.objects.filter(groupId=group.groupId)
+        for question in questions:
+            answers = AnsweredQuestions.objects.filter(questionId=question.questionId)
+            answer_dict = {}
+            for answer in answers:
+                answer_dict['answerId'] = answer.answerId
+                answer_dict['questionId'] = answer.questionId
+                answer_dict['customAnswer'] = answer.customAnswer
+                if answer.uploaded_file:
+                    file_list.append(answer.uploaded_file)    # Se l'ID della risposta corrisponde a quello selezionato, salva la risposta
+                answer_list.append(answer_dict)
+    questionnaireResponse['answeredQuestions'] = answer_list
+
+    ######### PREPARO LA CHIAMATA ALL'API #########
+    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/"
+    method = "POST"
+    headers = {
+        'Content-Type': 'application/json',
+        'tokenId': loginApplicativo(),
+    }
+    payload = {
+        "userId": userId,
+        "questionnaire": questionnaireResponse,
+        "files": file_list,
+    }
+
+    response = call_api(endpoint_url=endpoint_url, payload=payload, headers=headers, method=method)
+    if response is not None:
+        print("Questionnaire submitted successfully. {response}")
+    else:
+        print("Failed to submit questionnaire.")
