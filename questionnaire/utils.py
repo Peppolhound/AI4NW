@@ -318,10 +318,11 @@ def showGeneralitaForm(user_id, usercode, questionnaireJSON):
         print(f"Context Questions: {context_questions}")
         return context_questions
 
-def submitQuestionnaire(userId, userCode, questionnaireId):
-    import datetime
+import json
+import datetime
 
-    ##### RACCOGO ED ORGANIZZO IN JSON I DATI DEL QUESTIONARIO #####
+def submitQuestionnaire(userId, userCode, questionnaireId):
+    # === RACCOLTA DATI ===
     questionnaireResponse = {}
     file_list = []
     answer_list = []
@@ -330,6 +331,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     print(f"Today: {today}")
     print(f"User ID: {userId}")
     print(f"Questionnaire ID: {questionnaireId}")
+    
     questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId, user_id=userId, dateInsert=today)
     questionnaireResponse['dateInsert'] = int(questionnaireValue.dateInsert.strftime("%Y%m%d"))
     questionnaireResponse['questionnaireKey'] = "NW"
@@ -339,44 +341,45 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
         questions = Question.objects.filter(groupId=group.groupId)
         for question in questions:
             answers = AnsweredQuestions.objects.filter(questionId=question.questionId, userId=userId, dateAnswer=today)
-            answer_dict = {}
             for answer in answers:
-                answer_dict['answerId'] = int(answer.answerId)
-                answer_dict['questionId'] = int(answer.questionId)
-                answer_dict['customAnswer'] = answer.customAnswer
+                answer_dict = {
+                    'answerId': int(answer.answerId) if answer.answerId else None,
+                    'questionId': int(answer.questionId) if answer.questionId else None,
+                    'customAnswer': answer.customAnswer,
+                }
                 if answer.uploaded_file:
-                    file_list.append(answer.uploaded_file)    # Se l'ID della risposta corrisponde a quello selezionato, salva la risposta
+                    file_list.append(answer.uploaded_file)
                 answer_list.append(answer_dict)
+    
     questionnaireResponse['answeredQuestions'] = answer_list
-    dumpedJSON = json.dumps(questionnaireResponse)
 
-    ######### PREPARO LA CHIAMATA ALL'API #########
+    # === CONVERSIONE A FORM DATA MULTIPART ===
     endpoint_url = f"https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/submit?idUser={userId}"
-    method = "POST"
     headers = {
-        # 'Content-Type': 'multipart/form-data',
         'tokenId': loginApplicativo(),
     }
-    payload = {
-        # "userId": userCode,
-        "questionnaire": dumpedJSON,
-    }
+
+    # FORM DATA
     files = []
+
+    # Parte 1: JSON come stringa in un campo 'questionnaire'
+    files.append(('questionnaire', (None, json.dumps(questionnaireResponse), 'application/json')))
+
+    # Parte 2: allegati
     for f in file_list:
-        files.append(('files', (f.name.split('/')[-1], f.open('rb'), 'image/jpeg')))  # Get only the file name
+        files.append(('files', (f.name.split('/')[-1], f.open('rb'), 'image/jpeg')))
 
-    response = call_api(
-        endpoint_url=endpoint_url,
-        payload=payload,
-        headers=headers,
-        method=method,
-        files=files,
-    )
+    # Invio della richiesta POST multipart
+    import requests
+    response = call_api(endpoint_url=endpoint_url, headers=headers, method='POST', files=files)
+    # response = requests.post(endpoint_url, headers=headers, files=files)
 
-    if response is not None:
-        print("Questionnaire submitted successfully. {response}")
+    # === GESTIONE RISPOSTA ===
+    if response:
+        print("Questionnaire submitted successfully.")
     else:
-        print("Failed to submit questionnaire.")
+        print(f"Failed to submit questionnaire.\nStatus: {response.status_code}\nMessage: {response.text}")
+
 
 def getSavedAnswers(userId, questionId):
     today = datetime.date.today()
