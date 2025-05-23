@@ -22,7 +22,7 @@
             var $anchor = $(this);
             $('html, body').stop().animate({
                 scrollTop: $($anchor.attr('href')).offset().top - 0
-            }, 1500, 'easeInOutExpo');
+            }, 200, 'swing');
             event.preventDefault();
         });
     },
