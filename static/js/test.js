@@ -2,27 +2,30 @@
     "use strict";
 
     document.addEventListener('DOMContentLoaded', () => {
-		const testPaths = ['/test/', '/test_checkbox/', '/test_testo/', '/test_2nd/'];
-		const currentPath = window.location.pathname;
-	
-		if (!testPaths.includes(currentPath)) {
-			console.log("Non sei su una pagina test. Pulizia localStorage.");
-			Object.keys(localStorage).forEach(key => {
-				if (key.startsWith('wrapped_') || key === 'customAnswer') {
-					localStorage.removeItem(key);
-				}
-			});
-		} else {
-			console.log("Sei su una pagina test, nessuna pulizia.");
-		}
-	});
+        const testPaths = ['/test/', '/test_checkbox/', '/test_testo/', '/test_2nd/'];
+        const currentPath = window.location.pathname;
+
+        if (!testPaths.includes(currentPath)) {
+            console.log("Non sei su una pagina test. Pulizia localStorage.");
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('wrapped_') || key === 'customAnswer') {
+                    localStorage.removeItem(key);
+                }
+            });
+        } else {
+            console.log("Sei su una pagina test, nessuna pulizia.");
+        }
+    });
 
     // === Preloader ===
     $(window).on('load', function () {
         $('[data-loader="circle-side"]').fadeOut();
         $('#preloader').delay(350).fadeOut('slow');
         $('body').delay(350).css({ 'overflow': 'visible' });
+
+
     });
+
 
     // === Logica per ogni form ===
     document.querySelectorAll('form.step-form').forEach(form => {
@@ -84,6 +87,27 @@
                 });
             }
         }
+        const prev = document.getElementById('prev-button');
+
+        // Rimuovi l'attributo required dagli input quando si clicca il prev-button
+        if (prev) {
+            prev.addEventListener('click', function (e) {
+            e.preventDefault(); // Previene l'invio immediato del form
+            // Rimuove required da tutti gli input nel form corrente
+            form.querySelectorAll('[required]').forEach(function (input) {
+                input.removeAttribute('required');
+            });
+            // Aggiungi input nascosto per simulare il valore del bottone
+            let hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'action';
+            hidden.value = 'prev';
+            form.appendChild(hidden);
+
+            // Invia manualmente il form
+            form.submit();
+            });
+        }
 
         // === Validazione ===
         form.addEventListener('submit', function (e) {
@@ -129,6 +153,8 @@
                     }
                 }
             });
+
+
 
             // 👇 Salva customAnswer manualmente se c'è
             const customTextarea = form.querySelector('#customAnswer');

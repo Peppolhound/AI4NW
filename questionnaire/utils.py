@@ -53,12 +53,15 @@ def parseJSON(json_string):
     return questionnaire
 
 
-def call_api(endpoint_url, payload=None, headers=None, method='GET'):
+def call_api(endpoint_url, payload=None, headers=None, method='GET', files=None):
     try:
         if method.upper() == 'GET':
             response = requests.get(endpoint_url, headers=headers, params=payload)
         elif method.upper() == 'POST':
-            response = requests.post(endpoint_url, headers=headers, json=payload)
+            if files:
+                response = requests.post(endpoint_url, headers=headers, data=payload, files=files)
+            else:
+                response = requests.post(endpoint_url, headers=headers, json=payload)
         elif method.upper() == 'PUT':
             response = requests.put(endpoint_url, headers=headers, json=payload)
         elif method.upper() == 'DELETE':
@@ -243,10 +246,9 @@ def getFirstQuestion(questionnaireId):
         return None
     
 
-def showGeneralitaForm(user_id):
+def showGeneralitaForm(user_id, questionnaireJSON):
     today_date = datetime.date.today()
-    tokenId = loginApplicativo()
-    questionnaireJSON = getQuestionnaire(tokenId)
+
     # print(f"Questionnaire JSON: {questionnaireJSON}")
     if questionnaireJSON is not None:
         questionnaire = parseJSON(questionnaireJSON)
@@ -314,11 +316,12 @@ def submitQuestionnaire(userId, questionnaireId):
     file_list = []
     answer_list = []
     today = datetime.date.today()
+
     print(f"Today: {today}")
     print(f"User ID: {userId}")
     print(f"Questionnaire ID: {questionnaireId}")
     questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId, user_id=userId, dateInsert=today)
-    questionnaireResponse['dateInsert'] = questionnaireValue.dateInsert
+    questionnaireResponse['dateInsert'] = questionnaireValue.dateInsert.strftime("%Y%m%d")
     questionnaireResponse['questionnaireKey'] = "NW"
 
     groups = Group.objects.filter(questionnaireId=questionnaireId)
@@ -340,16 +343,26 @@ def submitQuestionnaire(userId, questionnaireId):
     endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/"
     method = "POST"
     headers = {
-        'Content-Type': 'application/json',
+        # 'Content-Type': 'multipart/form-data',
         'tokenId': loginApplicativo(),
     }
-    payload = {
+    data = {
         "userId": userId,
         "questionnaire": questionnaireResponse,
-        "files": file_list,
     }
+    print(f"Data to send: {data}")
+    files = []
+    for f in file_list:
+        files.append(('files', (f.name, f.open('rb'), 'application/octet-stream')))
 
-    response = call_api(endpoint_url=endpoint_url, payload=payload, headers=headers, method=method)
+    response = call_api(
+        endpoint_url=endpoint_url,
+        payload=data,
+        headers=headers,
+        method=method,
+        files=files,
+    )
+
     if response is not None:
         print("Questionnaire submitted successfully. {response}")
     else:
