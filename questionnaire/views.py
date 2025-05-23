@@ -107,11 +107,18 @@ def result(request):
             pass
         
         response = submitQuestionnaire(userId=user_id, questionnaireId=questionnaireId)
-        context = {
-            'CMDS': response['results']['CMDS'],
-            'Framingham Risk': response['results']['Framingame'],
+
+        if response:
+            context = {
+                'CMDS': response['results']['CMDS'],
+                'Framingham Risk': response['results']['Framingame'],
+                }
+        else:
+            print(f"Error! Response = None")
+            context = {
+                'error_message': 'Errore durante l\'invio del questionario. Riprova più tardi.',
             }
-        return render(request, 'questionnaire/result.html', content=context)
+        return render(request, 'questionnaire/result.html', context=context)
 
 
 def test_start(request):
@@ -156,10 +163,11 @@ def nextQuestion(request):
                 # Salvataggio delle risposte per le domande con Custom Answer
                 for questionid, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
                     AnsweredQuestions.objects.update_or_create(
+                        dateAnswer=today_date,
                         userId=user_id,
                         questionId=questionid,
                         answerId=None,
-                        customAnswer=answer_value
+                        defaults={'customAnswer': answer_value},
                     )
                     print(f"Created new answer for question {questionid}")
 
@@ -233,7 +241,8 @@ def nextQuestion(request):
                     userId=user_id,
                     questionId=question_id,
                     answerId=None,
-                    customAnswer=custom_answer
+                    dateAnswer=today_date,
+                    defaults={'customAnswer':custom_answer},
                 )
                 print(f"Created new custom answer for question {question_id}")
             else:

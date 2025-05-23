@@ -340,14 +340,13 @@ def submitQuestionnaire(userId, questionnaireId):
     questionnaireResponse['answeredQuestions'] = answer_list
 
     ######### PREPARO LA CHIAMATA ALL'API #########
-    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/"
+    endpoint_url = f"https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/?userId={userId}"
     method = "POST"
     headers = {
         # 'Content-Type': 'multipart/form-data',
         'tokenId': loginApplicativo(),
     }
     data = {
-        "userId": userId,
         "questionnaire": questionnaireResponse,
     }
     print(f"Data to send: {data}")
