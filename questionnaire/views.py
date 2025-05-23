@@ -145,10 +145,8 @@ def nextQuestion(request):
         groupsID = Group.objects.filter(questionnaireId=questionnaireId).values_list('groupId', flat=True)
         total_questions = Question.objects.filter(groupId__in=groupsID).count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
         print(f"Total questions: {total_questions}")
-        
         questions_completed = AnsweredQuestions.objects.filter(userId=user_id, dateAnswer=today_date).count()  # Domande completate nelle ultime ore
         print(f"Questions completed: {questions_completed}")
-
         completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
 
         # Gestisci il caso del pulsante "Next"
@@ -276,12 +274,17 @@ def nextQuestion(request):
                 })
             q['answers'] = answ
 
+            saved_answer_ids, saved_custom_answer = getSavedAnswers(user_id, question.questionId)
+
+
             context_questions = {
                 'q': q,
                 'questionId': q['questionId'],
                 'questionnaireId': questionnaireId,
                 'userId': user_id,
                 'is_last_question': is_last,
+                'saved_answer_ids': saved_answer_ids,
+                'saved_custom_answer': saved_custom_answer,
                 'userCode' : user_code,
                 'completion_percentage': completion_percentage,
             }
@@ -315,12 +318,13 @@ def nextQuestion(request):
                 return render(request, 'questionnaire/test_intro.html', context=context_questions)
 
             question = previousQuestionObj
-            saved_answers = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId,  dateAnswer=today_date)
-            saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
-            saved_custom_answer = None
-            custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
-            if custom_answers:
-                saved_custom_answer = custom_answers[0]
+            # saved_answers = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId,  dateAnswer=today_date)
+            # saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
+            # saved_custom_answer = None
+            # custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
+            # if custom_answers:
+            #     saved_custom_answer = custom_answers[0]
+            saved_answer_ids, saved_custom_answer = getSavedAnswers(user_id, question.questionId)
 
             q = {
                 'questionId': question.questionId,
@@ -362,6 +366,5 @@ def nextQuestion(request):
                 return render(request, 'questionnaire/test_media.html', context=context_questions)
             else:
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
-
     else:
         return redirect('home')

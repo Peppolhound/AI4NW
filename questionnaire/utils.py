@@ -368,3 +368,14 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
         print("Questionnaire submitted successfully. {response}")
     else:
         print("Failed to submit questionnaire.")
+
+def getSavedAnswers(userId, questionId):
+    today = datetime.date.today()
+    saved_answers = AnsweredQuestions.objects.filter(userId=userId, questionId=questionId,  dateAnswer=today)
+    saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
+    saved_custom_answer = None
+    custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
+    if custom_answers:
+        saved_custom_answer = custom_answers[0]
+    
+    return saved_answer_ids, saved_custom_answer
