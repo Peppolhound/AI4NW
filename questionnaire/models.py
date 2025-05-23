@@ -53,4 +53,4 @@ class AnsweredQuestions(models.Model):
     questionId = models.CharField(max_length=100)
     customAnswer = models.CharField(max_length=2000, blank=True, null=True)  # Custom answer for open-ended questions
     dateAnswer = models.DateField(auto_now_add=True)
-    uploaded_file = models.FileField(blank=True, null=True)
+    uploaded_file = models.FileField(upload_to='media/', blank=True, null=True)

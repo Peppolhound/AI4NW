@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.conf import settings
+from AI4NW import settings
 from .utils import *
 from .models import Questionnaire, Group, Question, Answer, QuestionnaireValue, AnsweredQuestions
 from django.core.files.storage import FileSystemStorage
@@ -7,21 +7,23 @@ from django.core.serializers import serialize
 import datetime
 import os
 import json
+from django.utils import timezone
 
 # Create your views here.
 def home(request):
     return render(request, 'questionnaire/home.html')
 
 def login(request):
-    questionnaireId = Questionnaire.objects.first().questionnaireId
-    print(f"questionnaireId: {questionnaireId}") # stampa il valore di questionnaireId)
-    return render(request, 'questionnaire/login.html', {'questionnaireId': questionnaireId})
+    # questionnaireId = Questionnaire.objects.first().questionnaireId
+    # print(f"questionnaireId: {questionnaireId}") # stampa il valore di questionnaireId)
+    # return render(request, 'questionnaire/login.html', {'questionnaireId': questionnaireId})
+    return render(request, 'questionnaire/login.html')
 
 
 def test(request):
     return render(request, 'questionnaire/test_start.html')
 
-def test_generale(request):
+def test_intro(request):
     if request.method == 'POST':
         username = request.POST.get('login-info')
         usercode = getUserCode(username)
@@ -30,26 +32,28 @@ def test_generale(request):
             ################## DEBUG ##################
             # usercode = '9876'                       
             ################## DEBUG ##################
-            questionnaireId = request.POST.get('questionnaireId')
+            questionnaireJSON = getQuestionnaire(tokenId)
+            questionnaireId = questionnaireJSON['questionnaireId']
+            print(f"Questionnaire ID: {questionnaireId}")
             user_id= loginUtente(usercode, tokenId)
             QuestionnaireValue.objects.create(
                 user_id=user_id,
                 questionnaireId=questionnaireId
             )
-            context_questions = showGeneralitaForm(user_id, usercode)
-            return render(request, 'questionnaire/test_generale.html', context=context_questions)
+            context_questions = showGeneralitaForm(user_id, usercode, questionnaireJSON)
+            return render(request, 'questionnaire/test_intro.html', context=context_questions)
     else:
         # If it's a GET request, just render the login page
         return redirect('login')
     
-def test_singola(request):
-    return render(request, 'questionnaire/test_singola.html')
+# def test_singola(request):
+#     return render(request, 'questionnaire/test_singola.html')
 
-def test_checkbox(request):
-    return render(request, 'questionnaire/test_checkbox.html')
+# def test_checkbox(request):
+#     return render(request, 'questionnaire/test_checkbox.html')
 
-def test_specifica(request):
-    return render(request, 'questionnaire/test_specifica.html')
+# def test_specifica(request):
+#     return render(request, 'questionnaire/test_specifica.html')
 
 def result(request):
     today_date = datetime.date.today()
@@ -103,18 +107,25 @@ def result(request):
             pass
         
         response = submitQuestionnaire(userId=user_id, userCode = user_code, questionnaireId=questionnaireId)
-        context = {
-            'CMDS': response['results']['CMDS'],
-            'Framingham Risk': response['results']['Framingame'],
+
+        if response:
+            context = {
+                'CMDS': response['results']['CMDS'],
+                'Framingham Risk': response['results']['Framingame'],
+                }
+        else:
+            print(f"Error! Response = None")
+            context = {
+                'error_message': 'Errore durante l\'invio del questionario. Riprova più tardi.',
             }
-        return render(request, 'questionnaire/result.html', content=context)
+        return render(request, 'questionnaire/result.html', context=context)
 
 
 def test_start(request):
     return render(request, 'questionnaire/test_start.html')
 
 def nextQuestion(request):
-    today_date = datetime.date.today()
+    today_date = timezone.now().date()
     if request.method == 'POST':
         action = request.POST.get('action')
         print(f"Action: {action}")
@@ -126,10 +137,18 @@ def nextQuestion(request):
         print(f"User code: {user_code}")
         question_id = request.POST.get('questionId')
         questionnaireId = request.POST.get('questionnaireId')
+        print(f'questionnaireId: {questionnaireId}')
+        print(f'questionId: {question_id}')
+        print(f'userId: {user_id}')
 
         # Calcola il numero totale di domande e domande completate
-        total_questions = Question.objects.count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
-        questions_completed = AnsweredQuestions.objects.filter(userId=user_id, dateAnswer=today_date).count()  # Domande completate  AGGIUNGERE FILTRO PER DATA
+        groupsID = Group.objects.filter(questionnaireId=questionnaireId).values_list('groupId', flat=True)
+        total_questions = Question.objects.filter(groupId__in=groupsID).count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
+        print(f"Total questions: {total_questions}")
+        
+        questions_completed = AnsweredQuestions.objects.filter(userId=user_id, dateAnswer=today_date).count()  # Domande completate nelle ultime ore
+        print(f"Questions completed: {questions_completed}")
+
         completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
 
         # Gestisci il caso del pulsante "Next"
@@ -146,19 +165,14 @@ def nextQuestion(request):
 
                 # Salvataggio delle risposte per le domande con Custom Answer
                 for questionid, answer_value in [(227, age), (228, weight), (229, height), (230, waist)]:
-                    existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=questionid, dateAnswer=today_date).first()
-                    if existing_answer:
-                        existing_answer.customAnswer = answer_value
-                        existing_answer.save()
-                        print(f"Updated customAnswer for question {questionid}")
-                    else:
-                        AnsweredQuestions.objects.create(
-                            userId=user_id,
-                            questionId=questionid,
-                            answerId=None,
-                            customAnswer=answer_value
-                        )
-                        print(f"Created new answer for question {questionid}")
+                    AnsweredQuestions.objects.update_or_create(
+                        dateAnswer=today_date,
+                        userId=user_id,
+                        questionId=questionid,
+                        answerId=None,
+                        defaults={'customAnswer': answer_value},
+                    )
+                    print(f"Created new answer for question {questionid}")
 
                 # Aggiorna o crea risposte per "Sesso" e "Fumo"
                 AnsweredQuestions.objects.update_or_create(
@@ -186,17 +200,18 @@ def nextQuestion(request):
                 filename_without_extension, file_extension = os.path.splitext(original_filename)
                 upload_file_date = datetime.date.today().strftime('%Y%m%d') 
                 new_filename = f"{question_id}_{filename_without_extension}-{user_id}-{upload_file_date}{file_extension}"
-                fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # Usa MEDIA_ROOT per salvare il file
-                print(f"Saving file: {settings.MEDIA_ROOT}")
-                filename = fs.save(new_filename, uploaded_file)  # Salva il file
-                file_url = fs.url(filename)  # Ottieni l'URL per accedere al file
+                uploaded_file.name = new_filename  # Cambia il nome del file
+                # fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # Usa MEDIA_ROOT per salvare il file
+                # print(f"Saving file: {settings.MEDIA_ROOT}")
+                # filename = fs.save(new_filename, uploaded_file)  # Salva il file
+                # file_url = fs.url(filename)  # Ottieni l'URL per accedere al file
 
                 # Salva o aggiorna la risposta con il nuovo URL del file
                 AnsweredQuestions.objects.update_or_create(
                     userId=user_id,  
                     dateAnswer=datetime.date.today(),  # Usa la data odierna
                     questionId=question_id, 
-                    defaults={'uploaded_file': file_url}  # Salva il percorso del file
+                    defaults={'uploaded_file': uploaded_file}  # Salva il percorso del file
                 )
 
             # Gestisci le risposte multiple
@@ -225,19 +240,14 @@ def nextQuestion(request):
                     
             elif custom_answer:
                 # Gestisci le risposte personalizzate
-                existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=None,  dateAnswer=today_date).first()
-                if existing_answer_custom:
-                    existing_answer_custom.customAnswer = custom_answer
-                    existing_answer_custom.save()  # Salva l'istanza aggiornata
-                    print(f"Updated customAnswer for question {question_id}")
-                else:
-                    AnsweredQuestions.objects.create(
-                        userId=user_id,
-                        questionId=question_id,
-                        answerId=None,
-                        customAnswer=custom_answer
-                    )
-                    print(f"Created new custom answer for question {question_id}")
+                AnsweredQuestions.objects.update_or_create(
+                    userId=user_id,
+                    questionId=question_id,
+                    answerId=None,
+                    dateAnswer=today_date,
+                    defaults={'customAnswer':custom_answer},
+                )
+                print(f"Created new custom answer for question {question_id}")
             else:
                 print("No answers or custom answer found.")
 
@@ -280,11 +290,11 @@ def nextQuestion(request):
 
             # Ritorna il template corretto in base al tipo domanda
             if q['typeQuestion_id'] == "1":
-                return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
+                return render(request, 'questionnaire/test_radio.html', context=context_questions)
             elif q['typeQuestion_id'] == "2":
-                return render(request, 'questionnaire/test_specifica.html', context=context_questions)
+                return render(request, 'questionnaire/test_text.html', context=context_questions)
             elif q['typeQuestion_id'] == "3":
-                return render(request, 'questionnaire/test_singola.html', context=context_questions)
+                return render(request, 'questionnaire/test_check.html', context=context_questions)
             elif q['typeQuestion_id'] == "4":
                 return render(request, 'questionnaire/test_media.html', context=context_questions)
             else:
@@ -300,8 +310,9 @@ def nextQuestion(request):
                 return render(request, 'questionnaire/result.html', {'userId': user_id, 'userCode': user_code})
 
             if is_first_group:
-                context_questions = showGeneralitaForm(user_id)
-                return render(request, 'questionnaire/test_generale.html', context=context_questions)
+                questionnaireJSON = getQuestionnaire(loginApplicativo())
+                context_questions = showGeneralitaForm(user_id, questionnaireJSON)
+                return render(request, 'questionnaire/test_intro.html', context=context_questions)
 
             question = previousQuestionObj
             saved_answers = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId,  dateAnswer=today_date)
@@ -342,11 +353,11 @@ def nextQuestion(request):
 
             # Ritorna il template adatto per la domanda precedente
             if q['typeQuestion_id'] == "1":
-                return render(request, 'questionnaire/test_checkbox.html', context=context_questions)
+                return render(request, 'questionnaire/test_radio.html', context=context_questions)
             elif q['typeQuestion_id'] == "2":
-                return render(request, 'questionnaire/test_specifica.html', context=context_questions)
+                return render(request, 'questionnaire/test_text.html', context=context_questions)
             elif q['typeQuestion_id'] == "3":
-                return render(request, 'questionnaire/test_singola.html', context=context_questions)
+                return render(request, 'questionnaire/test_check.html', context=context_questions)
             elif q['typeQuestion_id'] == "4":
                 return render(request, 'questionnaire/test_media.html', context=context_questions)
             else:
