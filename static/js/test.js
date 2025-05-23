@@ -111,7 +111,16 @@
 
         // === Validazione ===
         form.addEventListener('submit', function (e) {
-            form.querySelectorAll('.error').forEach(el => el.remove());
+            // Controlla quale pulsante è stato premuto
+            const action = e.submitter ? e.submitter.value : ''; // "next" o "prev"
+            
+            // Se l'azione è "prev", non fare la validazione
+            if (action === 'prev') {
+                return; // Non fare nulla
+            }
+
+            // Se l'azione è "next", procedi con la validazione
+            form.querySelectorAll('.error').forEach(el => el.remove()); // Rimuovi gli errori esistenti
             let formValid = true;
             const formData = {};
 
@@ -163,13 +172,13 @@
             }
 
             if (!formValid) {
-                e.preventDefault();
+                e.preventDefault(); // Prevenire l'invio del form se non valido
                 const firstError = form.querySelector('.error');
                 if (firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             } else {
-                localStorage.setItem(formId, JSON.stringify(formData));
+                localStorage.setItem(formId, JSON.stringify(formData)); // Salva i dati nel localStorage
             }
         });
 
@@ -190,9 +199,10 @@
         if (prevButton && prevButton.dataset.prevUrl) {
             prevButton.classList.remove('d-none');
             prevButton.addEventListener('click', function () {
-                window.location.href = prevButton.dataset.prevUrl;
+                window.location.href = prevButton.dataset.prevUrl; // Gestisci il tasto indietro
             });
         }
+
     });
 
 })(window.jQuery);
