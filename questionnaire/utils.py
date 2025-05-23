@@ -350,7 +350,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     questionnaireResponse['answeredQuestions'] = answer_list
 
     ######### PREPARO LA CHIAMATA ALL'API #########
-    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/NW/"
+    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/NW?userId={userCode}"
     method = "POST"
     headers = {
         # 'Content-Type': 'multipart/form-data',
@@ -360,7 +360,6 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
         "userId": userCode,
         "questionnaire": questionnaireResponse,
     }
-    print(f"Data to send: {payload}")
     files = []
     for f in file_list:
         files.append(('files', (f.name, f.open('rb'), 'application/octet-stream')))
