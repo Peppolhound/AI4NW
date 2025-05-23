@@ -23,27 +23,30 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-custom sticky">
         <div class="container">
             <a class="navbar-brand logo" href="{% url 'home' %}">
-                <img src="{% static 'images/AI4NIGHTWORKERS_Logo.png' %}" alt="AI4NIGHTWORKERS Logo" width="70">AI4NIGHTWORKERS</a>
+                <img src="{% static 'images/AI4NIGHTWORKERS_Logo.png' %}" alt="AI4NIGHTWORKERS Logo" width="70">AI4NIGHTWORKERS
+            </a>
             <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-        </div>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#home">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#partner">Partners</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}" hidden>Test</a>
-                </li>
-            </ul>
-            <a class="btn btn-outline-success" id="login" href="{% url 'login' %}" role="button">Login</a>
+            <!-- SPOSTATO DENTRO .container -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#partner">Partners</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}" hidden>Test</a>
+                    </li>
+                </ul>
+                <a class="btn btn-outline-success ms-3" id="login" href="{% url 'login' %}" role="button">Login</a>
+            </div>
         </div>
     </nav>
+
     <!-- Navbar END -->
 
     <!-- HOME START-->
@@ -87,7 +90,7 @@
                     <div class="features mt-4">
                         <div class="text-center">
                             <div class="mb-4">
-                                <img src="{% static 'images/1.jpg' %}" class="img-fluid rounded" alt="">
+                                <img src="{% static 'images/1.png' %}" class="img-fluid rounded" alt="">
                             </div>
 
                             <h4>Il Benessere come Inizio</h4>
@@ -100,7 +103,7 @@
                     <div class="features mt-4">
                         <div class="text-center">
                             <div class="mb-4">
-                                <img src="{% static 'images/2.jpg' %}" class="img-fluid rounded" alt="">
+                                <img src="{% static 'images/2.png' %}" class="img-fluid rounded" alt="">
                             </div>
                             <h4>Il futuro che immaginiamo</h4>
                             <p class="features-desc text-muted mt-3 pl-2 pr-2">Vogliamo promuovere una cultura della prevenzione che metta le persone al primo posto. Nel nostro futuro ogni lavoratore notturno può vivere in salute, con strumenti efficaci per conoscere, prevenire e affrontare i rischi legati ai propri ritmi di vita.</p>
@@ -112,7 +115,7 @@
                     <div class="features mt-4">
                         <div class="text-center">
                             <div class="mb-4">
-                                <img src="{% static 'images/3.jpg' %}" class="img-fluid rounded" alt="">
+                                <img src="{% static 'images/3.png' %}" class="img-fluid rounded" alt="">
                             </div>
                             <h4>Cosa ci sprona</h4>
                             <p class="features-desc text-muted mt-3 pl-2 pr-2">La nostra missione è creare soluzioni digitali, semplici e affidabili, per valutare in anticipo i rischi per la salute dei lavoratori turnisti. Attraverso dati concreti e l'intelligenza artificiale, vogliamo dare valore all'esperienza di chi lavora di notte.</p>
@@ -268,7 +271,7 @@
                 <div class="col-lg-4 me-4">
                     <div class="footer-menu">
                         <h5 class="mb-4 text-uppercase">AI4NIGHTWORKERS</h5>
-                        <p>Sanità digitale per migliorare la qualità della vita di chi lavora quando il mondo riposa. Posto per la Fund Mention dell'Ente Finanziatore.</p>
+                        <p>Sanità digitale per migliorare la qualità della vita di chi lavora quando il mondo riposa.</p>
                         <!-- <div class="text-white">
                             <a href="#facebook"><i class="mdi mdi-facebook facebook footer_mdi"></i></a>
                             <a href="#twitter"><i class="mdi mdi-twitter twitter footer_mdi"></i></a>

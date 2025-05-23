@@ -320,7 +320,7 @@ p{
     4. Home
 ================================*/
 .bg-home {
-    background-image: url('/static/images/home-bg.jpg');
+    background-image: url('/static/images/centrale.png');
     background-size: cover;
     background-position: center center;
     height: 100vh;
@@ -328,7 +328,7 @@ p{
 }
 
 .bg-home-half {
-    background-image: url('/static/images/home-bg.jpg');
+    background-image: url('/static/images/centrale.png');
     background-size: cover;
     background-position: center center;
     padding: 250px 0px 200px;
@@ -355,7 +355,7 @@ p{
 }
 
 .bg-cta {
-    background-image: url('/static/images/home-bg.jpg');
+    background-image: url('/static/images/centrale.png');
     background-size: cover;
     background-position: center center;
     position: relative;
