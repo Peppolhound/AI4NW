@@ -331,7 +331,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     print(f"User ID: {userId}")
     print(f"Questionnaire ID: {questionnaireId}")
     questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId, user_id=userId, dateInsert=today)
-    questionnaireResponse['dateInsert'] = questionnaireValue.dateInsert.strftime("%Y%m%d")
+    questionnaireResponse['dateInsert'] = int(questionnaireValue.dateInsert.strftime("%Y%m%d"))
     questionnaireResponse['questionnaireKey'] = "NW"
 
     groups = Group.objects.filter(questionnaireId=questionnaireId)
@@ -341,16 +341,17 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
             answers = AnsweredQuestions.objects.filter(questionId=question.questionId, userId=userId, dateAnswer=today)
             answer_dict = {}
             for answer in answers:
-                answer_dict['answerId'] = answer.answerId
-                answer_dict['questionId'] = answer.questionId
+                answer_dict['answerId'] = int(answer.answerId)
+                answer_dict['questionId'] = int(answer.questionId)
                 answer_dict['customAnswer'] = answer.customAnswer
                 if answer.uploaded_file:
                     file_list.append(answer.uploaded_file)    # Se l'ID della risposta corrisponde a quello selezionato, salva la risposta
                 answer_list.append(answer_dict)
     questionnaireResponse['answeredQuestions'] = answer_list
+    dumpedJSON = json.dumps(questionnaireResponse)
 
     ######### PREPARO LA CHIAMATA ALL'API #########
-    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/NW?userId={userCode}"
+    endpoint_url = f"https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/submit?idUser={userId}"
     method = "POST"
     headers = {
         # 'Content-Type': 'multipart/form-data',
@@ -358,7 +359,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     }
     payload = {
         "userId": userCode,
-        "questionnaire": questionnaireResponse,
+        "questionnaire": dumpedJSON,
     }
     files = []
     for f in file_list:
