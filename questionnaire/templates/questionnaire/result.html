@@ -41,7 +41,7 @@
                     <a class="nav-link" href="{% url 'test' %}">Test</a>
                 </li>
             </ul>
-            <a class="btn btn-outline-success" id="login" href="{% url 'login' %}" role="button">Login</a>
+            <a class="btn btn-outline-success" id="login" href="{% url 'login' %}" role="button" hidden>Login</a>
         </div>
     </nav>
     <!-- Navbar END -->
@@ -84,7 +84,7 @@
                                 <div class="service-head mt-4 mx-5 mobile-position-fix">
                                     <h4>Complimenti,  hai terminato il test!</h4>
                                     <p class="text-muted mb-0">Secondo il <a href="https://www.chronomeddiet.org/"> Chrono Med Diet Score: </a><br> <strong>{{ CMDS }} </strong></p><br> 
-                                    <p class="text-muted mb-0">L'indice di rischio associato al <a href="https://en.wikipedia.org/wiki/Framingham_Risk_Score"> Framingham Score </a>è pari a: <br><strong>{{ Framingham }} </strong></p>
+                                    <p class="text-muted mb-0">L'indice di rischio cardiovascolare associato al <a href="https://en.wikipedia.org/wiki/Framingham_Risk_Score"> Framingham Score </a>è pari a: <br><strong>{{ Framingham }} </strong></p>
                                 </div>
                             </div>
                         </div>
