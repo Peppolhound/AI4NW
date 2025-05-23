@@ -341,8 +341,8 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
             answers = AnsweredQuestions.objects.filter(questionId=question.questionId, userId=userId, dateAnswer=today)
             answer_dict = {}
             for answer in answers:
-                answer_dict['answerId'] = int(answer.answerId) if answer.answerId else None
-                answer_dict['questionId'] = answer.questionId
+                answer_dict['answerId'] = int(answer.answerId)
+                answer_dict['questionId'] = int(answer.questionId)
                 answer_dict['customAnswer'] = answer.customAnswer
                 if answer.uploaded_file:
                     file_list.append(answer.uploaded_file)    # Se l'ID della risposta corrisponde a quello selezionato, salva la risposta
@@ -351,7 +351,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     dumpedJSON = json.dumps(questionnaireResponse)
 
     ######### PREPARO LA CHIAMATA ALL'API #########
-    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/NW/"
+    endpoint_url = f"https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/submit?idUser={userId}"
     method = "POST"
     headers = {
         # 'Content-Type': 'multipart/form-data',
