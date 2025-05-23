@@ -358,13 +358,13 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
         'tokenId': loginApplicativo(),
     }
     payload = {
-        "userId": userCode,
+        # "userId": userCode,
         "questionnaire": dumpedJSON,
     }
     print(f"Data to send: {payload}")
     files = []
     for f in file_list:
-        files.append(('files', (f.name, f.open('rb'), 'application/octet-stream')))
+        files.append(('files', (f.name, f.open('rb'), 'image/jpeg')))  # Assuming the file is a JPEG image
 
     response = call_api(
         endpoint_url=endpoint_url,
