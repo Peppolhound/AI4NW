@@ -254,7 +254,7 @@ def showGeneralitaForm(user_id, usercode, questionnaireJSON):
         questionnaire = parseJSON(questionnaireJSON)
         first_group = Group.objects.filter(questionnaireId=questionnaire.questionnaireId).order_by('order').first() # SELEZIONO IL PRIMO GRUPPO con ID del questionario (in genere ANAMNESI)
         questions = Question.objects.filter(groupId=first_group.groupId).order_by('order')              # SELEZIONO LE DOMANDE del primo gruppo
-        print(f"Questions: {questions}")
+        # print(f"Questions: {questions}")
 
         context_questions = {}
         for question in questions:
@@ -285,28 +285,37 @@ def showGeneralitaForm(user_id, usercode, questionnaireJSON):
 
             if 'Sesso' in question.description: 
                 context_questions['sesso'] = q
-                context_questions['questionId'] = q['questionId'] 
+                # context_questions['questionId'] = q['questionId'] 
             elif 'Età' in question.description:
                 context_questions['eta'] = q
-                context_questions['questionId'] = q['questionId'] 
+                # context_questions['questionId'] = q['questionId'] 
             elif 'Altezza' in question.description:
                 context_questions['altezza'] = q
-                context_questions['questionId'] = q['questionId'] 
+                # context_questions['questionId'] = q['questionId'] 
             elif 'Peso' in question.description:
                 context_questions['peso'] = q
-                context_questions['questionId'] = q['questionId'] 
+                # context_questions['questionId'] = q['questionId'] 
             elif 'Fumo' in question.description:
                 context_questions['fumo'] = q
-                context_questions['questionId'] = q['questionId'] 
+                # context_questions['questionId'] = q['questionId'] 
             elif 'Addominale' in question.description:
                 context_questions['addominale'] = q
-                context_questions['questionId'] = q['questionId'] 
+                # context_questions['questionId'] = q['questionId'] 
             
 
         # User login failed, show an error message
+        question_id = context_questions['fumo']['questionId']
+        context_questions['questionId'] = question_id
+        completion_percentage = getProgressBarStatus(questionnaire.questionnaireId, question_id)
+        context_questions['completion_percentage'] = completion_percentage
+
+
+
+
         context_questions['questionnaireId'] = questionnaire.questionnaireId
         context_questions['userId'] = user_id 
         context_questions['userCode'] = usercode
+        print(f"Context Questions: {context_questions}")
         return context_questions
 
 def submitQuestionnaire(userId, userCode, questionnaireId):
@@ -371,11 +380,39 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
 
 def getSavedAnswers(userId, questionId):
     today = datetime.date.today()
-    saved_answers = AnsweredQuestions.objects.filter(userId=userId, questionId=questionId,  dateAnswer=today)
-    saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
-    saved_custom_answer = None
-    custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
-    if custom_answers:
-        saved_custom_answer = custom_answers[0]
-    
+    saved_answers = AnsweredQuestions.objects.filter(userId=userId, questionId=questionId, dateAnswer=today)
+    if saved_answers:
+        saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
+        saved_custom_answer = None
+        custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
+        if custom_answers:
+            saved_custom_answer = custom_answers[0]
+    else:
+        saved_answer_ids = ""
+        saved_custom_answer = ""
     return saved_answer_ids, saved_custom_answer
+
+def getProgressBarStatus(questionnaireId, questionId):
+
+    # Calcola il numero totale di domande 
+    groupsID = Group.objects.filter(questionnaireId=questionnaireId).values_list('groupId', flat=True)
+    total_questions = Question.objects.filter(groupId__in=groupsID).count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
+
+    # Calcola il numero di domande fino alla domanda corrente
+    questionList = []
+    for group in groupsID:
+        questionList.extend(list(Question.objects.filter(groupId=group).order_by('order').values_list('questionId', flat=True)))
+
+    print(f"QuestionList: {questionList}")
+    try:
+        idx = questionList.index(questionId)
+        # print(f"Index of current question: {idx}")
+        # print(f"Question ID: {questionId}")
+        questions_completed = idx + 1
+    except ValueError:
+        questions_completed = 0
+    print(f"Total questions: {total_questions}")
+    print(f"Questions completed: {questions_completed}")
+    completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
+
+    return completion_percentage

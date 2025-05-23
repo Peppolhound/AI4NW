@@ -36,9 +36,10 @@ def test_intro(request):
             questionnaireId = questionnaireJSON['questionnaireId']
             print(f"Questionnaire ID: {questionnaireId}")
             user_id= loginUtente(usercode, tokenId)
-            QuestionnaireValue.objects.create(
+            QuestionnaireValue.objects.update_or_create(
                 user_id=user_id,
-                questionnaireId=questionnaireId
+                questionnaireId=questionnaireId,
+                dateInsert=datetime.date.today(),
             )
             context_questions = showGeneralitaForm(user_id, usercode, questionnaireJSON)
             return render(request, 'questionnaire/test_intro.html', context=context_questions)
@@ -141,13 +142,15 @@ def nextQuestion(request):
         print(f'questionId: {question_id}')
         print(f'userId: {user_id}')
 
-        # Calcola il numero totale di domande e domande completate
-        groupsID = Group.objects.filter(questionnaireId=questionnaireId).values_list('groupId', flat=True)
-        total_questions = Question.objects.filter(groupId__in=groupsID).count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
-        print(f"Total questions: {total_questions}")
-        questions_completed = AnsweredQuestions.objects.filter(userId=user_id, dateAnswer=today_date).count()  # Domande completate nelle ultime ore
-        print(f"Questions completed: {questions_completed}")
-        completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
+        # # Calcola il numero totale di domande e domande completate
+        # groupsID = Group.objects.filter(questionnaireId=questionnaireId).values_list('groupId', flat=True)
+        # total_questions = Question.objects.filter(groupId__in=groupsID).count()  # Numero totale di domande  AGGIUNGERE QUESTIONID
+        # print(f"Total questions: {total_questions}")
+        # questions_completed = AnsweredQuestions.objects.filter(userId=user_id, dateAnswer=today_date).count()  # Domande completate nelle ultime ore
+        # print(f"Questions completed: {questions_completed}")
+        # completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
+
+        completion_percentage = getProgressBarStatus(questionnaireId, question_id)
 
         # Gestisci il caso del pulsante "Next"
         if action == 'next':
@@ -303,6 +306,9 @@ def nextQuestion(request):
             else:
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
         
+
+
+
         # Gestisci il caso del pulsante "Prev"
         elif action == 'prev':
 
@@ -314,7 +320,7 @@ def nextQuestion(request):
 
             if is_first_group:
                 questionnaireJSON = getQuestionnaire(loginApplicativo())
-                context_questions = showGeneralitaForm(user_id, questionnaireJSON)
+                context_questions = showGeneralitaForm(user_id, user_code, questionnaireJSON)
                 return render(request, 'questionnaire/test_intro.html', context=context_questions)
 
             question = previousQuestionObj
@@ -325,6 +331,8 @@ def nextQuestion(request):
             # if custom_answers:
             #     saved_custom_answer = custom_answers[0]
             saved_answer_ids, saved_custom_answer = getSavedAnswers(user_id, question.questionId)
+
+            completion_percentage = getProgressBarStatus(questionnaireId, question_id)
 
             q = {
                 'questionId': question.questionId,
