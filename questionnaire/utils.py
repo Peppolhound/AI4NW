@@ -361,7 +361,6 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
         # "userId": userCode,
         "questionnaire": dumpedJSON,
     }
-    print(f"Data to send: {payload}")
     files = []
     for f in file_list:
         files.append(('files', (f.name, f.open('rb'), 'image/jpeg')))  # Assuming the file is a JPEG image
