@@ -152,6 +152,8 @@ def nextQuestion(request):
         # completion_percentage = (questions_completed / total_questions) * 100 if total_questions > 0 else 0  # Percentuale di completamento
 
         completion_percentage = getProgressBarStatus(questionnaireId, question_id)
+        stringQuestions = ["241"]
+
 
         # Gestisci il caso del pulsante "Next"
         if action == 'next':
@@ -258,6 +260,7 @@ def nextQuestion(request):
             # if nextQuestionObj is None:
             #     return render(request, 'questionnaire/result.html', {'userId': user_id})
 
+
             # Prepara il context per la prossima domanda
             question = nextQuestionObj
             q = {
@@ -281,6 +284,12 @@ def nextQuestion(request):
             saved_answer_ids, saved_custom_answer = getSavedAnswers(user_id, question.questionId)
 
 
+            if question.questionId in stringQuestions:
+                is_numeric = False
+            else:
+                is_numeric = True
+
+
             context_questions = {
                 'q': q,
                 'questionId': q['questionId'],
@@ -291,8 +300,9 @@ def nextQuestion(request):
                 'saved_custom_answer': saved_custom_answer,
                 'userCode' : user_code,
                 'completion_percentage': completion_percentage,
+                'is_numeric': is_numeric,  # Aggiungi questa riga
             }
-            print(f'La prossima domanda sarà {q['typeQuestion_description']}')
+            print(f'La prossima domanda sarà {q["typeQuestion_description"]}')
             print(f'Questionnaire ID_casonext: {questionnaireId}')
 
             # Ritorna il template corretto in base al tipo domanda
@@ -352,6 +362,11 @@ def nextQuestion(request):
                 })
             q['answers'] = answ
 
+            if question.questionId in stringQuestions:
+                is_numeric = False
+            else:
+                is_numeric = True
+
             context_questions = {
                 'q': q,
                 'questionId': q['questionId'],
@@ -360,7 +375,8 @@ def nextQuestion(request):
                 'saved_answer_ids': saved_answer_ids,
                 'userCode' : user_code,
                 'saved_custom_answer': saved_custom_answer,
-                'completion_percentage': completion_percentage  # Mostra la percentuale anche nel caso di "Prev"
+                'completion_percentage': completion_percentage,  # Mostra la percentuale anche nel caso di "Prev"
+                'is_numeric': is_numeric,  # Aggiungi questa riga
             }
             print(f'Questionnaire ID_Casoprev: {questionnaireId}')
 

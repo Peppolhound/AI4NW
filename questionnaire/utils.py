@@ -369,6 +369,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     for f in file_list:
         files.append(('files', (f.name.split('/')[-1], f.open('rb'), 'image/jpeg')))
 
+    print(f'JSON: {files}')
     # Invio della richiesta POST multipart
     import requests
     response = call_api(endpoint_url=endpoint_url, headers=headers, method='POST', files=files)
@@ -378,7 +379,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     if response:
         print("Questionnaire submitted successfully.")
     else:
-        print(f"Failed to submit questionnaire.\nStatus: {response.status_code}\nMessage: {response.text}")
+        print(f"Failed to submit questionnaire.")
     return response
 
 

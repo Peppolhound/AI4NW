@@ -41,7 +41,7 @@
                     <a class="nav-link" href="{% url 'test' %}">Test</a>
                 </li>
             </ul>
-            <a class="btn btn-outline-success" id="login" href="{% url 'login' %}" role="button">Login</a>
+            <a class="btn btn-outline-success" id="login" href="{% url 'login' %}" role="button" hidden>Login</a>
         </div>
     </nav>
     <!-- Navbar END -->
@@ -106,15 +106,27 @@
                                                             Inserisci il valore:
                                                         {% endif %}
                                                     </label>
-                                                    <textarea
+                                                    {% if is_numeric %}
+                                                    <input
                                                         class="form-control"
                                                         name="customAnswer_{{ q.questionId }}"
                                                         id="customAnswer_{{ q.questionId }}"
                                                         value = "{{ saved_custom_answer }}"
                                                         rows="3"
                                                         placeholder="Scrivi qui..."
-                                                        required
+                                                        required 
+                                                        type="number" 
+                                                    ></input>
+                                                    {% else %}
+                                                    <textarea
+                                                        class="form-control"
+                                                        name="customAnswer_{{ q.questionId }}"
+                                                        id="customAnswer_{{ q.questionId }}"
+                                                        rows="3"
+                                                        placeholder="Scrivi qui..."
+                                                        required type="number" 
                                                     >{{ saved_custom_answer }}</textarea>
+                                                    {% endif %} 
                                                 </div>
                                                 {% endif %}
                                                     <!-- <label class="container_radio">No

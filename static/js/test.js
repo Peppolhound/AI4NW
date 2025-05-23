@@ -126,7 +126,7 @@
 
             const allFields = Array.from(form.querySelectorAll('input[name], select[name], textarea[name]'));
             const fieldGroups = [...new Set(allFields.map(el => el.name))];
-
+            
             fieldGroups.forEach(name => {
                 const fields = form.querySelectorAll(`[name="${name}"]`);
                 const type = fields[0].type;
