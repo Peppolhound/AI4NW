@@ -363,7 +363,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     }
     files = []
     for f in file_list:
-        files.append(('files', (f.name, f.open('rb'), 'image/jpeg')))  # Assuming the file is a JPEG image
+        files.append(('files', (f.name.split('/')[-1], f.open('rb'), 'image/jpeg')))  # Get only the file name
 
     response = call_api(
         endpoint_url=endpoint_url,
