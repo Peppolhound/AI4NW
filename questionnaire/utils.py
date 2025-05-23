@@ -243,7 +243,7 @@ def getFirstQuestion(questionnaireId):
         return None
     
 
-def showGeneralitaForm(user_id):
+def showGeneralitaForm(user_id, usercode):
     today_date = datetime.date.today()
     tokenId = loginApplicativo()
     questionnaireJSON = getQuestionnaire(tokenId)
@@ -304,9 +304,10 @@ def showGeneralitaForm(user_id):
         # User login failed, show an error message
         context_questions['questionnaireId'] = questionnaire.questionnaireId
         context_questions['userId'] = user_id 
+        context_questions['userCode'] = usercode
         return context_questions
 
-def submitQuestionnaire(userId, questionnaireId):
+def submitQuestionnaire(userId, userCode, questionnaireId):
     import datetime
 
     ##### RACCOGO ED ORGANIZZO IN JSON I DATI DEL QUESTIONARIO #####
@@ -337,14 +338,14 @@ def submitQuestionnaire(userId, questionnaireId):
     questionnaireResponse['answeredQuestions'] = answer_list
 
     ######### PREPARO LA CHIAMATA ALL'API #########
-    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/"
+    endpoint_url = "https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/NW/"
     method = "POST"
     headers = {
         'Content-Type': 'application/json',
         'tokenId': loginApplicativo(),
     }
     payload = {
-        "userId": userId,
+        "userId": userCode,
         "questionnaire": questionnaireResponse,
         "files": file_list,
     }

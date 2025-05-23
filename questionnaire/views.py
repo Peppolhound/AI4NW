@@ -32,12 +32,11 @@ def test_generale(request):
             ################## DEBUG ##################
             questionnaireId = request.POST.get('questionnaireId')
             user_id= loginUtente(usercode, tokenId)
-            print(f"User ID: {user_id}")
             QuestionnaireValue.objects.create(
                 user_id=user_id,
                 questionnaireId=questionnaireId
             )
-            context_questions = showGeneralitaForm(user_id)
+            context_questions = showGeneralitaForm(user_id, usercode)
             return render(request, 'questionnaire/test_generale.html', context=context_questions)
     else:
         # If it's a GET request, just render the login page
@@ -59,6 +58,7 @@ def result(request):
         question_id = request.POST.get('questionId')
         custom_answer = request.POST.get(f'customAnswer_{question_id}', None)
         user_id = request.POST.get('userId')    
+        user_code = request.POST.get('userCode')
         questionnaireId = request.POST.get('questionnaireId')
         
 
@@ -102,7 +102,7 @@ def result(request):
         else:
             pass
         
-        response = submitQuestionnaire(userId=user_id, questionnaireId=questionnaireId)
+        response = submitQuestionnaire(userId=user_id, userCode = user_code, questionnaireId=questionnaireId)
         context = {
             'CMDS': response['results']['CMDS'],
             'Framingham Risk': response['results']['Framingame'],
@@ -121,6 +121,9 @@ def nextQuestion(request):
         
         # Ottieni userId e questionId
         user_id = request.POST.get('userId')
+        user_code = request.POST.get('userCode')
+        print(f"User ID: {user_id}")
+        print(f"User code: {user_code}")
         question_id = request.POST.get('questionId')
         questionnaireId = request.POST.get('questionnaireId')
 
@@ -252,6 +255,7 @@ def nextQuestion(request):
                 'typeQuestion_id': question.typeQuestion_idTypeQuestion,
                 'groupId': question.groupId,
                 'order': question.order,
+                
             }
             answ = []
             for answer in nextAnswer:
@@ -268,10 +272,11 @@ def nextQuestion(request):
                 'questionnaireId': questionnaireId,
                 'userId': user_id,
                 'is_last_question': is_last,
+                'userCode' : user_code,
                 'completion_percentage': completion_percentage,
             }
             print(f'La prossima domanda sarà {q['typeQuestion_description']}')
-            print(f'Questionnaire ID: {questionnaireId}')
+            print(f'Questionnaire ID_casonext: {questionnaireId}')
 
             # Ritorna il template corretto in base al tipo domanda
             if q['typeQuestion_id'] == "1":
@@ -292,7 +297,7 @@ def nextQuestion(request):
             previousQuestionObj, previousAnswer, is_first_group = getPreviousQuestion(question_id)
 
             if previousQuestionObj is None:
-                return render(request, 'questionnaire/result.html', {'userId': user_id})
+                return render(request, 'questionnaire/result.html', {'userId': user_id, 'userCode': user_code})
 
             if is_first_group:
                 context_questions = showGeneralitaForm(user_id)
@@ -329,10 +334,11 @@ def nextQuestion(request):
                 'userId': user_id,
                 'questionnaireId': questionnaireId,
                 'saved_answer_ids': saved_answer_ids,
+                'userCode' : user_code,
                 'saved_custom_answer': saved_custom_answer,
                 'completion_percentage': completion_percentage  # Mostra la percentuale anche nel caso di "Prev"
             }
-            print(f'Questionnaire ID: {questionnaireId}')
+            print(f'Questionnaire ID_Casoprev: {questionnaireId}')
 
             # Ritorna il template adatto per la domanda precedente
             if q['typeQuestion_id'] == "1":

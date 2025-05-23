@@ -87,12 +87,12 @@
 
         // === Validazione ===
         form.addEventListener('submit', function (e) {
-            // Controlla quale pulsante è stato premuto
-            const action = e.submitter ? e.submitter.value : ''; // "next" o "prev"
+            // Controlla quale pulsante è stato premuto tra "next" o "prev"
+            const action = e.submitter ? e.submitter.value : ''; 
             
-            // Se l'azione è "prev", non fare la validazione
+            // Se l'azione è "prev", non fa la validazione
             if (action === 'prev') {
-                return; // Non fare nulla
+                return; 
             }
 
             // Se l'azione è "next", procedi con la validazione
