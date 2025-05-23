@@ -12,4 +12,5 @@ urlpatterns = [
     path('next-question/', views.nextQuestion, name='next_question'),
     path('result/', views.result, name='result'),  
 
+
 ]

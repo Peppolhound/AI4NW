@@ -108,11 +108,12 @@ def result(request):
             pass
         
         response = submitQuestionnaire(userId=user_id, userCode = user_code, questionnaireId=questionnaireId)
+        print(f"Response: {response}")
 
         if response:
             context = {
-                'CMDS': response['results']['CMDS'],
-                'Framingham Risk': response['results']['Framingame'],
+                'CMDS': response['results']['CDMS'],
+                'Framingham': response['results']['Framingham Risk'],
                 }
         else:
             print(f"Error! Response = None")

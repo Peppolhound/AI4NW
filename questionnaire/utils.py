@@ -379,6 +379,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
         print("Questionnaire submitted successfully.")
     else:
         print(f"Failed to submit questionnaire.\nStatus: {response.status_code}\nMessage: {response.text}")
+    return response
 
 
 def getSavedAnswers(userId, questionId):
