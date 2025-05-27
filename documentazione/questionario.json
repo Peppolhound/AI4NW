@@ -27,6 +27,12 @@
                             "questionId": 226,
                             "description": "Femmina",
                             "order": 2
+                        },
+                        {
+                            "answerId": 909,
+                            "questionId": 226,
+                            "description": "Non voglio rispondere",
+                            "order": 3
                         }
                     ],
                     "order": 1
@@ -82,7 +88,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Fumo",
+                    "description": "Fumi?",
                     "answers": [
                         {
                             "answerId": 823,
@@ -182,6 +188,18 @@
                             "questionId": 233,
                             "description": "6",
                             "order": 7
+                        },
+                        {
+                            "answerId": 897,
+                            "questionId": 233,
+                            "description": "Più di 6",
+                            "order": 8
+                        },
+                        {
+                            "answerId": 898,
+                            "questionId": 233,
+                            "description": "Solo notturni",
+                            "order": 9
                         }
                     ],
                     "order": 2
@@ -234,14 +252,20 @@
                         {
                             "answerId": 838,
                             "questionId": 235,
-                            "description": "Alla luce naturale",
+                            "description": "Alla luce naturale sia di giorno che di notte",
                             "order": 1
                         },
                         {
                             "answerId": 839,
                             "questionId": 235,
-                            "description": "Alla luce artificiale (stanza illuminata a giorno a prescindere dall’orario)",
+                            "description": "Alla luca artificiale di giorno e a quella artificiale di notte",
                             "order": 2
+                        },
+                        {
+                            "answerId": 899,
+                            "questionId": 235,
+                            "description": "Alla luce artificiale sia di giorno che di notte",
+                            "order": 3
                         }
                     ],
                     "order": 4
@@ -262,7 +286,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Terapia per Diabete:",
+                    "description": "Assumi terapia per il diabete?",
                     "answers": [
                         {
                             "answerId": 840,
@@ -286,7 +310,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Terapia per Ipertensione Arteriosa",
+                    "description": "Assumi terapia per l'ipertensione arteriosa?",
                     "answers": [
                         {
                             "answerId": 842,
@@ -310,7 +334,7 @@
                         "idTypeQuestion": 1,
                         "description": "Checkbox"
                     },
-                    "description": "Terapia per colesterolo alto ",
+                    "description": "Assumi terapia per dislipidemia (colesterolo o trigliceridi alti) ?",
                     "answers": [
                         {
                             "answerId": 844,
@@ -334,7 +358,7 @@
                         "idTypeQuestion": 2,
                         "description": "Testo"
                     },
-                    "description": "Ultimo valore di Colesterolo misurato",
+                    "description": "Ultimo valore di Colesterolo Totale misurato",
                     "answers": [],
                     "order": 4
                 },
@@ -345,7 +369,7 @@
                         "idTypeQuestion": 2,
                         "description": "Testo"
                     },
-                    "description": "Ultimo valore di Colesterolo HDL misurato (mmol/L)",
+                    "description": "Ultimo valore di Colesterolo HDL Totale misurato (mmol/L)",
                     "answers": [],
                     "order": 5
                 },
@@ -356,7 +380,7 @@
                         "idTypeQuestion": 2,
                         "description": "Testo"
                     },
-                    "description": "Ultimo valore di Pressione Arteriosa Massima misurata (mmHg)",
+                    "description": "Ultimo valore di Pressione Arteriosa Massima (Sistolica) misurata",
                     "answers": [],
                     "order": 6
                 },
@@ -367,7 +391,7 @@
                         "idTypeQuestion": 2,
                         "description": "Testo"
                     },
-                    "description": "Ultimo valore di Pressione Arteriosa Minima misurata (mmHg)",
+                    "description": "Ultimo valore di Pressione Arteriosa Minima (Diastolica) misurata",
                     "answers": [],
                     "order": 7
                 },
@@ -375,11 +399,66 @@
                     "questionId": 241,
                     "groupId": 23,
                     "typeQuestion": {
-                        "idTypeQuestion": 2,
-                        "description": "Testo"
+                        "idTypeQuestion": 3,
+                        "description": "Checkbox Multipla"
                     },
                     "description": "Patologie cardiovascolari già note?",
-                    "answers": [],
+                    "answers": [
+                        {
+                            "answerId": 900,
+                            "questionId": 241,
+                            "description": "Ipertensione Arteriosa",
+                            "order": 1
+                        },
+                        {
+                            "answerId": 901,
+                            "questionId": 241,
+                            "description": "Fibrillazione Atriale",
+                            "order": 2
+                        },
+                        {
+                            "answerId": 902,
+                            "questionId": 241,
+                            "description": "Stenosi/Insufficienza di valvola aortica/mitrale",
+                            "order": 3
+                        },
+                        {
+                            "answerId": 903,
+                            "questionId": 241,
+                            "description": "Alterosclerosi",
+                            "order": 4
+                        },
+                        {
+                            "answerId": 904,
+                            "questionId": 241,
+                            "description": "Aneurisma Aortico",
+                            "order": 5
+                        },
+                        {
+                            "answerId": 905,
+                            "questionId": 241,
+                            "description": "Arteriopatia obliterante degli arti inferiori",
+                            "order": 6
+                        },
+                        {
+                            "answerId": 906,
+                            "questionId": 241,
+                            "description": "Patologie cardiache congenite",
+                            "order": 7
+                        },
+                        {
+                            "answerId": 907,
+                            "questionId": 241,
+                            "description": "Altra patologia cardiovascolare",
+                            "order": 8
+                        },
+                        {
+                            "answerId": 908,
+                            "questionId": 241,
+                            "description": "Nessuna patologia",
+                            "order": 9
+                        }
+                    ],
                     "order": 8
                 }
             ],

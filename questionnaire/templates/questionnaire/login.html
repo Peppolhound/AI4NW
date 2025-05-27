@@ -63,6 +63,18 @@
                         <h3>Login</h3>
 
                         <p>Inserisci il tuo indirizzo email/il tuo codice di accesso</p>
+                        <!-- MESSAGGI DI ERRORE -->
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger mt-3" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% elif error_message %}
+                            <div class="alert alert-danger mt-3" role="alert">
+                                {{ error_message }}
+                            </div>
+                        {% endif %}
                         <form method="POST" action="{% url 'test_intro' %}">
                             {% csrf_token %}
                             <input type="hidden" name="questionnaireId" value="{{ questionnaireId }}">

@@ -36,13 +36,16 @@ def test_intro(request):
             questionnaireId = questionnaireJSON['questionnaireId']
             print(f"Questionnaire ID: {questionnaireId}")
             user_id= loginUtente(usercode, tokenId)
-            QuestionnaireValue.objects.update_or_create(
-                user_id=user_id,
-                questionnaireId=questionnaireId,
-                dateInsert=datetime.date.today(),
-            )
-            context_questions = showGeneralitaForm(user_id, usercode, questionnaireJSON)
-            return render(request, 'questionnaire/test_intro.html', context=context_questions)
+            if user_id:
+                QuestionnaireValue.objects.update_or_create(
+                    user_id=user_id,
+                    questionnaireId=questionnaireId,
+                    dateInsert=datetime.date.today(),
+                )
+                context_questions = showGeneralitaForm(user_id, usercode, questionnaireJSON)
+                return render(request, 'questionnaire/test_intro.html', context=context_questions)
+            else:
+                return render(request, 'questionnaire/login.html', {'error_message': 'Indirizzo email o codice di accesso non valido. Riprova.'})
     else:
         # If it's a GET request, just render the login page
         return redirect('login')

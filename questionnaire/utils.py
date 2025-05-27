@@ -97,7 +97,7 @@ def loginUtente(userCode, tokenId):
         'tokenId': tokenId,
     }
     response = call_api(endpoint_url=url, headers=headers, method=method)
-    userId = response['idUser'] if 'idUser' in response else None
+    userId = response.get('idUser') if isinstance(response, dict) else None
     return userId
 
 def getQuestionnaire(tokenId):
@@ -274,6 +274,7 @@ def showGeneralitaForm(user_id, usercode, questionnaireJSON):
                 a['questionId'] = answer.questionId
                 answ.append(a)
             q['answers'] = answ
+            
 
             saved_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question.questionId, dateAnswer=today_date).first()
             if saved_answer:
@@ -295,13 +296,12 @@ def showGeneralitaForm(user_id, usercode, questionnaireJSON):
             elif 'Peso' in question.description:
                 context_questions['peso'] = q
                 # context_questions['questionId'] = q['questionId'] 
-            elif 'Fumo' in question.description:
+            elif 'Fumi?' in question.description:
                 context_questions['fumo'] = q
                 # context_questions['questionId'] = q['questionId'] 
             elif 'Addominale' in question.description:
                 context_questions['addominale'] = q
                 # context_questions['questionId'] = q['questionId'] 
-            
 
         # User login failed, show an error message
         question_id = context_questions['fumo']['questionId']
