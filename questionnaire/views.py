@@ -296,6 +296,7 @@ def nextQuestion(request):
             context_questions = {
                 'q': q,
                 'questionId': q['questionId'],
+                'description':  Group.objects.get(groupId=question.groupId),
                 'questionnaireId': questionnaireId,
                 'userId': user_id,
                 'is_last_question': is_last,
@@ -374,6 +375,7 @@ def nextQuestion(request):
             context_questions = {
                 'q': q,
                 'questionId': q['questionId'],
+                'description':  Group.objects.get(groupId=question.groupId),
                 'userId': user_id,
                 'questionnaireId': questionnaireId,
                 'saved_answer_ids': saved_answer_ids,

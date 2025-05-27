@@ -315,6 +315,7 @@ def showGeneralitaForm(user_id, usercode, questionnaireJSON):
         context_questions['questionnaireId'] = questionnaire.questionnaireId
         context_questions['userId'] = user_id 
         context_questions['userCode'] = usercode
+        context_questions['description'] = "GENERALITÀ"
         print(f"Context Questions: {context_questions}")
         return context_questions
 
