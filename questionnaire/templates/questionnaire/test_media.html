@@ -71,7 +71,7 @@
                                 <div class="progress-bar" style="width: {{ completion_percentage }}%"></div>
                             </div>                            
                             <!-- FORM START -->
-                            <form id="wrapped_1" class="step-form" method="post" enctype="multipart/form-data" action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question'  %}{% endif %}" novalidate>
+                            <form id="wrapped_1" class="step-form" method="post" enctype="multipart/form-data" action="{% if is_last_question %}{% url 'result' %}{% else %}{% url 'next_question'  %}{% endif %}">
                                 {% csrf_token %}
                                 <div id="middle-wizard">
                                     <fieldset class="step" id="Group_1">
@@ -98,12 +98,17 @@
                                     </fieldset>
                                 </div>
 
-                                <!-- Campo per caricare un file -->
-                                <div class="form-group">
-                                    <label for="file_upload">Carica un file (PDF, JPG, PNG):</label>
-                                    <input type="file" class="form-control" name="file_upload" id="file_upload" accept=".pdf, .jpg, .png" required>
-                                </div>
+                                <div class="d-grid gap-2 mb-2">
+                                    <input type="file"
+                                        name="file_upload"
+                                        id="file_upload"
+                                        accept=".pdf, .jpg, .jpeg, .png, image/*"
+                                        capture="environment"
+                                        value="{{ uploaded_file }}"
+                                        required>
 
+                                    <small id="file-name-output" class="form-text text-muted mt-1"></small>
+                                </div>
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
                                         <button id="prev-button" type="submit" name="action" value="prev" class="backward flex-fill" data-prev-url="{% url 'next_question' %}">Prev</button>

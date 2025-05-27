@@ -195,7 +195,7 @@ def nextQuestion(request):
             # Gestione delle risposte alle domande successive
             question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
             custom_answer = request.POST.get(f'customAnswer_{question_id}', None) 
-            uploaded_file = request.FILES.get('file_upload')
+            uploaded_file = request.FILES.get('file_upload') 
            
             # Se il file è presente, salvalo nel modello
             if uploaded_file:
