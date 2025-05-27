@@ -284,7 +284,7 @@ def nextQuestion(request):
                 })
             q['answers'] = answ
 
-            saved_answer_ids, saved_custom_answer = getSavedAnswers(user_id, question.questionId)
+            saved_answer_ids, saved_custom_answer, uploaded_file = getSavedAnswers(user_id, question.questionId)
 
 
             if question.questionId in stringQuestions:
@@ -301,6 +301,7 @@ def nextQuestion(request):
                 'is_last_question': is_last,
                 'saved_answer_ids': saved_answer_ids,
                 'saved_custom_answer': saved_custom_answer,
+                'uploaded_file': uploaded_file, 
                 'userCode' : user_code,
                 'completion_percentage': completion_percentage,
                 'is_numeric': is_numeric,  # Aggiungi questa riga
@@ -344,7 +345,7 @@ def nextQuestion(request):
             # custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
             # if custom_answers:
             #     saved_custom_answer = custom_answers[0]
-            saved_answer_ids, saved_custom_answer = getSavedAnswers(user_id, question.questionId)
+            saved_answer_ids, saved_custom_answer, uploaded_file = getSavedAnswers(user_id, question.questionId)
 
             completion_percentage = getProgressBarStatus(questionnaireId, question_id)
 
@@ -378,6 +379,7 @@ def nextQuestion(request):
                 'saved_answer_ids': saved_answer_ids,
                 'userCode' : user_code,
                 'saved_custom_answer': saved_custom_answer,
+                'uploaded_file': uploaded_file, 
                 'completion_percentage': completion_percentage,  # Mostra la percentuale anche nel caso di "Prev"
                 'is_numeric': is_numeric,  # Aggiungi questa riga
             }

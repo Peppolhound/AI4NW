@@ -385,17 +385,28 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
 
 def getSavedAnswers(userId, questionId):
     today = datetime.date.today()
-    saved_answers = AnsweredQuestions.objects.filter(userId=userId, questionId=questionId, dateAnswer=today)
-    if saved_answers:
-        saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId is not None)
-        saved_custom_answer = None
+    saved_answers = AnsweredQuestions.objects.filter(
+        userId=userId,
+        questionId=questionId,
+        dateAnswer=today
+    )
+
+    saved_answer_ids = set()
+    saved_custom_answer = None
+    uploaded_file = None
+
+    if saved_answers.exists():
+        saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId)
+
         custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
         if custom_answers:
             saved_custom_answer = custom_answers[0]
-    else:
-        saved_answer_ids = ""
-        saved_custom_answer = ""
-    return saved_answer_ids, saved_custom_answer
+
+        files = [a.uploaded_file for a in saved_answers if a.uploaded_file]
+        if files:
+            uploaded_file = files[0]
+
+    return saved_answer_ids, saved_custom_answer, uploaded_file
 
 def getProgressBarStatus(questionnaireId, questionId):
 
