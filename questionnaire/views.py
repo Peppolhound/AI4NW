@@ -113,11 +113,33 @@ def result(request):
         response = submitQuestionnaire(userId=user_id, userCode = user_code, questionnaireId=questionnaireId)
         print(f"Response: {response}")
 
+        cmds_uomo = response['results'].get('CDMS (uomo)', '')
+        cmds_donna = response['results'].get('CDMS (donna)', '')
+        if cmds_uomo and cmds_donna:
+            cmds = f"<strong>Uomo:</strong> <em>{cmds_uomo}</em><br><strong>Donna:</strong> <em>{cmds_uomo}</em>"
+        elif cmds_uomo and not cmds_donna:
+            cmds = f"<em>{cmds_uomo}</em>"
+        elif cmds_donna and not cmds_uomo:
+            cmds = f"<em>{cmds_uomo}</em>"
+        else:
+            cmds = ""
+
+        framingham_uomo = response['results'].get('Framingham Risk (uomo)', '')
+        framingham_donna = response['results'].get('Framingham Risk (donna)', '')
+        if framingham_uomo and framingham_donna:
+            framingham = f"<strong>Uomo:</strong> <em>{framingham_uomo}</em><br><strong>Donna:</strong> <em>{framingham_donna}</em>"
+        elif framingham_uomo and not framingham_donna:
+            framingham = f"<em>{framingham_uomo}</em>"
+        elif framingham_donna and not framingham_uomo:
+            framingham = f"<em>{framingham_donna}</em>"
+        else:
+            framingham = ""
+
         if response:
             context = {
-                'CMDS': response['results']['CDMS'],
-                'Framingham': response['results']['Framingham Risk'],
-                }
+                'CMDS': cmds,
+                'Framingham': framingham,   
+            }
         else:
             print(f"Error! Response = None")
             context = {

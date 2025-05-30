@@ -83,8 +83,8 @@
                                 </div>
                                 <div class="service-head mt-4 mx-5 mobile-position-fix">
                                     <h4>Complimenti,  hai terminato il test!</h4>
-                                    <p class="text-muted mb-0">Secondo il <a href="https://www.chronomeddiet.org/"> Chrono Med Diet Score: </a><br> <strong>{{ CMDS }} </strong></p><br> 
-                                    <p class="text-muted mb-0">L'indice di rischio cardiovascolare associato al <a href="https://en.wikipedia.org/wiki/Framingham_Risk_Score"> Framingham Score </a>è pari a: <br><strong>{{ Framingham }} </strong></p>
+                                    <p class="text-muted mb-0">Secondo il <a href="https://www.chronomeddiet.org/"> Chrono Med Diet Score: </a><br> {{ CMDS|safe }} </p><br> 
+                                    <p class="text-muted mb-0">L'indice di rischio cardiovascolare associato al <a href="https://en.wikipedia.org/wiki/Framingham_Risk_Score"> Framingham Score </a>è pari a: <br>{{ Framingham|safe }} </p>
                                 </div>
                             </div>
                         </div>
