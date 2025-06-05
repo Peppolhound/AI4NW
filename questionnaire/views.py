@@ -220,28 +220,33 @@ def nextQuestion(request):
             # Gestione delle risposte alle domande successive
             question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
             custom_answer = request.POST.get(f'customAnswer_{question_id}', None) 
-            uploaded_file = request.FILES.get('file_upload') 
-           
-            # Se il file è presente, salvalo nel modello
-            if uploaded_file:
-                # Cambio nome del file 
-                original_filename = uploaded_file.name
-                filename_without_extension, file_extension = os.path.splitext(original_filename)
-                upload_file_date = datetime.date.today().strftime('%Y%m%d') 
-                new_filename = f"{question_id}_{filename_without_extension}-{user_id}-{upload_file_date}{file_extension}"
-                uploaded_file.name = new_filename  # Cambia il nome del file
-                # fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # Usa MEDIA_ROOT per salvare il file
-                # print(f"Saving file: {settings.MEDIA_ROOT}")
-                # filename = fs.save(new_filename, uploaded_file)  # Salva il file
-                # file_url = fs.url(filename)  # Ottieni l'URL per accedere al file
+            uploaded_file = request.FILES.getlist('file_upload')
 
-                # Salva o aggiorna la risposta con il nuovo URL del file
-                AnsweredQuestions.objects.update_or_create(
-                    userId=user_id,  
-                    dateAnswer=datetime.date.today(),  # Usa la data odierna
-                    questionId=question_id, 
-                    defaults={'uploaded_file': uploaded_file}  # Salva il percorso del file
-                )
+
+
+            if uploaded_file:
+                # Cancella eventuali file precedenti per la stessa domanda, stesso utente e stessa data
+                AnsweredQuestions.objects.filter(
+                    userId=user_id,
+                    questionId=question_id,
+                    dateAnswer=datetime.date.today()
+                ).delete()
+
+                for i, file in enumerate(uploaded_file):
+                    original_filename = file.name
+                    filename_without_extension, file_extension = os.path.splitext(original_filename)
+                    upload_file_date = datetime.date.today().strftime('%Y%m%d') 
+                    new_filename = f"{question_id}_{filename_without_extension}-{user_id}-{upload_file_date}{file_extension}"
+                    file.name = new_filename
+
+                    AnsweredQuestions.objects.create(
+                        userId=user_id,
+                        questionId=question_id,
+                        customAnswer=custom_answer if custom_answer else None,
+                        dateAnswer=datetime.date.today(),
+                        uploaded_file=file  # salva ogni file come nuova entry, se vengono inseriti 2 file insieme si duplica la domanda
+                    )
+           
 
             # Gestisci le risposte multiple
             if question_keys:
@@ -327,7 +332,7 @@ def nextQuestion(request):
                 'uploaded_file': uploaded_file, 
                 'userCode' : user_code,
                 'completion_percentage': completion_percentage,
-                'is_numeric': is_numeric,  # Aggiungi questa riga
+                'is_numeric': is_numeric,  
             }
             print(f'La prossima domanda sarà {q["typeQuestion_description"]}')
             print(f'Questionnaire ID_casonext: {questionnaireId}')

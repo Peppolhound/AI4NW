@@ -394,20 +394,22 @@ def getSavedAnswers(userId, questionId):
 
     saved_answer_ids = set()
     saved_custom_answer = None
-    uploaded_file = None
+    uploaded_files = []
 
     if saved_answers.exists():
+        # Raccolta degli answerId (es. per domande a risposta chiusa)
         saved_answer_ids = set(str(a.answerId) for a in saved_answers if a.answerId)
 
+        # Risposta custom (una sola gestita)
         custom_answers = [a.customAnswer for a in saved_answers if a.customAnswer]
         if custom_answers:
             saved_custom_answer = custom_answers[0]
 
-        files = [a.uploaded_file for a in saved_answers if a.uploaded_file]
-        if files:
-            uploaded_file = files[0]
+        # Raccolta dei file caricati
+        uploaded_files = [a.uploaded_file for a in saved_answers if a.uploaded_file]
 
-    return saved_answer_ids, saved_custom_answer, uploaded_file
+    print(f"Files: {[f.name for f in uploaded_files]}")
+    return saved_answer_ids, saved_custom_answer, uploaded_files
 
 def getProgressBarStatus(questionnaireId, questionId):
 

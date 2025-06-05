@@ -98,24 +98,25 @@
                                     </fieldset>
                                 </div>
                                 <div class="d-grid gap-2 mb-2">
-                                    <label for="file_upload" class="btn btn-outline-primary">
+                                    <!-- <label for="file_upload" class="btn btn-outline-primary">
                                         Carica un file o scatta una foto
-                                    </label>
+                                    </label> -->
 
                                     <input type="file"
                                         name="file_upload"
                                         id="file_upload"
                                         accept=".pdf, .jpg, .jpeg, .png, image/*"
                                         capture="environment"
-                                        style="display: none;"
+                                        multiple
                                         {% if not uploaded_file %}required{% endif %}>
                                     
                                     <!-- Mostra nome file selezionato -->
                                     <span id="file-name" class="text-muted mt-2">
                                         {% if uploaded_file %}
-                                            File già caricato: <a href="{{ uploaded_file.url }}" target="_blank">{{ uploaded_file.name }}</a>
-                                        {% else %}
-                                            Nessun file selezionato
+                                            <strong>Hai già caricato:</strong> 
+                                            {% for file in uploaded_file %}
+                                            <li><a href="{{ file.url }}" target="_blank">{{ file.name }}</a></li>
+                                            {% endfor %}
                                         {% endif %}
                                     </span>
                                 </div>
