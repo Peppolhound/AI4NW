@@ -120,7 +120,7 @@ def result(request):
         elif cmds_uomo and not cmds_donna:
             cmds = f"<em>{cmds_uomo}</em>"
         elif cmds_donna and not cmds_uomo:
-            cmds = f"<em>{cmds_uomo}</em>"
+            cmds = f"<em>{cmds_donna}</em>"
         else:
             cmds = ""
 
