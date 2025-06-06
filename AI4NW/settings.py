@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-)^n+$m1ft-yadb2r#kp%_c=fq13n15%x8n$k@7bw$%08o^)y1+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ai4nw.napslab.it', '192.168.178.170', '127.0.0.1']
+ALLOWED_HOSTS = ['ai4nw.napslab.it', '192.168.178.20', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://ai4nw.napslab.it',

@@ -16,6 +16,7 @@
             console.log("Sei su una pagina test, nessuna pulizia.");
         }
     });
+    
 
     // === Preloader ===
     $(window).on('load', function () {

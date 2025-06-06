@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
 </head>
+
 <body>
     <!-- Navbar START -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-custom sticky nav-sticky">
@@ -102,6 +103,7 @@
                                         Carica un file o scatta una foto
                                     </label> -->
 
+                                <div class="d-grid gap-2 mb-2" id="file-container">
                                     <input type="file"
                                         name="file_upload"
                                         id="file_upload"
@@ -109,9 +111,9 @@
                                         capture="environment"
                                         multiple
                                         {% if not uploaded_file %}required{% endif %}>
-                                    
-                                    <!-- Mostra nome file selezionato -->
-                                    <span id="file-name" class="text-muted mt-2">
+
+                                </div>
+                                <span id="file-name" class="text-muted mt-2">
                                         {% if uploaded_file %}
                                             <strong>Hai già caricato:</strong> 
                                             {% for file in uploaded_file %}
@@ -152,6 +154,48 @@
 
     <!-- Home Javascript -->
     <script src="{% static 'js/test.js' %}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("file-container");
+
+            function createFileInput() {
+                const newInput = document.createElement("input");
+                newInput.type = "file";
+                newInput.name = "file_upload";
+                newInput.accept = ".pdf, .jpg, .jpeg, .png, image/*";
+                newInput.capture = "environment";
+                newInput.className = "mt-2 form-control";
+                newInput.required = false;
+
+                newInput.addEventListener("change", handleFileInput);
+                container.appendChild(newInput);
+            }
+
+            function isImage(file) {
+                return file && file.type.startsWith("image/");
+            }
+
+            function handleFileInput(event) {
+                const input = event.target;
+                const file = input.files[0];
+
+                // Procedi solo se:
+                // 1. L'input non è già stato gestito
+                // 2. Il file esiste ed è un'immagine (non un PDF, ad esempio)
+                if (!input.dataset.handled && file && isImage(file)) {
+                    input.dataset.handled = "true";
+                    createFileInput();
+                }
+            }
+
+            // Inizializza listener sul primo input
+            const initialInput = document.getElementById("file_upload");
+            if (initialInput) {
+                initialInput.addEventListener("change", handleFileInput);
+            }
+        });
+    </script>
 
 </body>
 </html>
