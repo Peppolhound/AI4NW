@@ -114,14 +114,23 @@
                                 <span id="file-preview" class="mt-2 text-muted" hidden> <strong>Hai appena caricato: </strong></span> 
 
                                 <span id="file-name" class="text-muted mt-2">
-                                        {% if uploaded_file %}
-                                            In passato hai caricato:
-                                            {% for file in uploaded_file %}
-                                            <li>            
-                                                <a href="#" class="open-preview" data-url="{{ file.url }}">{{ file.name }}</a>
-                                            </li>
-                                            {% endfor %}
-                                        {% endif %}
+                                    {% if uploaded_file %}
+                                        <strong>In passato hai caricato:</strong>
+                                        <ul class="list-unstyled">
+                                        {% for file in uploaded_file %}
+                                            {% with file.name|lower as fname %}
+                                                <li>
+                                                    <a href="#"
+                                                    class="open-preview"
+                                                    data-url="{{ file.url }}"
+                                                    data-type="{% if '.pdf' in fname %}application/pdf{% else %}image/jpeg{% endif %}">
+                                                    {{ file.name }}
+                                                    </a>
+                                                </li>
+                                            {% endwith %}
+                                        {% endfor %}
+                                        </ul>
+                                    {% endif %}
                                 </span>
                                 </div>
                                 <div id="bottom-wizard">
@@ -203,14 +212,14 @@
                 for (let file of files) {
                     const fileURL = URL.createObjectURL(file);
 
-                    const link = document.createElement("a");
-                    link.href = fileURL;
-                    link.textContent = file.name;
-                    link.target = "_blank";
-                    link.className = "d-block text-primary mt-1";
+                        const link = document.createElement("a");
+                        link.href = "#";
+                        link.textContent = file.name;
+                        link.className = "d-block text-primary mt-1 open-preview";
+                        link.setAttribute("data-url", fileURL);
+                        link.setAttribute("data-type", file.type);  
 
-                    // Inserisci prima di #file-name
-                    fileNameSpan.parentNode.insertBefore(link, fileNameSpan);
+                        fileNameSpan.parentNode.insertBefore(link, fileNameSpan);
                 }
 
                 // Genera un nuovo campo solo se questo è stato appena usato
@@ -227,42 +236,44 @@
             initialInput.addEventListener("change", handleFileInput);
         }
     });
-    </script>
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const previewModal = new bootstrap.Modal(document.getElementById("previewModal"));
-        const modalBody = document.getElementById("modalBody");
+    </script> 
+   <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const previewModal = new bootstrap.Modal(document.getElementById("previewModal"));
+            const modalBody = document.getElementById("modalBody");
 
-        document.addEventListener("click", function (event) {
-            if (event.target.matches(".open-preview")) {
-                event.preventDefault();
-                const url = event.target.getAttribute("data-url");
-                modalBody.innerHTML = "";
+            document.addEventListener("click", function (event) {
+                if (event.target.matches(".open-preview")) {
+                    event.preventDefault();
+                    const url = event.target.getAttribute("data-url");
+                    let type = event.target.getAttribute("data-type") || "";
 
-                if (url.match(/\.(jpg|jpeg|png|gif)$/i)) {
-                    const img = document.createElement("img");
-                    img.src = url;
-                    img.className = "img-fluid";
-                    modalBody.appendChild(img);
-                    previewModal.show();
-                } else if (url.match(/\.pdf$/i)) {
-                    const iframe = document.createElement("iframe");
-                    iframe.src = url;
-                    iframe.width = "100%";
-                    iframe.height = "600px";
-                    iframe.style.border = "none";
-                    modalBody.appendChild(iframe);
-                    previewModal.show();
-                } else {
-                    modalBody.innerHTML = "<p>Anteprima non disponibile per questo tipo di file.</p>";
+                    modalBody.innerHTML = "";
+
+                    if (type.startsWith("image/")) {
+                        const img = document.createElement("img");
+                        img.src = url;
+                        img.className = "img-fluid";
+                        modalBody.appendChild(img);
+                    } else if (type === "application/pdf") {
+                        const iframe = document.createElement("iframe");
+                        iframe.src = url;
+                        iframe.width = "100%";
+                        iframe.height = "600px";
+                        iframe.style.border = "none";
+                        modalBody.appendChild(iframe);
+                    } else {
+                        modalBody.innerHTML = "<p>Anteprima non disponibile per questo tipo di file.</p>";
+                    }
+
                     previewModal.show();
                 }
-            }
+            });
         });
-    });
     </script>
 
-    
+
+            
 
 </body>
 </html>
