@@ -117,10 +117,12 @@
                                         {% if uploaded_file %}
                                             In passato hai caricato:
                                             {% for file in uploaded_file %}
-                                            <li><a href="{{ file.url }}" target="_blank">{{ file.name }}</a></li>
+                                            <li>            
+                                                <a href="#" class="open-preview" data-url="{{ file.url }}">{{ file.name }}</a>
+                                            </li>
                                             {% endfor %}
                                         {% endif %}
-                                    </span>
+                                </span>
                                 </div>
                                 <div id="bottom-wizard">
                                     <div class="d-flex gap-2 w-100 mobile-d-flex">
@@ -139,6 +141,20 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Anteprima file</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body text-center" id="modalBody">
+            <!-- Contenuto dinamico -->
+        </div>
+        </div>
+    </div>
+    </div>
+    
     <!-- FORM SECTION END-->
 
     <!-- JAVASCRIPTS -->
@@ -167,7 +183,6 @@
             newInput.name = "file_upload";
             newInput.accept = ".pdf, .jpg, .jpeg, .png, image/*";
             newInput.capture = "environment";
-            // newInput.className = "form-control mt-2"; // CLASSE ESSENZIALE
             newInput.multiple = true;
             newInput.required = false;
 
@@ -213,6 +228,40 @@
         }
     });
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const previewModal = new bootstrap.Modal(document.getElementById("previewModal"));
+        const modalBody = document.getElementById("modalBody");
+
+        document.addEventListener("click", function (event) {
+            if (event.target.matches(".open-preview")) {
+                event.preventDefault();
+                const url = event.target.getAttribute("data-url");
+                modalBody.innerHTML = "";
+
+                if (url.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.className = "img-fluid";
+                    modalBody.appendChild(img);
+                    previewModal.show();
+                } else if (url.match(/\.pdf$/i)) {
+                    const iframe = document.createElement("iframe");
+                    iframe.src = url;
+                    iframe.width = "100%";
+                    iframe.height = "600px";
+                    iframe.style.border = "none";
+                    modalBody.appendChild(iframe);
+                    previewModal.show();
+                } else {
+                    modalBody.innerHTML = "<p>Anteprima non disponibile per questo tipo di file.</p>";
+                    previewModal.show();
+                }
+            }
+        });
+    });
+    </script>
+
     
 
 </body>
