@@ -99,9 +99,9 @@
                                     </fieldset>
                                 </div>
                                 <div class="d-grid gap-2 mb-2">
-                                    <!-- <label for="file_upload" class="btn btn-outline-primary">
-                                        Carica un file o scatta una foto
-                                    </label> -->
+                                    <span id="file-label" class="text-muted mt-2">
+                                        <strong>Carica un file o scatta una foto alla volta </strong> 
+                                    </span>
 
                                 <div class="d-grid gap-2 mb-2" id="file-container">
                                     <input type="file"
@@ -109,13 +109,13 @@
                                         id="file_upload"
                                         accept=".pdf, .jpg, .jpeg, .png, image/*"
                                         capture="environment"
-                                        multiple
                                         {% if not uploaded_file %}required{% endif %}>
-
                                 </div>
+                                <span id="file-preview" class="mt-2 text-muted" hidden> <strong>Hai appena caricato: </strong></span> 
+
                                 <span id="file-name" class="text-muted mt-2">
                                         {% if uploaded_file %}
-                                            <strong>Hai già caricato:</strong> 
+                                            In passato hai caricato:
                                             {% for file in uploaded_file %}
                                             <li><a href="{{ file.url }}" target="_blank">{{ file.name }}</a></li>
                                             {% endfor %}
@@ -157,45 +157,63 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const container = document.getElementById("file-container");
+        const container = document.getElementById("file-container");
+        const fileNameSpan = document.getElementById("file-name");
+        
 
-            function createFileInput() {
-                const newInput = document.createElement("input");
-                newInput.type = "file";
-                newInput.name = "file_upload";
-                newInput.accept = ".pdf, .jpg, .jpeg, .png, image/*";
-                newInput.capture = "environment";
-                newInput.className = "mt-2 form-control";
-                newInput.required = false;
+        function createFileInput() {
+            const newInput = document.createElement("input");
+            newInput.type = "file";
+            newInput.name = "file_upload";
+            newInput.accept = ".pdf, .jpg, .jpeg, .png, image/*";
+            newInput.capture = "environment";
+            // newInput.className = "form-control mt-2"; // CLASSE ESSENZIALE
+            newInput.multiple = true;
+            newInput.required = false;
 
-                newInput.addEventListener("change", handleFileInput);
-                container.appendChild(newInput);
-            }
+            newInput.addEventListener("change", handleFileInput);
+            container.appendChild(newInput);
+        }
 
-            function isImage(file) {
-                return file && file.type.startsWith("image/");
-            }
+        function handleFileInput(event) {
+            const input = event.target;
+            const files = input.files;
+            const previewSpan = document.getElementById("file-preview");
+            const filenameSpan = document.getElementById("file-name");
 
-            function handleFileInput(event) {
-                const input = event.target;
-                const file = input.files[0];
 
-                // Procedi solo se:
-                // 1. L'input non è già stato gestito
-                // 2. Il file esiste ed è un'immagine (non un PDF, ad esempio)
-                if (!input.dataset.handled && file && isImage(file)) {
-                    input.dataset.handled = "true";
+            if (files.length > 0) {
+                previewSpan.hidden = false;
+                filenameSpan.hidden = true;
+                for (let file of files) {
+                    const fileURL = URL.createObjectURL(file);
+
+                    const link = document.createElement("a");
+                    link.href = fileURL;
+                    link.textContent = file.name;
+                    link.target = "_blank";
+                    link.className = "d-block text-primary mt-1";
+
+                    // Inserisci prima di #file-name
+                    fileNameSpan.parentNode.insertBefore(link, fileNameSpan);
+                }
+
+                // Genera un nuovo campo solo se questo è stato appena usato
+                if (!input.dataset.filled) {
+                    input.dataset.filled = "true";
                     createFileInput();
                 }
             }
+        }
 
-            // Inizializza listener sul primo input
-            const initialInput = document.getElementById("file_upload");
-            if (initialInput) {
-                initialInput.addEventListener("change", handleFileInput);
-            }
-        });
+        // Primo campo esistente
+        const initialInput = document.getElementById("file_upload");
+        if (initialInput) {
+            initialInput.addEventListener("change", handleFileInput);
+        }
+    });
     </script>
+    
 
 </body>
 </html>

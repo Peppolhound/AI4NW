@@ -226,11 +226,11 @@ def nextQuestion(request):
 
             if uploaded_file:
                 # Cancella eventuali file precedenti per la stessa domanda, stesso utente e stessa data
-                AnsweredQuestions.objects.filter(
-                    userId=user_id,
-                    questionId=question_id,
-                    dateAnswer=datetime.date.today()
-                ).delete()
+                # AnsweredQuestions.objects.filter(
+                #     userId=user_id,
+                #     questionId=question_id,
+                #     dateAnswer=datetime.date.today()
+                # ).delete()
 
                 for i, file in enumerate(uploaded_file):
                     original_filename = file.name
