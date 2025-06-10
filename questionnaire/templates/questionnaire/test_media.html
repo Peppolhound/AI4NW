@@ -255,13 +255,13 @@
                         img.src = url;
                         img.className = "img-fluid";
                         modalBody.appendChild(img);
-                    } else if (type === "application/pdf") {
-                        const iframe = document.createElement("iframe");
-                        iframe.src = url;
-                        iframe.width = "100%";
-                        iframe.height = "600px";
-                        iframe.style.border = "none";
-                        modalBody.appendChild(iframe);
+                    } else if (type === "application/pdf" || url.toLowerCase().endswith(".pdf")) {
+                        const link = document.createElement("a");
+                        link.href = url;
+                        link.target = "_blank";
+                        link.textContent = "Apri il PDF in una nuova scheda";
+                        link.className = "btn btn-primary";
+                        modalBody.appendChild(link);
                     } else {
                         modalBody.innerHTML = "<p>Anteprima non disponibile per questo tipo di file.</p>";
                     }
