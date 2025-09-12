@@ -107,8 +107,7 @@
                                     <input type="file"
                                         name="file_upload"
                                         id="file_upload"
-                                        accept=".pdf, .jpg, .jpeg, .png, image/*"
-                                        capture="environment"
+                                        accept=".pdf, .jpg, .jpeg, .png, image/*" 
                                         {% if not uploaded_file %}required{% endif %}>
                                 </div>
                                 <span id="file-preview" class="mt-2 text-muted" hidden> <strong>Hai appena caricato: </strong></span> 
@@ -191,7 +190,7 @@
             newInput.type = "file";
             newInput.name = "file_upload";
             newInput.accept = ".pdf, .jpg, .jpeg, .png, image/*";
-            newInput.capture = "environment";
+            // newInput.capture = "environment";
             newInput.multiple = true;
             newInput.required = false;
 

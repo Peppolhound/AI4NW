@@ -332,26 +332,50 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     print(f"Today: {today}")
     print(f"User ID: {userId}")
     print(f"Questionnaire ID: {questionnaireId}")
-    
-    questionnaireValue = QuestionnaireValue.objects.get(questionnaireId=questionnaireId, user_id=userId, dateInsert=today)
-    questionnaireResponse['dateInsert'] = int(questionnaireValue.dateInsert.strftime("%Y%m%d"))
+
+    questionnaireValue = QuestionnaireValue.objects.get(
+        questionnaireId=questionnaireId,
+        user_id=userId,
+        dateInsert=today
+    )
+
+    dt = datetime.datetime.combine(questionnaireValue.dateInsert, datetime.time.min) # Convertre date in un datetime
+    timestamp_millis = int(dt.timestamp() * 1000) # Restituisce i secondi dal 1 gennaio 1970 e converte in millisecondi
+    questionnaireResponse['dateInsert'] = timestamp_millis
     questionnaireResponse['questionnaireKey'] = "NW"
+
+    question_media_added = False  # per evitare duplicati di questionId=243 (question media)
 
     groups = Group.objects.filter(questionnaireId=questionnaireId)
     for group in groups:
         questions = Question.objects.filter(groupId=group.groupId)
         for question in questions:
-            answers = AnsweredQuestions.objects.filter(questionId=question.questionId, userId=userId, dateAnswer=today)
+            answers = AnsweredQuestions.objects.filter(
+                questionId=question.questionId,
+                userId=userId,
+                dateAnswer=today
+            )
             for answer in answers:
-                answer_dict = {
-                    'answerId': int(answer.answerId) if answer.answerId else None,
-                    'questionId': int(answer.questionId) if answer.questionId else None,
-                    'customAnswer': answer.customAnswer,
-                }
+                qid = int(answer.questionId)
+
+                # aggiungi solo una volta la domanda 243 (domanda media)
+                if answer.uploaded_file and question_media_added:
+                    pass  # salta duplicati
+                else:
+                    answer_dict = {
+                        'answerId': int(answer.answerId) if answer.answerId else None,
+                        'questionId': qid,
+                        'customAnswer': answer.customAnswer,
+                    }
+                    answer_list.append(answer_dict)
+
+                    if answer.uploaded_file:
+                        question_media_added = True
+
+                # raccogli tutti i file
                 if answer.uploaded_file:
                     file_list.append(answer.uploaded_file)
-                answer_list.append(answer_dict)
-    
+
     questionnaireResponse['answeredQuestions'] = answer_list
 
     # === CONVERSIONE A FORM DATA MULTIPART ===
@@ -360,29 +384,30 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
         'tokenId': loginApplicativo(),
     }
 
-    # FORM DATA
     files = []
 
-    # Parte 1: JSON come stringa in un campo 'questionnaire'
+    # Parte 1: JSON come stringa nel campo 'questionnaire'
     files.append(('questionnaire', (None, json.dumps(questionnaireResponse), 'application/json')))
 
     # Parte 2: allegati
     for f in file_list:
-        files.append(('files', (f.name.split('/')[-1], f.open('rb'), 'image/jpeg')))
+        filename = f.name.split('/')[-1]
+        content_type = 'image/jpeg'
+        files.append(('files', (filename, f.open('rb'), content_type)))
 
     print(f'JSON: {files}')
+
     # Invio della richiesta POST multipart
     import requests
     response = call_api(endpoint_url=endpoint_url, headers=headers, method='POST', files=files)
-    # response = requests.post(endpoint_url, headers=headers, files=files)
 
     # === GESTIONE RISPOSTA ===
     if response:
         print("Questionnaire submitted successfully.")
     else:
         print(f"Failed to submit questionnaire.")
-    return response
 
+    return response
 
 def getSavedAnswers(userId, questionId):
     today = datetime.date.today()

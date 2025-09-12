@@ -226,11 +226,11 @@ def nextQuestion(request):
 
             if uploaded_file:
                 # Cancella eventuali file precedenti per la stessa domanda, stesso utente e stessa data
-                # AnsweredQuestions.objects.filter(
-                #     userId=user_id,
-                #     questionId=question_id,
-                #     dateAnswer=datetime.date.today()
-                # ).delete()
+                AnsweredQuestions.objects.filter(
+                    userId=user_id,
+                    questionId=question_id,
+                    dateAnswer=datetime.date.today()
+                ).delete()
 
                 for i, file in enumerate(uploaded_file):
                     original_filename = file.name
@@ -354,12 +354,12 @@ def nextQuestion(request):
 
         # Gestisci il caso del pulsante "Prev"
         elif action == 'prev':
-
+            print("Prev button clicked")
             # Recupera la domanda precedente e la progress bar aggiornata
             previousQuestionObj, previousAnswer, is_first_group = getPreviousQuestion(question_id)
 
-            if previousQuestionObj is None:
-                return render(request, 'questionnaire/result.html', {'userId': user_id, 'userCode': user_code})
+            # if previousQuestionObj is None:
+            #     return render(request, 'questionnaire/result.html', {'userId': user_id, 'userCode': user_code})
 
             if is_first_group:
                 questionnaireJSON = getQuestionnaire(loginApplicativo())
@@ -415,6 +415,7 @@ def nextQuestion(request):
             print(f'Questionnaire ID_Casoprev: {questionnaireId}')
 
             # Ritorna il template adatto per la domanda precedente
+
             if q['typeQuestion_id'] == "1":
                 return render(request, 'questionnaire/test_radio.html', context=context_questions)
             elif q['typeQuestion_id'] == "2":

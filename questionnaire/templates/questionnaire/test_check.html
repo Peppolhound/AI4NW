@@ -103,8 +103,7 @@
                                 <div id="bottom-wizard">
                                       <div class="d-flex gap-2 w-100 mobile-d-flex">
                                         <!-- Prev button: action sempre "prev" -->
-                                        <button type="submit" name="action" value="prev" class="backward flex-fill" data-prev-url="{% url 'next_question' %}">Prev</button>
-
+                                        <button id="prev-button" type="submit" name="action" value="prev" class="backward flex-fill" data-prev-url="{% url 'next_question' %}" >Prev</button>
                                         <!-- Next/Submit button: Se è l'ultima domanda, il tasto cambierà a "Submit", altrimenti sarà "Next" -->
                                         <button type="submit" name="action" value="next" class="forward flex-fill">
                                             {% if is_last_question %}Submit{% else %}Next{% endif %}
@@ -122,7 +121,37 @@
     <!-- FORM SECTION END-->
 
     <!-- JAVASCRIPTS -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    var prevBtn = document.getElementById('prev-button');
+    if (!prevBtn) return;
+    prevBtn.addEventListener('click', function (e) {
+        e.preventDefault();                 // evita il submit "normale"
+        var form = this.form;
+        if (!form) return;
 
+        // disattiva validazione solo per questo invio
+        form.noValidate = true;
+
+        // forza l'action verso next_question (hai già data-prev-url)
+        var target = this.dataset.prevUrl;
+        if (target) form.action = target;
+
+        // assicura POST
+        form.method = 'post';
+
+        // in un submit programmatico -> aggiungi hidden per action=prev
+        var hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'action';
+        hidden.value = 'prev';
+        form.appendChild(hidden);
+
+        // 5) invia
+        form.submit();
+    });
+    });
+    </script>
     <!--  jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
