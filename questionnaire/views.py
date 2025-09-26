@@ -428,3 +428,6 @@ def nextQuestion(request):
                 return render(request, 'questionnaire/result.html', {'userId': user_id})
     else:
         return redirect('home')
+
+def scarica(request):
+    return render(request, 'questionnaire/scarica.html')

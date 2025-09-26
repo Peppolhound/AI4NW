@@ -11,6 +11,5 @@ urlpatterns = [
     # path('test_specifica/', views.test_specifica, name='test_specifica'),  
     path('next-question/', views.nextQuestion, name='next_question'),
     path('result/', views.result, name='result'),  
-
-
+    path('scarica/', views.scarica, name='scarica'),
 ]
