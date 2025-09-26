@@ -57,8 +57,8 @@ def test_intro_ospite(request):
         print(f"Questionnaire ID: {questionnaireId}")
         return render(request, 'questionnaire/test_intro.html', context=context_questions)
     else:
-    #     # If it's a GET request, just render the test page
-    return redirect('home')
+        # If it's a GET request, just render the test page
+        return redirect('home')
 
 def result(request):
     today_date = datetime.date.today()
