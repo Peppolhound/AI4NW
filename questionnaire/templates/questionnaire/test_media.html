@@ -87,8 +87,8 @@
                                                     {% for answer in q.answers %}
                                                     <label class="container_radio mr-3">
                                                         <input type="radio" name="question_{{ q.questionId }}" value="{{ answer.answerId }}"
-                                                        {% if answer.answerId|stringformat:"s" in saved_answer_ids %}checked{% endif %}
-                                                        required>
+                                                        {% if answer.answerId|stringformat:"s" in saved_answer_ids %}checked{% endif %}>
+                                                        <!-- required> -->
                                                         {{ answer.description }}
                                                         <span class="checkmark"></span>
                                                     </label>
@@ -107,8 +107,8 @@
                                     <input type="file"
                                         name="file_upload"
                                         id="file_upload"
-                                        accept=".pdf, .jpg, .jpeg, .png, image/*" 
-                                        {% if not uploaded_file %}required{% endif %}>
+                                        accept=".pdf, .jpg, .jpeg, .png, image/*">
+                                        <!-- {% if not uploaded_file %}required{% endif %}> -->
                                 </div>
                                 <span id="file-preview" class="mt-2 text-muted" hidden> <strong>Hai appena caricato: </strong></span> 
 
