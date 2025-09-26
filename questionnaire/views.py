@@ -50,14 +50,15 @@ def test_intro(request):
         # If it's a GET request, just render the login page
         return redirect('login')
     
-# def test_singola(request):
-#     return render(request, 'questionnaire/test_singola.html')
-
-# def test_checkbox(request):
-#     return render(request, 'questionnaire/test_checkbox.html')
-
-# def test_specifica(request):
-#     return render(request, 'questionnaire/test_specifica.html')
+def test_intro_ospite(request):
+    if request.method == 'POST':
+        questionnaireJSON = getQuestionnaire(tokenId)
+        questionnaireId = questionnaireJSON['questionnaireId']
+        print(f"Questionnaire ID: {questionnaireId}")
+        return render(request, 'questionnaire/test_intro.html', context=context_questions)
+    else:
+    #     # If it's a GET request, just render the test page
+    return redirect('home')
 
 def result(request):
     today_date = datetime.date.today()
