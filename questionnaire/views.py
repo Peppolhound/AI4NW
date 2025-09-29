@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+import random
 from AI4NW import settings
 from .utils import *
 from .models import Questionnaire, Group, Question, Answer, QuestionnaireValue, AnsweredQuestions
@@ -49,7 +50,14 @@ def test_intro(request):
     else:
         # If it's a GET request, just render the login page
         return redirect('login')
-    
+
+
+def generate_unique_userid():
+    while True:
+        user_id = random.randint(100000, 999999)  # 6 cifre random
+        if not QuestionnaireValue.objects.filter(user_id=user_id).exists():
+            return user_id
+
 def test_intro_ospite(request):
     tokenId = loginApplicativo()
     if tokenId is not None:
@@ -59,11 +67,14 @@ def test_intro_ospite(request):
         questionnaireJSON = getQuestionnaire(tokenId)
         questionnaireId = questionnaireJSON['questionnaireId']
         print(f"Questionnaire ID: {questionnaireId}")
+        user_id = generate_unique_userid()
+        print(f"Generated user ID: {user_id}")
         QuestionnaireValue.objects.update_or_create(
+            user_id=user_id,
             questionnaireId=questionnaireId,
             dateInsert=datetime.date.today(),
         )
-        context_questions = showGeneralitaForm(questionnaireJSON)
+        context_questions = showGeneralitaForm(questionnaireJSON, user_id=user_id)
         return render(request, 'questionnaire/test_intro.html', context=context_questions)
 
 
@@ -73,8 +84,8 @@ def result(request):
         question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
         question_id = request.POST.get('questionId')
         custom_answer = request.POST.get(f'customAnswer_{question_id}', None)
-        user_id = request.POST.get('userId')    
-        user_code = request.POST.get('userCode')
+        user_id = request.POST.get('userId') if request.POST.get('userId') else None
+        user_code = request.POST.get('userCode') if request.POST.get('userCode') else None
         questionnaireId = request.POST.get('questionnaireId')
         
 
