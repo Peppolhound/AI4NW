@@ -42,7 +42,7 @@ def test_intro(request):
                     questionnaireId=questionnaireId,
                     dateInsert=datetime.date.today(),
                 )
-                context_questions = showGeneralitaForm(user_id, usercode, questionnaireJSON)
+                context_questions = showGeneralitaForm(questionnaireJSON, user_id, usercode)
                 return render(request, 'questionnaire/test_intro.html', context=context_questions)
             else:
                 return render(request, 'questionnaire/login.html', {'error_message': 'Indirizzo email o codice di accesso non valido. Riprova.'})
@@ -51,14 +51,21 @@ def test_intro(request):
         return redirect('login')
     
 def test_intro_ospite(request):
-    if request.method == 'POST':
+    tokenId = loginApplicativo()
+    if tokenId is not None:
+        ################## DEBUG ##################
+        # usercode = '9876'                       
+        ################## DEBUG ##################
         questionnaireJSON = getQuestionnaire(tokenId)
         questionnaireId = questionnaireJSON['questionnaireId']
         print(f"Questionnaire ID: {questionnaireId}")
+        QuestionnaireValue.objects.update_or_create(
+            questionnaireId=questionnaireId,
+            dateInsert=datetime.date.today(),
+        )
+        context_questions = showGeneralitaForm(questionnaireJSON)
         return render(request, 'questionnaire/test_intro.html', context=context_questions)
-    else:
-        # If it's a GET request, just render the test page
-        return redirect('home')
+
 
 def result(request):
     today_date = datetime.date.today()

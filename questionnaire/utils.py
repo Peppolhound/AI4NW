@@ -76,7 +76,7 @@ def call_api(endpoint_url, payload=None, headers=None, method='GET', files=None)
         return None
     
 def loginApplicativo():
-    url = "https://vita-develop.health-portal.it/nw-ws/night-worker/auth/app-login"
+    url = "https://dev01.health-portal.it/nw-ws/night-worker/auth/app-login"
     payload = {
         "username": "admin-nw",
         "password": "6jS3Fohz@C"
@@ -90,7 +90,7 @@ def loginApplicativo():
     return tokenId
 
 def loginUtente(userCode, tokenId):
-    url = f"https://vita-develop.health-portal.it/nw-ws/night-worker/auth/user-login?userCode={userCode}"
+    url = f"https://dev01.health-portal.it/nw-ws/night-worker/auth/user-login?userCode={userCode}"
     method = "POST"
     headers = {
         'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ def loginUtente(userCode, tokenId):
     return userId
 
 def getQuestionnaire(tokenId):
-    url='https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/NW'
+    url='https://dev01.health-portal.it/nw-ws/night-worker/questionnaire/NW'
     method = "GET"
     headers = {
         'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ def getFirstQuestion(questionnaireId):
         return None
     
 
-def showGeneralitaForm(user_id, usercode, questionnaireJSON):
+def showGeneralitaForm(questionnaireJSON, user_id=None, usercode=None):
     today_date = datetime.date.today()
 
     # print(f"Questionnaire JSON: {questionnaireJSON}")
@@ -379,7 +379,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     questionnaireResponse['answeredQuestions'] = answer_list
 
     # === CONVERSIONE A FORM DATA MULTIPART ===
-    endpoint_url = f"https://vita-develop.health-portal.it/nw-ws/night-worker/questionnaire/submit?idUser={userId}"
+    endpoint_url = f"https://dev01.health-portal.it/nw-ws/night-worker/questionnaire/submit?idUser={userId}"
     headers = {
         'tokenId': loginApplicativo(),
     }
