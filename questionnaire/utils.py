@@ -379,7 +379,7 @@ def submitQuestionnaire(userId, userCode, questionnaireId):
     questionnaireResponse['answeredQuestions'] = answer_list
 
     # === CONVERSIONE A FORM DATA MULTIPART ===
-    endpoint_url = f"https://dev01.health-portal.it/nw-ws/night-worker/questionnaire/submit?idUser={userId}"
+    endpoint_url = f"https://dev01.health-portal.it/nw-ws/night-worker/questionnaire/submit"
     headers = {
         'tokenId': loginApplicativo(),
     }

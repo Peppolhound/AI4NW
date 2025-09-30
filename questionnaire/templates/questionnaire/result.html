@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risultati</title>
+    <title>La salute del turnista</title>
     
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
 
@@ -82,10 +82,44 @@
                                     </div>
                                 </div>
                                 <div class="service-head mt-4 mx-5 mobile-position-fix">
-                                    <h4>Complimenti,  hai terminato il test!</h4>
-                                    <p class="text-muted mb-0">Secondo il <a href="https://www.chronomeddiet.org/"> Chrono Med Diet Score: </a><br> {{ CMDS|safe }} </p><br> 
-                                    <p class="text-muted mb-0">L'indice di rischio cardiovascolare associato al <a href="https://www.cuore.iss.it/valutazione/calc-rischio"> Framingham Score </a>è pari a: <br>{{ Framingham|safe }} </p>
-                                </div>
+                                    {% if page_error %}
+                                        <div class="alert alert-info" role="alert">
+                                        {{ page_error }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if not page_error %}
+                                        <h4>Complimenti, hai terminato il test!</h4>
+
+                                        <!-- CMDS -->
+                                        <h5 class="mt-3">Chrono Med Diet Score (CMDS)</h5>
+                                        {% if CMDS %}
+                                        <p class="text-muted mb-0">
+                                            Secondo il <a href="https://www.chronomeddiet.org/">Chrono Med Diet Score</a>:<br>
+                                            {{ CMDS|safe }}
+                                        </p>
+                                        {% else %}
+                                        <div class="alert alert-info mt-2" role="alert">
+                                            {{ CMDS_missing }}
+                                        </div>
+                                        {% endif %}
+
+                                        <!-- Framingham -->
+                                        <h5 class="mt-4">Framingham Risk</h5>
+                                        {% if Framingham %}
+                                        <p class="text-muted mb-0">
+                                            L'indice di rischio cardiovascolare associato al
+                                            <a href="https://www.cuore.iss.it/valutazione/calc-rischio">Framingham Score</a> è pari a:<br>
+                                            {{ Framingham|safe }}
+                                        </p>
+                                        {% else %}
+                                        <div class="alert alert-info mt-2" role="alert">
+                                            {{ Framingham_missing }}
+                                        </div>
+                                        {% endif %}
+
+                                    {% endif %}
+                                    </div>
                             </div>
                         </div>
                     </div>

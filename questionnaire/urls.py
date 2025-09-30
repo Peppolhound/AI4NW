@@ -4,9 +4,9 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.login, name='login'),
-    path('test/', views.test, name='test'),
+    path('inizia_il_test/', views.test, name='test'),
     path('test_intro/', views.test_intro, name='test_intro'),
-    path('test_intro_ospite/', views.test_intro_ospite, name='test_intro_ospite'),
+    path('test/', views.test_intro_ospite, name='test_intro_ospite'),
     # path('test_singola/', views.test_singola, name='test_singola'),           
     # path('test_radio/', views.test_radio, name='test_radio'),
     # path('test_specifica/', views.test_specifica, name='test_specifica'),  
