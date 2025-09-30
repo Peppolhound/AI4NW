@@ -9,6 +9,8 @@ import datetime
 import os
 import json
 from django.utils import timezone
+from django.shortcuts import render
+from django.contrib import messages
 
 # Create your views here.
 def home(request):
@@ -77,10 +79,8 @@ def test_intro_ospite(request):
         context_questions = showGeneralitaForm(questionnaireJSON, user_id=user_id)
         return render(request, 'questionnaire/test_intro.html', context=context_questions)
 
-
 def result(request):
     today_date = datetime.date.today()
-
     if request.method == 'POST':
         question_keys = [k for k in request.POST.keys() if k.startswith("question_")]
         question_id = request.POST.get('questionId')
@@ -89,104 +89,84 @@ def result(request):
         user_code = request.POST.get('userCode') if request.POST.get('userCode') else None
         questionnaireId = request.POST.get('questionnaireId')
 
-        # Recupero risposte multiple
+
         if question_keys:
             question_key = question_keys[0]
             answers = request.POST.getlist(question_key)
         else:
             answers = []
 
-        # Salvataggio risposte
         if answers:
             for answer in answers:
-                existing_answer = AnsweredQuestions.objects.filter(
-                    userId=user_id,
-                    questionId=question_id,
-                    answerId=answer,
-                    dateAnswer=today_date
-                ).first()
+                existing_answer = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, answerId=answer, dateAnswer=today_date).first()
 
-                if not existing_answer:
+                if existing_answer:
+                    print(f"Answer already exists for userId: {user_id}, questionId: {question_id}, answerId: {answer}, no update needed.")
+                else:
+                    # Se la risposta non esiste (cioè, answerId diverso), aggiorna il valore
                     AnsweredQuestions.objects.update_or_create(
                         userId=user_id,
                         dateAnswer=today_date,
                         questionId=question_id,
-                        answerId=answer,
-                        defaults={'customAnswer': None}
+                        answerId=answer,  # Usa answerId come chiave
+                        defaults={'customAnswer': None}  # Aggiorna con il nuovo valore (se necessario)
                     )
 
         elif custom_answer:
-            existing_answer_custom = AnsweredQuestions.objects.filter(
-                userId=user_id,
-                questionId=question_id,
-                dateAnswer=today_date,
-                answerId=None
-            ).first()
-
+            existing_answer_custom = AnsweredQuestions.objects.filter(userId=user_id, questionId=question_id, dateAnswer=today_date, answerId=None).first()
+            # Solo risposta custom, aggiorna o crea una singola risposta
             if existing_answer_custom:
+                # Se esiste una risposta custom, aggiorna il campo customAnswer
                 existing_answer_custom.customAnswer = custom_answer
-                existing_answer_custom.save()
+                existing_answer_custom.save()  # Salva l'istanza aggiornata
             else:
+                # Se non esiste una risposta custom, creane una nuova
                 AnsweredQuestions.objects.create(
                     userId=user_id,
                     questionId=question_id,
                     answerId=None,
                     customAnswer=custom_answer
                 )
+        else:
+            pass
 
-        # Invio questionario
-        response = submitQuestionnaire(userId=user_id, userCode=user_code, questionnaireId=questionnaireId)
+        response = submitQuestionnaire(userId=user_id, userCode = user_code, questionnaireId=questionnaireId)
+        print(f"Response: {response}")
 
-        if not response:
-            context = {
-                'page_error': "Non è stato possibile calcolare il tuo rischio cardiovascolare. Effettua nuovamente il test compilando tutti i campi"
-            }
-            return render(request, 'questionnaire/result.html', context)
-
-        # Estrazione risultati
         cmds_uomo = response['results'].get('CDMS (uomo)', '')
         cmds_donna = response['results'].get('CDMS (donna)', '')
+        if cmds_uomo and cmds_donna:
+            cmds = f"<strong>Uomo:</strong> <em>{cmds_uomo}</em><br><strong>Donna:</strong> <em>{cmds_uomo}</em>"
+        elif cmds_uomo and not cmds_donna:
+            cmds = f"<em>{cmds_uomo}</em>"
+        elif cmds_donna and not cmds_uomo:
+            cmds = f"<em>{cmds_donna}</em>"
+        else:
+            cmds = ""
+
         framingham_uomo = response['results'].get('Framingham Risk (uomo)', '')
         framingham_donna = response['results'].get('Framingham Risk (donna)', '')
-
-        # Costruzione HTML risultati
-        if cmds_uomo and cmds_donna:
-            cmds_html = f"<strong>Uomo:</strong> <em>{cmds_uomo}</em><br><strong>Donna:</strong> <em>{cmds_donna}</em>"
-        elif cmds_uomo:
-            cmds_html = f"<em>{cmds_uomo}</em>"
-        elif cmds_donna:
-            cmds_html = f"<em>{cmds_donna}</em>"
-        else:
-            cmds_html = None
-
+        framingham_risk = response['results'].get('Framingham Risk', '')
         if framingham_uomo and framingham_donna:
-            fr_html = f"<strong>Uomo:</strong> <em>{framingham_uomo}</em><br><strong>Donna:</strong> <em>{framingham_donna}</em>"
-        elif framingham_uomo:
-            fr_html = f"<em>{framingham_uomo}</em>"
-        elif framingham_donna:
-            fr_html = f"<em>{framingham_donna}</em>"
+            framingham = f"<strong>Uomo:</strong> <em>{framingham_uomo}</em><br><strong>Donna:</strong> <em>{framingham_donna}</em>"
+        elif framingham_uomo and not framingham_donna:
+            framingham = f"<em>{framingham_uomo}</em>"
+        elif framingham_donna and not framingham_uomo:
+            framingham = f"<em>{framingham_donna}</em>"
         else:
-            fr_html = None
+            framingham = f"<em>{framingham_risk}</em>"
 
-        # Messaggi mancanti specifici
-        cmds_missing_msg = None if cmds_html else "Non è stato possibile calcolare il Chrono Med Diet Score (CMDS) per dati insufficienti."
-        framingham_missing_msg = None if fr_html else "Non è stato possibile calcolare il Framingham Risk: mancano dati fondamentali (es. HDL e/o pressione arteriosa)."
-
-        # Messaggio generale se non c'è nulla
-        page_error = None
-        if not cmds_html and not fr_html:
-            page_error = "Non è stato possibile generare i risultati. Verifica di aver fornito i dati richiesti."
-
-        # Context finale
-        context = {
-            'page_error': page_error,
-            'CMDS': cmds_html,
-            'Framingham': fr_html,
-            'CMDS_missing': cmds_missing_msg,
-            'Framingham_missing': framingham_missing_msg,
-        }
-
-        return render(request, 'questionnaire/result.html', context)
+        if response:
+            context = {
+                'CMDS': cmds,
+                'Framingham': framingham,   
+            }
+        else:
+            print(f"Error! Response = None")
+            context = {
+                'error_message': 'Errore durante l\'invio del questionario. Riprova più tardi.',
+            }
+        return render(request, 'questionnaire/result.html', context=context)
 
 
 
@@ -476,4 +456,19 @@ def nextQuestion(request):
         return redirect('home')
 
 def scarica(request):
+    if request.method == 'POST':
+        password = request.POST.get('password', '')
+
+        if password == "ai4nw!":
+            # messaggio di successo
+            messages.success(request, 'Password corretta. Il file è in preparazione.')
+            # passa un flag al template per mostrare l’area di download
+            return render(request, 'questionnaire/scarica.html', {'auth_ok': True})
+        else:
+            # messaggio di errore
+            messages.error(request, 'Password errata, riprova.')
+            # torni allo stesso template SENZA redirect
+            return render(request, 'questionnaire/scarica.html', status=401)
+
+    # GET → mostra il form
     return render(request, 'questionnaire/scarica.html')
