@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 import random
+import csv
+from django.http import HttpResponse
 from AI4NW import settings
 from .utils import *
 from .models import Questionnaire, Group, Question, Answer, QuestionnaireValue, AnsweredQuestions
@@ -168,7 +170,8 @@ def result(request):
                 'error_message': 'Errore durante l\'invio del questionario. Riprova più tardi.',
             }
         return render(request, 'questionnaire/result.html', context=context)
-
+    else:
+        return redirect('home')
 
 
 def test_start(request):
@@ -461,15 +464,25 @@ def scarica(request):
         password = request.POST.get('password', '')
 
         if password == "ai4nw!":
-            # messaggio di successo
-            messages.success(request, 'Password corretta. Il file è in preparazione.')
-            # passa un flag al template per mostrare l’area di download
-            return render(request, 'questionnaire/scarica.html', {'auth_ok': True})
+            # RITORNA SUBITO IL CSV → il browser parte con il download
+            response = HttpResponse(content_type='text/csv; charset=utf-8')
+            response['Content-Disposition'] = 'attachment; filename="dati.csv"'
+
+            # BOM per Excel (facoltativo, utile per accenti)
+            response.write('\ufeff')
+
+            writer = csv.writer(response)
+            writer.writerow(['Colonna1', 'Colonna2', 'Colonna3'])
+            writer.writerow(['Valore1', 'Valore2', 'Valore3'])
+            writer.writerow(['Altro1', 'Altro2', 'Altro3'])
+            return response
         else:
-            # messaggio di errore
+            # Password errata → torna la pagina con errore
+            from django.contrib import messages
+            from django.shortcuts import render
             messages.error(request, 'Password errata, riprova.')
-            # torni allo stesso template SENZA redirect
             return render(request, 'questionnaire/scarica.html', status=401)
 
     # GET → mostra il form
+    from django.shortcuts import render
     return render(request, 'questionnaire/scarica.html')
