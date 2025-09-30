@@ -154,7 +154,8 @@ def result(request):
         elif framingham_donna and not framingham_uomo:
             framingham = f"<em>{framingham_donna}</em>"
         else:
-            framingham = f"<em>{framingham_risk}</em>"
+            framingham = f'<span class="text-danger"><em>{framingham_risk} per mancanza di dati. Compila di nuovo il test inserendo tutte le informazioni.</em></span>'
+
 
         if response:
             context = {
