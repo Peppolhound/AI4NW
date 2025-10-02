@@ -26,10 +26,14 @@ SECRET_KEY = 'django-insecure-)^n+$m1ft-yadb2r#kp%_c=fq13n15%x8n$k@7bw$%08o^)y1+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ai4nw.napslab.it', '127.0.0.1', '192.168.178.170', 'lasalutedelturnista.it', 'lasalutedelturnista.org']
+ALLOWED_HOSTS = ['ai4nw.napslab.it', '127.0.0.1', '192.168.178.170', 'lasalutedelturnista.it', 'lasalutedelturnista.org', 'www.lasalutedelturnista.it', 'www.lasalutedelturnista.org']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://ai4nw.napslab.it',
+    'https://lasalutedelturnista.it',
+    'https://lasalutedelturnista.org',
+    'https://www.lasalutedelturnista.it',
+    'https://www.lasalutedelturnista.org'
 ]
 
 

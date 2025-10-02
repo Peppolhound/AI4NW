@@ -156,7 +156,7 @@ def result(request):
         elif framingham_donna and not framingham_uomo:
             framingham = f"<em>{framingham_donna}</em>"
         else:
-            framingham = f'<span class="text-danger"><em>{framingham_risk} per mancanza di dati. Compila di nuovo il test inserendo tutte le informazioni.</em></span>'
+            framingham = f'<span class="text-danger"><em>Non è stato possibile calcolare il tuo rischio cardiovascolare a 10 anni perchè non hai inserito i dati relativi agli esami ematochimici. Compila il test inserendo tutte le informazioni.</em></span>'
 
 
         if response:
